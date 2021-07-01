@@ -1,0 +1,22 @@
+{
+  "name": "blockchain-inbox-backend",
+  "version": "1.0.0",
+  "description": "An anchored backend for receiving and sending messages to blockchain account holders",
+  "main": "lib",
+  "scripts": {
+    "build": "tsc",
+    "dev": "NODE_PATH=./src nodemon --watch 'src/**/*.ts' --exec 'npm start'",
+    "heroku": "node ./build",
+    "start": "NODE_PATH=./src ts-node src"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@bluzelle/sdk-js": "^1.1.5",
+    "@types/express": "^4.17.12",
+    "@types/node": "^15.12.5",
+    "nodemon": "^2.0.9",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.5"
+  }
+}
