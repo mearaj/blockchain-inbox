@@ -13,11 +13,10 @@ const bluzelleConfig: SDKOptions = {
   gasPrice: 0.002,
 };
 
-const initSDK = async () => {
+export const initSDK = async () => {
   return await bluzelle(bluzelleConfig);
 };
 
 // "bluzelle1pm2902v7z87ektlngvqy23yd4geahd2j03mg3v"
 // "crunch digital library parent female spell rose comic rotate clock camera snap income outside notable feel scorpion obtain transfer aim water security scene prepare"
 
-export {initSDK};
