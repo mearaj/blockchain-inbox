@@ -1,60 +1,58 @@
 import CommonBar from 'components/CommonBar';
-import {Button, Typography} from '@material-ui/core';
+import {FormControlLabel, Radio, RadioGroup} from '@material-ui/core';
 import React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppState} from 'store';
+import {accountActions} from 'store/Account';
 
 
 const LoginExtensionPage: React.FC = (props) => {
-  const loginWithMetamask = () => {
+  const accounts = useSelector((state: AppState) => state.accountsState);
+  const account = useSelector((state: AppState) => state.accountState);
+  const dispatch = useDispatch();
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const account = accounts[(event.target as HTMLInputElement).value];
+    dispatch(accountActions.updateAccountState(account));
   };
+  console.log(accounts);
+  console.log(account);
 
-  const loginWithKeplr = async () => {
-    if (!window.keplr) {
-      return
-    }
-    if (window.getOfflineSigner) {
-      const chainId = "bluzelleTestNetPublic-22";
-      try {
-        await window.keplr.enable(chainId);
-        const offlineSigner = window.getOfflineSigner(chainId);
-        const accounts = await offlineSigner.getAccounts();
-        // const cosmJS = new SigningCosmosClient(
-        //   "https://lcd-cosmoshub.keplr.app",
-        //   accounts[0].address,
-        //   offlineSigner,
-        // );
-        const result = await window.keplr.signDirect(
-          chainId,
-          accounts[0].address,
-          {
-            bodyBytes: new Uint8Array(0),
-            chainId,
-          }
-        );
-        console.log(result);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  }
   return (
     <div>
       <CommonBar>
         Login
       </CommonBar>
       <br/>
-      <Typography variant="h5">
-        Currently you can login with the either of the extensions
-      </Typography>
-      <br/>
-      <Button disabled={!window.keplr} color="primary" variant="contained">
-        Login with Curium Extension
-      </Button>
-      <br/>
-      <br/>
-      <Button disabled={!window.ethereum} color='primary' variant="contained">
-        Login with Metamask Extension
-      </Button>
+      {
+        accounts &&
+        <RadioGroup value={account.publicAddress} onChange={handleChange}>
+          {
+            Object.keys(accounts).map((publicAdd: string) => {
+              return (
+                <FormControlLabel
+                  key={publicAdd}
+                  value={publicAdd}
+                  control={<Radio />}
+                  label={`${account.publicAddress} (${account.wallet})`} />
+              );
+            })
+          }
+        </RadioGroup>
+      }
+
+      {/*<Typography variant="h5">*/}
+      {/*  Currently you can login with the either of the extensions*/}
+      {/*</Typography>*/}
+      {/*<br/>*/}
+      {/*<Button disabled={!window.keplr} color="primary" variant="contained">*/}
+      {/*  Login with Curium Extension*/}
+      {/*</Button>*/}
+      {/*<br/>*/}
+      {/*<br/>*/}
+      {/*<Button disabled={!window.ethereum} color='primary' variant="contained">*/}
+      {/*  Login with Metamask Extension*/}
+      {/*</Button>*/}
     </div>
   )
 }

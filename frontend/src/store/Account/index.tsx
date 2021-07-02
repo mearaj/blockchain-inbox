@@ -1,30 +1,39 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
+export enum AccountWallet {
+  METAMASK_EXTENSION_WALLET = 'METAMASK_EXTENSION_WALLET',
+  CURIUM_EXTENSION_WALLET = 'CURIUM_EXTENSION_WALLET',
+}
 
-export interface AccountState {
-  isRegistered: boolean,
+
+export interface Account {
+  wallet: AccountWallet | undefined,
   isLoggedIn: boolean,
   publicAddress: string,
   publicKey: string,
 }
 
-const initialState: AccountState = {
-  isRegistered: true,
+const initialState: Account = {
+  wallet: undefined,
   isLoggedIn: false,
   publicAddress: "",
   publicKey: "",
 }
 
-const register = (state: AccountState, action: PayloadAction) => {
-  state.isRegistered = true;
-}
-
-const login = (state: AccountState, action: PayloadAction) => {
+const login = (state: Account, action: PayloadAction) => {
   state.isLoggedIn = true;
 }
 
-const logout = (state: AccountState, action: PayloadAction) => {
+const logout = (state: Account, action: PayloadAction) => {
   state.isLoggedIn = false;
+}
+
+const updateAccountState = (state: Account, action: PayloadAction<any>) => {
+  state.isLoggedIn = action.payload.isLoggedIn;
+  state.publicAddress = action.payload.publicAddress;
+  state.wallet = action.payload.wallet;
+  state.publicKey = action.payload.publicKey;
+  return state;
 }
 
 const accountSlice = createSlice({
@@ -33,6 +42,7 @@ const accountSlice = createSlice({
   reducers: {
     login,
     logout,
+    updateAccountState,
   }
 })
 
