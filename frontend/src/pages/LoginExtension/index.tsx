@@ -15,8 +15,6 @@ const LoginExtensionPage: React.FC = (props) => {
     const account = accounts[(event.target as HTMLInputElement).value];
     dispatch(accountActions.updateAccountState(account));
   };
-  console.log(accounts);
-  console.log(account);
 
   return (
     <div>
@@ -34,7 +32,7 @@ const LoginExtensionPage: React.FC = (props) => {
                   key={publicAdd}
                   value={publicAdd}
                   control={<Radio />}
-                  label={`${account.publicAddress} (${account.wallet})`} />
+                  label={`${publicAdd} (${accounts[publicAdd].wallet})`} />
               );
             })
           }

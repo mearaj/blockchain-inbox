@@ -18,6 +18,7 @@ import LoginExtensionPage from 'pages/LoginExtension';
 import {Accounts, accountsActions} from 'store/Accounts';
 import {accountActions, AccountWallet} from 'store/Account';
 import {curiumActions} from 'store/Curium';
+import {AccountData} from 'secretjs/types/wallet';
 
 declare var window: Window & any;
 
@@ -38,6 +39,7 @@ const Pages = (props: AppProps) => {
 
 
   const curiumState = useSelector((state: AppState) => state.curiumState);
+  const metamaskState = useSelector((state: AppState) => state.metamaskState);
   const accountsState = useSelector((state: AppState) => state.accountsState);
   const dispatch = useDispatch<Dispatch<PayloadAction<any>>>();
 
@@ -54,20 +56,19 @@ const Pages = (props: AppProps) => {
         .request({method: 'eth_accounts'})
         .then((accountsArr: string[]) => {
           let updatedAccounts: Accounts = {};
-          accountsArr.forEach((accountKey: string) => {
-            if (accountsState[accountKey]) {
-              updatedAccounts[accountKey] = accountsState[accountKey]
+          accountsArr.forEach((accountAddress: string) => {
+            if (accountsState[accountAddress]) {
+              updatedAccounts[accountAddress] = accountsState[accountAddress]
             } else {
-              updatedAccounts[accountKey] = {
+              updatedAccounts[accountAddress] = {
                 wallet: AccountWallet.METAMASK_EXTENSION_WALLET,
                 isLoggedIn: false,
-                publicAddress: accountKey,
+                publicAddress: accountAddress,
                 publicKey: ''
               };
             }
           });
           dispatch(accountsActions.updateAccounts(updatedAccounts));
-          dispatch(accountActions.updateAccountState(updatedAccounts[accountsArr[0]]));
         })
         .catch((err: Error) => {
           // Some unexpected error.
@@ -116,20 +117,20 @@ const Pages = (props: AppProps) => {
           const offlineSigner = window.getOfflineSigner(chainId);
           const accounts = await offlineSigner.getAccounts();
           console.log(accounts);
-          // let updatedAccounts: Accounts = {};
-          // accounts.forEach((accountKey: string) => {
-          //   if (accountsState[accountKey]) {
-          //     updatedAccounts[accountKey] = accountsState[accountKey]
-          //   } else {
-          //     updatedAccounts[accountKey] = {
-          //       wallet: AccountWallet.CURIUM_EXTENSION_WALLET,
-          //       isLoggedIn: false,
-          //       publicAddress: accountKey,
-          //       publicKey: ''
-          //     };
-          //   }
-          // });
-          // dispatch(accountsActions.updateAccounts(updatedAccounts));
+          let updatedAccounts: Accounts = {};
+          accounts.forEach((accountData:AccountData) => {
+            if (accountsState[accountData.address]) {
+              updatedAccounts[accountData.address] = accountsState[accountData.address]
+            } else {
+              updatedAccounts[accountData.address] = {
+                wallet: AccountWallet.CURIUM_EXTENSION_WALLET,
+                isLoggedIn: false,
+                publicAddress: accountData.address,
+                publicKey: new TextDecoder().decode(accountData.pubkey),
+              };
+            }
+          });
+           dispatch(accountsActions.updateAccounts(updatedAccounts));
           // dispatch(accountActions.updateAccountState(updatedAccounts[accounts[0]]));
           // const cosmJS = new SigningCosmosClient(
           //   "https://lcd-cosmoshub.keplr.app",
@@ -149,9 +150,9 @@ const Pages = (props: AppProps) => {
           console.log(e);
         }
       }
-      return () => clearTimeout(timerId);
+       return () => clearTimeout(timerId);
     }, 0)
-  })
+  },[])
 
 
   const loginWithMetamask = () => {
