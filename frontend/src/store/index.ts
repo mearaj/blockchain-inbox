@@ -1,9 +1,11 @@
-import {combineReducers, createStore} from 'redux';
+import {applyMiddleware, combineReducers, createStore} from 'redux';
+import thunkMiddleware from 'redux-thunk';
 import {Account, accountReducer} from 'store/Account';
 import {metamaskReducer, MetamaskState} from 'store/Metamask';
 import {sidebarReducer, SidebarState} from 'store/Sidebar';
 import {curiumReducer, CuriumState} from 'store/Curium';
 import {Accounts, accountsReducer} from 'store/Accounts';
+import {composeWithDevTools} from 'redux-devtools-extension';
 
 // the keys should map with combineReducers key
 export interface AppState {
@@ -22,6 +24,16 @@ const appReducer = combineReducers({
   curiumState: curiumReducer,
 })
 
-const store = createStore(appReducer);
+let composedEnhancer: any;
+
+// we use redux-devtools-extension during development and not in production
+if (process.env.NODE_ENV==="development") {
+  composedEnhancer = composeWithDevTools(applyMiddleware(thunkMiddleware));
+} else {
+  composedEnhancer = applyMiddleware(thunkMiddleware);
+}
+
+
+const store = createStore(appReducer, composedEnhancer);
 
 export default store;

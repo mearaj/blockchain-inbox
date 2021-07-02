@@ -10,7 +10,8 @@ const initialState: Accounts = {};
 
 
 const updateAccounts = (state: Accounts, action: PayloadAction<any>) => {
-  return action.payload;
+  state = {...state, ...action.payload}
+  return state;
 }
 
 const accountsSlice = createSlice({

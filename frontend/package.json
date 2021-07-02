@@ -6,6 +6,7 @@
     "@bluzelle/sdk-js": "^1.1.5",
     "@cosmjs/launchpad": "^0.25.5",
     "@cosmjs/proto-signing": "^0.25.5",
+    "@keplr-wallet/types": "^0.9.0-alpha.8",
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "@metamask/detect-provider": "^1.2.0",
@@ -26,6 +27,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "redux": "^4.1.0",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-thunk": "^2.3.0",
     "secretjs": "^0.13.0",
     "typescript": "^4.3.4",
     "web-vitals": "^1.1.2"
@@ -53,8 +56,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@keplr-wallet/types": "^0.9.0-alpha.8"
   }
 }

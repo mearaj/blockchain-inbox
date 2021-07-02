@@ -20,32 +20,20 @@ const initialState: Account = {
   publicKey: "",
 }
 
-const login = (state: Account, action: PayloadAction) => {
-  state.isLoggedIn = true;
+const setLoginStatus = (state: Account, action: PayloadAction<boolean>) => {
+  state.isLoggedIn = action.payload;
 }
 
-const logout = (state: Account, action: PayloadAction) => {
-  state.isLoggedIn = false;
-}
-
-const updateAccountState = (state: Account, action: PayloadAction<any>) => {
-  state.isLoggedIn = action.payload.isLoggedIn;
-  state.publicAddress = action.payload.publicAddress;
-  state.wallet = action.payload.wallet;
-  state.publicKey = action.payload.publicKey;
-  return state;
-}
+const updateAccountState = (state: Account, action: PayloadAction<Account>) => action.payload;
 
 const accountSlice = createSlice({
   name: 'accountState',
   initialState: initialState,
   reducers: {
-    login,
-    logout,
+    setLoginStatus,
     updateAccountState,
   }
 })
-
 
 export const accountReducer = accountSlice.reducer;
 export const accountActions = accountSlice.actions;
