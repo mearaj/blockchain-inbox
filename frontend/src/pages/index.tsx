@@ -11,7 +11,7 @@ import AccountPage from 'pages/Account';
 import OutboxPage from 'pages/Outbox';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
-import {manageAccounts} from 'store/Accounts/thunk';
+import {manageAccounts} from 'store/Account/thunk';
 
 interface AppProps {}
 
@@ -27,10 +27,9 @@ const Pages = (props: AppProps) => {
     return () => window.removeEventListener("keplr_keystorechange", handleKeplrAccountChange);
   });
 
-  const accountState = useSelector((state: AppState) => state.accountState);
-  const accounts = useSelector((state:AppState) => state.accountsState);
+  const accountState = useSelector((state: AppState) => state.accountsState);
+  const {accounts, currentAccount} = accountState;
   const dispatch = useDispatch();
-  const {isLoggedIn} = accountState;
   const location = useLocation();
 
   const handleChainChanged = useCallback((_chainId) => {
@@ -100,7 +99,7 @@ const Pages = (props: AppProps) => {
   </Switch>)
   if (!window.keplr && !window.ethereum) {
     currentView = <SelectExtensionPage/>
-  } else if (!isLoggedIn) {
+  } else if (!accounts[currentAccount]?.isLoggedIn) {
      currentView = <AccountPage/>
   }
   return (

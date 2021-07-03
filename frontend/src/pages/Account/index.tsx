@@ -3,21 +3,18 @@ import {FormControlLabel, Radio, RadioGroup} from '@material-ui/core';
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
-import {accountActions} from 'store/Account';
 import CommonBarHeader from 'components/CommonBarHeader';
-import {accountsActions} from 'store/Accounts';
+import {accountsActions} from 'store/Account';
 
 
 const AccountPage: React.FC = (props) => {
-  const accounts = useSelector((state: AppState) => state.accountsState);
-  const account = useSelector((state: AppState) => state.accountState);
+  const accountsState = useSelector((state: AppState) => state.accountsState);
+  const {accounts, currentAccount} = accountsState
   const dispatch = useDispatch();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = (event.target as HTMLInputElement).value;
-    const account = accounts[value];
-    dispatch(accountActions.updateAccountState(account));
-    dispatch(accountsActions.updateAccounts({[value]:account}))
+    dispatch(accountsActions.setCurrentAccount(value));
   };
 
   return (
@@ -30,7 +27,7 @@ const AccountPage: React.FC = (props) => {
       <br/>
       {
         accounts &&
-        <RadioGroup value={account.publicAddress} onChange={handleChange}>
+        <RadioGroup value={currentAccount} onChange={handleChange}>
           {
             Object.keys(accounts).map((publicAdd: string) => {
               return (

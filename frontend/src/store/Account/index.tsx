@@ -1,41 +1,53 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {Account} from 'store/Account/account';
 
-export enum AccountWallet {
-  METAMASK_EXTENSION_WALLET = 'METAMASK_EXTENSION_WALLET',
-  CURIUM_EXTENSION_WALLET = 'CURIUM_EXTENSION_WALLET',
+export interface AccountsState {
+  // currentAccount is the public address
+  currentAccount: string;
+  accounts: Accounts;
+}
+export interface Accounts {
+  // key is the public address of account
+  [key: string]: Account
 }
 
 
-export interface Account {
-  wallet: AccountWallet | undefined,
-  isLoggedIn: boolean,
-  publicAddress: string,
-  publicKey: string,
+const initialState: AccountsState = {
+  currentAccount: "",
+  accounts: {},
+};
+
+const updateAccounts = (state: AccountsState, action: PayloadAction<Accounts>) => {
+  state.accounts = {...state.accounts, ...action.payload}
+  return state;
 }
 
-const initialState: Account = {
-  wallet: undefined,
-  isLoggedIn: false,
-  publicAddress: "",
-  publicKey: "",
+const setLoginStatus = (state: AccountsState, action: PayloadAction<boolean>) => {
+  if (state.accounts[state.currentAccount]) {
+    state.accounts[state.currentAccount].isLoggedIn = action.payload;
+  }
 }
 
-const setLoginStatus = (state: Account, action: PayloadAction<boolean>) => {
-  state.isLoggedIn = action.payload;
+const setAccountState = (state: AccountsState, action: PayloadAction<{ account: string, accountState: Account }>) => {
+  state.accounts[action.payload.account] = action.payload.accountState;
 }
 
-const updateAccountState = (state: Account, action: PayloadAction<Account>) => action.payload;
+const setCurrentAccount = (state: AccountsState, action: PayloadAction<string>) => {
+  state.currentAccount = action.payload;
+}
 
-const accountSlice = createSlice({
-  name: 'accountState',
+const accountsSlice = createSlice({
+  name: 'accountsState',
   initialState: initialState,
   reducers: {
+    updateAccounts,
     setLoginStatus,
-    updateAccountState,
+    setAccountState,
+    setCurrentAccount,
   }
-})
+});
 
-export const accountReducer = accountSlice.reducer;
-export const accountActions = accountSlice.actions;
+export const accountsReducer = accountsSlice.reducer;
+export const accountsActions = accountsSlice.actions;
 
-export default accountSlice;
+export default accountsSlice;

@@ -7,25 +7,25 @@ import Toolbar from '@material-ui/core/Toolbar';
 import useStyles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
 import {sidebarActions} from 'store/Sidebar';
-import {Button, Link} from '@material-ui/core';
+import {Button} from '@material-ui/core';
 import {AppState} from 'store';
-import {accountActions} from 'store/Account';
 import {useHistory} from 'react-router-dom';
+import {accountsActions} from 'store/Account';
 
 
 const CommonBar: React.FC = (props) => {
   const classes = useStyles();
-  const accountState = useSelector((state: AppState) => state.accountState);
+  const accountsState = useSelector((state: AppState) => state.accountsState);
+  const {accounts, currentAccount} = accountsState;
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const handleLoginClick = ()=> {
-    dispatch(accountActions.setLoginStatus(true));
+  const handleLoginClick = () => {
+    dispatch(accountsActions.setLoginStatus(true));
   };
 
-  const handleLogoutClick = ()=> {
-    //history.push("/account");
-    dispatch(accountActions.setLoginStatus(false));
+  const handleLogoutClick = () => {
+    dispatch(accountsActions.setLoginStatus(false));
   }
 
   return (
@@ -46,7 +46,7 @@ const CommonBar: React.FC = (props) => {
               {props.children}
             </div>
             {
-              accountState.isLoggedIn ?
+              accounts[currentAccount]?.isLoggedIn ?
                 <Button onClick={handleLogoutClick} variant="contained">Logout</Button>:
                 <Button onClick={handleLoginClick} variant="contained">Login</Button>
             }

@@ -1,27 +1,24 @@
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import {Account, accountReducer} from 'store/Account';
 import {metamaskReducer, MetamaskState} from 'store/Metamask';
 import {sidebarReducer, SidebarState} from 'store/Sidebar';
 import {curiumReducer, CuriumState} from 'store/Curium';
-import {Accounts, accountsReducer} from 'store/Accounts';
+import {accountsReducer, AccountsState} from 'store/Account';
 import {composeWithDevTools} from 'redux-devtools-extension';
 
 // the keys should map with combineReducers key
 export interface AppState {
-  accountState: Account,
-  accountsState: Accounts,
+  accountsState: AccountsState,
   metamaskState: MetamaskState,
   curiumState: CuriumState,
   sidebarState: SidebarState,
 }
 
 const appReducer = combineReducers({
-  accountState: accountReducer,
   accountsState: accountsReducer,
-  sidebarState: sidebarReducer,
   metamaskState: metamaskReducer,
   curiumState: curiumReducer,
+  sidebarState: sidebarReducer,
 })
 
 let composedEnhancer: any;
