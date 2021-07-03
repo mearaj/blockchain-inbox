@@ -13,7 +13,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import {manageAccounts} from 'store/Account/thunk';
 
-interface AppProps {}
+interface AppProps {
+}
 
 const Pages = (props: AppProps) => {
   const classes = useStyles();
@@ -28,24 +29,35 @@ const Pages = (props: AppProps) => {
   });
 
   const accountState = useSelector((state: AppState) => state.accountsState);
+  const metamaskState = useSelector((state: AppState) => state.metamaskState);
   const {accounts, currentAccount} = accountState;
   const dispatch = useDispatch();
   const location = useLocation();
+  const isLoggedIn = accounts[currentAccount]?.isLoggedIn;
 
   const handleChainChanged = useCallback((_chainId) => {
     window.location.reload();
   }, []);
-  useEffect(()=> {
-    console.log(accounts);
-    console.log(accountState);
-  }, [location]);
+
+  const onMetamaskAccountsChanged =  (accounts:string[]) => {
+    window.location.reload();
+  };
 
   useEffect(() => {
-    const timerId = setTimeout(()=> {
+    const timerId = setTimeout(async ()=> {
+      if (window.ethereum) {
+        (window.ethereum as any).on('accountsChanged', onMetamaskAccountsChanged);
+      }
+    }, );
+    return ()=> clearTimeout(timerId);
+  },[]);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
       console.log("managed accounts in useEffect called");
       dispatch(manageAccounts());
     }, 0);
-    return ()=> clearTimeout(timerId);
+    return () => clearTimeout(timerId);
   }, [dispatch]);
 
   useEffect(() => {
@@ -91,16 +103,14 @@ const Pages = (props: AppProps) => {
 
   let currentView: ReactElement = (<Switch>
     <Route exact path={"/"}><Redirect to="/inbox"/></Route>
-    <Route exact path={"/account"} component={AccountPage} />
-    <Route exact path={"/compose"} component={ComposePage}/>
-    <Route exact path={"/sent"} component={SentPage}/>
-    <Route exact path={"/inbox"} component={InboxPage}/>
-    <Route exact path={"/outbox"} component={OutboxPage}/>
+    <Route exact path={"/account"} component={AccountPage}/>
+    <Route exact path={"/compose"} component={() => isLoggedIn ? <ComposePage/>:<Redirect to="/account"/>}/>
+    <Route exact path={"/sent"} component={() => isLoggedIn ? <SentPage/>:<Redirect to="/account"/>}/>
+    <Route exact path={"/inbox"} component={() => isLoggedIn ? <InboxPage/>:<Redirect to="/account"/>}/>
+    <Route exact path={"/outbox"} component={() => isLoggedIn ? <OutboxPage/>:<Redirect to="/account"/>}/>
   </Switch>)
   if (!window.keplr && !window.ethereum) {
     currentView = <SelectExtensionPage/>
-  } else if (!accounts[currentAccount]?.isLoggedIn) {
-     currentView = <AccountPage/>
   }
   return (
     <div className={classes.root}>

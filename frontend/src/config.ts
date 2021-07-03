@@ -1,6 +1,4 @@
 import {SDKOptions} from '@bluzelle/sdk-js/lib/client-lib/rpc';
-import {useEffect} from 'react';
-import {bluzelle} from '@bluzelle/sdk-js';
 
 const mintResult = {
   address: "bluzelle1ns5julcqlw8yx8umjklg5ggrq8waphmw04sgqn",

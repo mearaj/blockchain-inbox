@@ -94,6 +94,7 @@ const manageAccountsFromMetaMask = async (dispatch: Dispatch, getState: () => Ap
           };
         }
       });
+      console.log("metamask accounts are...", accountsArr);
 
       dispatch(accountsActions.updateAccounts({...accounts, ...updatedAccounts}));
     } catch (err) {
@@ -105,7 +106,8 @@ const manageAccountsFromMetaMask = async (dispatch: Dispatch, getState: () => Ap
   }
 }
 
-export const manageAccounts = () => async (dispatch: Dispatch, appState: () => AppState) => {
-  await manageAccountsFromCurium(dispatch, appState);
-  await manageAccountsFromMetaMask(dispatch, appState);
+export const manageAccounts = () => async (dispatch: Dispatch, getState: () => AppState) => {
+  await manageAccountsFromCurium(dispatch, getState);
+  await manageAccountsFromMetaMask(dispatch, getState);
+  console.log(getState());
 };

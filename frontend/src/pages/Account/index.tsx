@@ -1,10 +1,12 @@
 import CommonBar from 'components/CommonBar';
-import {FormControlLabel, Radio, RadioGroup} from '@material-ui/core';
+import {Button, FormControlLabel, Radio, RadioGroup} from '@material-ui/core';
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import CommonBarHeader from 'components/CommonBarHeader';
 import {accountsActions} from 'store/Account';
+import {AccountWallet} from 'store/Account/account';
+import {manageAccounts} from 'store/Account/thunk';
 
 
 const AccountPage: React.FC = (props) => {
@@ -17,6 +19,14 @@ const AccountPage: React.FC = (props) => {
     dispatch(accountsActions.setCurrentAccount(value));
   };
 
+  const connectToMetamaskHandler = async ()=> {
+    await (window.ethereum as any).request({method:'eth_requestAccounts'});
+    dispatch(manageAccounts())
+  };
+
+  const isMetamaskConnected = Object.keys(accounts).find(
+    (account) => accounts[account].wallet === AccountWallet.METAMASK_EXTENSION_WALLET);
+
   return (
     <div>
       <CommonBar>
@@ -24,7 +34,6 @@ const AccountPage: React.FC = (props) => {
           My Account
         </CommonBarHeader>
       </CommonBar>
-      <br/>
       {
         accounts &&
         <RadioGroup value={currentAccount} onChange={handleChange}>
@@ -52,9 +61,12 @@ const AccountPage: React.FC = (props) => {
       {/*</Button>*/}
       {/*<br/>*/}
       {/*<br/>*/}
-      {/*<Button disabled={!window.ethereum} color='primary' variant="contained">*/}
-      {/*  Login with Metamask Extension*/}
-      {/*</Button>*/}
+      {
+        !isMetamaskConnected &&
+        <Button onClick={connectToMetamaskHandler} color='primary' variant="contained">
+          Connect to Metamask Extension
+        </Button>
+      }
     </div>
   )
 }
