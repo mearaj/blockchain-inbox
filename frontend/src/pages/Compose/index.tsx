@@ -3,6 +3,7 @@ import CommonBar from 'components/CommonBar';
 
 import useStyles from './styles';
 import CommonBarHeader from 'components/CommonBarHeader';
+import {Card, CardContent, CardHeader, FormControl, TextField} from '@material-ui/core';
 
 
 const ComposePage: React.FC = () => {
@@ -15,7 +16,14 @@ const ComposePage: React.FC = () => {
           Compose
         </CommonBarHeader>
       </CommonBar>
-      Compose Page
+      <Card>
+        <CardContent>
+          <FormControl>
+            <TextField label="To" placeholder="Enter recipient wallet address here"/>
+          </FormControl>
+          <TextField label="From" />
+        </CardContent>
+      </Card>
     </div>
   );
 }

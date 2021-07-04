@@ -8,3 +8,5 @@ declare global {
   }
 }
 declare var web3;
+
+declare module 'redux-persist/lib/storage';

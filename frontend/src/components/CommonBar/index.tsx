@@ -7,11 +7,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import useStyles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
 import {sidebarActions} from 'store/Sidebar';
-import {Button, CircularProgress, LinearProgress} from '@material-ui/core';
+import {Button} from '@material-ui/core';
 import {AppState} from 'store';
 import {useHistory} from 'react-router-dom';
 import {accountsActions} from 'store/Account';
 import {loginBluezelle} from 'store/Account/thunk';
+import {AccountWallet} from 'store/Account/account';
 
 const CommonBar: React.FC = (props) => {
   const classes = useStyles();
@@ -20,8 +21,13 @@ const CommonBar: React.FC = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const handleLoginClick = () => {
-    dispatch(loginBluezelle());
+
+  const handleLoginClick = async () => {
+    await dispatch(loginBluezelle());
+    if (accounts[currentAccount].wallet === AccountWallet.CURIUM_EXTENSION_WALLET) {
+      const result = await window.keplr?.getKey("bluzelleTestNetPublic-22");
+      console.log(result);
+    }
   };
 
   const handleLogoutClick = () => {

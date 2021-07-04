@@ -29,8 +29,8 @@ export const initSDK = async () => {
   sdk = await bluzelle(bluzelleConfig);
   return sdk;
 };
-// initSDK().then((res)=> {
-//   console.log(res);
-// })
+initSDK().then((res)=> {
+  console.log(res.db);
+})
 // "bluzelle1pm2902v7z87ektlngvqy23yd4geahd2j03mg3v"
 // "crunch digital library parent female spell rose comic rotate clock camera snap income outside notable feel scorpion obtain transfer aim water security scene prepare"

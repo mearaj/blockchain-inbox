@@ -13,6 +13,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import {manageAccounts, manageAccountsFromMetaMask} from 'store/Account/thunk';
 import {Backdrop, CircularProgress} from '@material-ui/core';
+import {loaderActions} from 'store/Loader';
 
 interface AppProps {
 }
@@ -26,6 +27,7 @@ const Pages = (props: AppProps) => {
 
   const accountState = useSelector((state: AppState) => state.accountsState);
   const metamaskState = useSelector((state: AppState) => state.metamaskState);
+  const loaderState = useSelector((state: AppState) => state.loaderState);
   const {accounts, currentAccount} = accountState;
   const dispatch = useDispatch();
   const location = useLocation();
@@ -79,7 +81,8 @@ const Pages = (props: AppProps) => {
       // );
       return () => clearTimeout(timerId);
     }, 0)
-  }, [])
+  }, []);
+
 
 
   const loginWithMetamask = () => {
@@ -120,9 +123,9 @@ const Pages = (props: AppProps) => {
       <main className={classes.content}>
         {currentView}
       </main>
-      {/*<Backdrop open={true} style={{zIndex: 10000}}>*/}
-      {/*  <CircularProgress/>*/}
-      {/*</Backdrop>*/}
+      <Backdrop onClick={()=> dispatch(loaderActions.hideLoader())} open={loaderState.show} style={{zIndex: 10000}}>
+        <CircularProgress/>
+      </Backdrop>
     </div>
   );
 }

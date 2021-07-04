@@ -9,6 +9,7 @@ import {metamaskActions} from 'store/Metamask';
 import {requestLoginToken} from 'api';
 import * as sigUtil from 'eth-sig-util';
 import * as ethUtil from 'ethereumjs-util';
+import {loaderActions} from 'store/Loader';
 
 export const manageAccountsFromCurium = () => async (dispatch: Dispatch, getState: () => AppState) => {
   const appState = getState();
@@ -132,7 +133,7 @@ export const manageAccountsFromMetaMask = () => async (dispatch: Dispatch, getSt
     } catch (err) {
       // Some unexpected error.
       // For backwards compatibility reasons, if no accounts are available,
-      // eth_accounts will return an empty array.
+      // eth_accounts will return an empty    array.
       console.error(err);
     }
   }
@@ -168,7 +169,12 @@ export const promptMetamaskPublicKey = () => async (dispatch: Dispatch, getState
 const loginWithMetamaskPublicKey = async (dispatch: Dispatch, getState: () => AppState) => {
   const {accounts, currentAccount} = getState().accountsState;
   const account = accounts[currentAccount];
-  const {loginToken} = (await requestLoginToken({publicAddress: account.publicAddress})).data;
+  try {
+    const {loginToken} = (await requestLoginToken({publicAddress: account.publicAddress})).data;
+  } catch (e) {
+    console.log(e);
+  }
+  //dispatch(loaderActions.hideLoader());
   const {provider} = getState().metamaskState;
   // if (provider) {
   //   provider

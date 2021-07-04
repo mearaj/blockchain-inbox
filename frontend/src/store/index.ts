@@ -5,17 +5,24 @@ import {sidebarReducer, SidebarState} from 'store/Sidebar';
 import {curiumReducer, CuriumState} from 'store/Curium';
 import {accountsReducer, AccountsState} from 'store/Account';
 import {composeWithDevTools} from 'redux-devtools-extension';
+import {loaderReducer, LoaderState} from 'store/Loader';
+import storage from 'redux-persist/lib/storage';
+import {persistReducer, persistStore} from 'redux-persist'
+
 
 // the keys should map with combineReducers key
 export interface AppState {
+  loaderState: LoaderState,
   accountsState: AccountsState,
   metamaskState: MetamaskState,
   curiumState: CuriumState,
   sidebarState: SidebarState,
+  serializableCheck: false
 }
 
 
 const appReducer = combineReducers({
+  loaderState: loaderReducer,
   accountsState: accountsReducer,
   metamaskState: metamaskReducer,
   curiumState: curiumReducer,
@@ -31,7 +38,12 @@ if (process.env.NODE_ENV==="development") {
   composedEnhancer = applyMiddleware(thunkMiddleware);
 }
 
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['accountsState']
+};
 
-const store = createStore(appReducer, composedEnhancer);
-
-export default store;
+const persistedReducer = persistReducer(persistConfig, appReducer);
+export const store = createStore(persistedReducer, undefined, composedEnhancer);
+export const persistor = persistStore(store);
