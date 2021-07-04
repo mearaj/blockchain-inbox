@@ -5,13 +5,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import CommonBarHeader from 'components/CommonBarHeader';
 import {accountsActions} from 'store/Account';
-import {AccountWallet} from 'store/Account/account';
 import {manageAccounts} from 'store/Account/thunk';
 
 
 const AccountPage: React.FC = (props) => {
   const accountsState = useSelector((state: AppState) => state.accountsState);
-  const {accounts, currentAccount} = accountsState
+  const {accounts, currentAccount} = accountsState;
+  const metamaskState = useSelector((state: AppState) => state.metamaskState);
   const dispatch = useDispatch();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,13 +19,10 @@ const AccountPage: React.FC = (props) => {
     dispatch(accountsActions.setCurrentAccount(value));
   };
 
-  const connectToMetamaskHandler = async ()=> {
-    await (window.ethereum as any).request({method:'eth_requestAccounts'});
+  const connectToMetamaskHandler = async () => {
+    await (window.ethereum as any).request({method: 'eth_requestAccounts'});
     dispatch(manageAccounts())
   };
-
-  const isMetamaskConnected = Object.keys(accounts).find(
-    (account) => accounts[account].wallet === AccountWallet.METAMASK_EXTENSION_WALLET);
 
   return (
     <div>
@@ -62,7 +59,7 @@ const AccountPage: React.FC = (props) => {
       {/*<br/>*/}
       {/*<br/>*/}
       {
-        !isMetamaskConnected &&
+        metamaskState.provider && !metamaskState.isConnected &&
         <Button onClick={connectToMetamaskHandler} color='primary' variant="contained">
           Connect to Metamask Extension
         </Button>

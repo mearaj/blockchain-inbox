@@ -40,17 +40,18 @@ const Pages = (props: AppProps) => {
   }, []);
 
   const onMetamaskAccountsChanged =  (accounts:string[]) => {
-    window.location.reload();
+    //window.location.reload();
+    dispatch(manageAccounts());
   };
 
   useEffect(() => {
-    const timerId = setTimeout(async ()=> {
-      if (window.ethereum) {
-        (window.ethereum as any).on('accountsChanged', onMetamaskAccountsChanged);
+    const timerId = setTimeout( ()=> {
+      if (metamaskState.provider) {
+        (metamaskState.provider).on('accountsChanged', onMetamaskAccountsChanged);
       }
     }, );
     return ()=> clearTimeout(timerId);
-  },[]);
+  },[metamaskState]);
 
   useEffect(() => {
     const timerId = setTimeout(() => {

@@ -18,15 +18,15 @@ const initialState: AccountsState = {
 };
 
 const updateAccounts = (state: AccountsState, action: PayloadAction<Accounts>) => {
-  state.accounts = {...state.accounts, ...action.payload}
+  state.accounts = action.payload;
   return state;
 }
 
-const setLoginStatus = (state: AccountsState, action: PayloadAction<boolean>) => {
-  if (state.accounts[state.currentAccount]) {
-    state.accounts[state.currentAccount].isLoggedIn = action.payload;
-  }
-}
+// const setLoginStatus = (state: AccountsState, action: PayloadAction<boolean>) => {
+//   if (state.accounts[state.currentAccount]) {
+//     state.accounts[state.currentAccount].isLoggedIn = action.payload;
+//   }
+// }
 
 const setAccountState = (state: AccountsState, action: PayloadAction<{ account: string, accountState: Account }>) => {
   state.accounts[action.payload.account] = action.payload.accountState;
@@ -41,7 +41,7 @@ const accountsSlice = createSlice({
   initialState: initialState,
   reducers: {
     updateAccounts,
-    setLoginStatus,
+    //setLoginStatus,
     setAccountState,
     setCurrentAccount,
   }

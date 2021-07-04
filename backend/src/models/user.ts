@@ -8,7 +8,7 @@ export class User {
 
 // export type Users = {[key:string]: User};
 
-export interface loginToken {
-  // key is the public address of the user
+// Interface to map unique values to each User
+export interface Users {
   [key:string]: User
 }

@@ -11,7 +11,7 @@ import {Button} from '@material-ui/core';
 import {AppState} from 'store';
 import {useHistory} from 'react-router-dom';
 import {accountsActions} from 'store/Account';
-
+import {loginBluezelle} from 'store/Account/thunk';
 
 const CommonBar: React.FC = (props) => {
   const classes = useStyles();
@@ -21,11 +21,14 @@ const CommonBar: React.FC = (props) => {
   const history = useHistory();
 
   const handleLoginClick = () => {
-    dispatch(accountsActions.setLoginStatus(true));
+    dispatch(loginBluezelle());
   };
 
   const handleLogoutClick = () => {
-    dispatch(accountsActions.setLoginStatus(false));
+    dispatch(accountsActions.setAccountState({
+      account: currentAccount,
+      accountState: {...accounts[currentAccount], isLoggedIn: false, loginToken: ""}
+    }));
   }
 
   return (

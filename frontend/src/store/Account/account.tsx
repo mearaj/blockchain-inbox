@@ -7,6 +7,8 @@ export enum AccountWallet {
 export interface Account {
   wallet: AccountWallet | undefined,
   isLoggedIn: boolean,
+  loginToken?:string,
+  loginTokenSignature?: string,
   publicAddress: string,
   publicKey: string,
 }

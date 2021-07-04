@@ -2,19 +2,21 @@ import axiosOrig, {AxiosRequestConfig} from 'axios';
 
 
 
-const BASE_URL = 'https://localhost:8080/api/v1';
+const BASE_URL = 'http://localhost:8081/api/v1';
 export const REQUEST_LOGIN_TOKEN_ENDPOINT = `/requestLoginToken`;
 export const LOGIN_ENDPOINT = `/login`;
 export const LOGOUT_ENDPOINT = `/logout`;
 
 const config:AxiosRequestConfig = {
   baseURL: BASE_URL,
+  headers: {
+    'Content-Type': 'application/json'
+  }
 }
 
-const axios = axiosOrig.create(config);
-
 export const requestLoginToken = async (address: {publicAddress:string}) => {
-  await axios.get(REQUEST_LOGIN_TOKEN_ENDPOINT,{data:address});
+  const axios = axiosOrig.create(config);
+  return await axios.post<{publicAddress:string, loginToken:string}>(REQUEST_LOGIN_TOKEN_ENDPOINT,address);
 }
 
 

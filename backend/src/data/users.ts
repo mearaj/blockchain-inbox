@@ -6,7 +6,7 @@
 //   algorithm: string;
 // }
 
-import {loginToken} from 'models/user';
+import {Users} from 'models/user';
 
-export const loginTokens: loginToken = {};
+export const users: Users = {};
 

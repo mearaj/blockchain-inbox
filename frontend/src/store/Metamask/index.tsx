@@ -3,11 +3,17 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 export interface MetamaskState {
   provider: typeof window.ethereum | any | undefined;
   errMsg: string;
+  isConnected: boolean;
 }
 
 const initialState = {
   provider: undefined,
   errMsg: "",
+  isConnected: false,
+}
+
+const setIsConnected = (state: MetamaskState, action: PayloadAction<any>) => {
+  state.isConnected = action.payload;
 }
 
 const setError = (state: MetamaskState, action: PayloadAction<any>) => {
@@ -34,7 +40,8 @@ const metamaskSlice = createSlice({
     setError,
     clearError,
     setProvider,
-    updateState
+    updateState,
+    setIsConnected
   }
 })
 

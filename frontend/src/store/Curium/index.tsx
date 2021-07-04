@@ -36,7 +36,8 @@ const curiumSlice = createSlice({
     setProvider,
     updateState
   }
-})
+});
+
 export const curiumActions = curiumSlice.actions;
 export const curiumReducer = curiumSlice.reducer;
 

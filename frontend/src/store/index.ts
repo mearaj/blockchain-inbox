@@ -14,6 +14,7 @@ export interface AppState {
   sidebarState: SidebarState,
 }
 
+
 const appReducer = combineReducers({
   accountsState: accountsReducer,
   metamaskState: metamaskReducer,
