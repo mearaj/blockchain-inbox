@@ -11,7 +11,8 @@ import AccountPage from 'pages/Account';
 import OutboxPage from 'pages/Outbox';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
-import {manageAccounts} from 'store/Account/thunk';
+import {manageAccounts, manageAccountsFromMetaMask} from 'store/Account/thunk';
+import {Backdrop, CircularProgress} from '@material-ui/core';
 
 interface AppProps {
 }
@@ -22,11 +23,6 @@ const Pages = (props: AppProps) => {
   const handleKeplrAccountChange = () => {
     console.log("handleKeplrAccountChange, Key store in Keplr is changed. You may need to refetch the account info.");
   }
-
-  useEffect(() => {
-    window.addEventListener("keplr_keystorechange", handleKeplrAccountChange);
-    return () => window.removeEventListener("keplr_keystorechange", handleKeplrAccountChange);
-  });
 
   const accountState = useSelector((state: AppState) => state.accountsState);
   const metamaskState = useSelector((state: AppState) => state.metamaskState);
@@ -41,8 +37,13 @@ const Pages = (props: AppProps) => {
 
   const onMetamaskAccountsChanged =  (accounts:string[]) => {
     //window.location.reload();
-    dispatch(manageAccounts());
+    dispatch(manageAccountsFromMetaMask());
   };
+
+  useEffect(() => {
+    window.addEventListener("keplr_keystorechange", handleKeplrAccountChange);
+    return () => window.removeEventListener("keplr_keystorechange", handleKeplrAccountChange);
+  });
 
   useEffect(() => {
     const timerId = setTimeout( ()=> {
@@ -119,6 +120,9 @@ const Pages = (props: AppProps) => {
       <main className={classes.content}>
         {currentView}
       </main>
+      {/*<Backdrop open={true} style={{zIndex: 10000}}>*/}
+      {/*  <CircularProgress/>*/}
+      {/*</Backdrop>*/}
     </div>
   );
 }

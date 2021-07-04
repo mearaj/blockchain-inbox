@@ -10,7 +10,7 @@ import {requestLoginToken} from 'api';
 import * as sigUtil from 'eth-sig-util';
 import * as ethUtil from 'ethereumjs-util';
 
-const manageAccountsFromCurium = async (dispatch: Dispatch, getState: () => AppState) => {
+export const manageAccountsFromCurium = () => async (dispatch: Dispatch, getState: () => AppState) => {
   const appState = getState();
   const curiumState = appState.curiumState;
   if (!window.keplr) {
@@ -20,11 +20,16 @@ const manageAccountsFromCurium = async (dispatch: Dispatch, getState: () => AppS
     return
   }
   dispatch(curiumActions.updateState({provider: window.keplr, msg: ""}))
-  const accounts = appState.accountsState.accounts;
-  if (window.getOfflineSigner && accounts) {
+  if (window.getOfflineSigner) {
     try {
+      let accounts = appState.accountsState.accounts;
       const chainId = "bluzelleTestNetPublic-22";
-      await window.keplr.enable(chainId);
+      try {
+        const result = await window.keplr.enable(chainId);
+      } catch (e) {
+        console.log("This is where the error occurs");
+      }
+      // console.log(result);
       const offlineSigner = window.getOfflineSigner(chainId);
       const curiumAccounts = await offlineSigner.getAccounts();
       let updatedAccounts: Accounts = {};
@@ -40,6 +45,19 @@ const manageAccountsFromCurium = async (dispatch: Dispatch, getState: () => AppS
           };
         }
       });
+      if (curiumAccounts.length===0) {
+        let filteredAccounts: Accounts = {};
+        Object.keys(accounts).forEach((publicAddress: string) => {
+          if (accounts[publicAddress].wallet!==AccountWallet.CURIUM_EXTENSION_WALLET) {
+            filteredAccounts[publicAddress] = accounts[publicAddress];
+          }
+        })
+        dispatch(curiumActions.setIsConnected(false));
+        dispatch(accountsActions.updateAccounts({...filteredAccounts, ...updatedAccounts}));
+      } else {
+        dispatch(curiumActions.setIsConnected(true));
+        dispatch(accountsActions.updateAccounts({...accounts, ...updatedAccounts}));
+      }
       dispatch(accountsActions.updateAccounts({...accounts, ...updatedAccounts}));
       // dispatch(accountActions.setCurrentAccount(updatedAccounts[accounts[0]]));
       // const cosmJS = new SigningCosmosClient(
@@ -62,7 +80,7 @@ const manageAccountsFromCurium = async (dispatch: Dispatch, getState: () => AppS
   }
 }
 
-const manageAccountsFromMetaMask = async (dispatch: Dispatch, getState: () => AppState) => {
+export const manageAccountsFromMetaMask = () => async (dispatch: Dispatch, getState: () => AppState) => {
   const appState = getState();
   // this returns the provider, or null if it wasn't detected
   let provider = await detectEthereumProvider();
@@ -99,21 +117,18 @@ const manageAccountsFromMetaMask = async (dispatch: Dispatch, getState: () => Ap
       });
 
       if (accountsArr.length===0) {
-        let filteredAccounts:Accounts = {};
-        Object.keys(accounts).forEach((publicAddress:string)=> {
-          if (accounts[publicAddress].wallet !== AccountWallet.METAMASK_EXTENSION_WALLET) {
+        let filteredAccounts: Accounts = {};
+        Object.keys(accounts).forEach((publicAddress: string) => {
+          if (accounts[publicAddress].wallet!==AccountWallet.METAMASK_EXTENSION_WALLET) {
             filteredAccounts[publicAddress] = accounts[publicAddress];
           }
         })
         dispatch(metamaskActions.setIsConnected(false));
-        console.log("filtered accounts is ", filteredAccounts);
-        console.log("updated accounts is ", filteredAccounts);
         dispatch(accountsActions.updateAccounts({...filteredAccounts, ...updatedAccounts}));
       } else {
         dispatch(metamaskActions.setIsConnected(true));
         dispatch(accountsActions.updateAccounts({...accounts, ...updatedAccounts}));
       }
-      console.log("metamask accounts are...", accountsArr);
     } catch (err) {
       // Some unexpected error.
       // For backwards compatibility reasons, if no accounts are available,
@@ -124,11 +139,58 @@ const manageAccountsFromMetaMask = async (dispatch: Dispatch, getState: () => Ap
 }
 
 export const manageAccounts = () => async (dispatch: Dispatch, getState: () => AppState) => {
-  await manageAccountsFromCurium(dispatch, getState);
-  await manageAccountsFromMetaMask(dispatch, getState);
+  await manageAccountsFromCurium()(dispatch, getState);
+  await manageAccountsFromMetaMask()(dispatch, getState);
 };
 
-const loginWithMetamask = async (dispatch: Dispatch, getState: () => AppState) => {
+export const promptMetamaskPublicKey = () => async (dispatch: Dispatch, getState: () => AppState) => {
+  const {accounts, currentAccount} = getState().accountsState;
+  const account = accounts[currentAccount];
+  const {provider} = getState().metamaskState;
+  if (provider) {
+    try {
+      const result:string = await provider.request({
+        method: 'eth_getEncryptionPublicKey',
+        params: [account.publicAddress], // you must have access to the specified account
+      });
+    } catch (error: any) {
+      if (error.code===4001) {
+        // EIP-1193 userRejectedRequest error
+        console.log("We can't encrypt anything without the key.");
+      } else {
+        console.error(error);
+      }
+    }
+  }
+};
+
+
+const loginWithMetamaskPublicKey = async (dispatch: Dispatch, getState: () => AppState) => {
+  const {accounts, currentAccount} = getState().accountsState;
+  const account = accounts[currentAccount];
+  const {loginToken} = (await requestLoginToken({publicAddress: account.publicAddress})).data;
+  const {provider} = getState().metamaskState;
+  // if (provider) {
+  //   provider
+  //     .request({
+  //       method: 'eth_getEncryptionPublicKey',
+  //       params: [account.publicAddress], // you must have access to the specified account
+  //     })
+  //     .then((result: string) => {
+  //       console.log(result)
+  //     })
+  //     .catch((error: { code: number }) => {
+  //       if (error.code===4001) {
+  //         // EIP-1193 userRejectedRequest error
+  //         console.log("We can't encrypt anything without the key.");
+  //       } else {
+  //         console.error(error);
+  //       }
+  //     });
+  // }
+}
+
+const loginWithMetamaskPublicAddress = async (dispatch: Dispatch, getState: () => AppState) => {
   const {accounts, currentAccount} = getState().accountsState;
   const account = accounts[currentAccount];
   const {loginToken} = (await requestLoginToken({publicAddress: account.publicAddress})).data;
@@ -136,12 +198,14 @@ const loginWithMetamask = async (dispatch: Dispatch, getState: () => AppState) =
   const method = 'personal_sign';
   const params = [loginToken, account.publicAddress];
   const {provider} = getState().metamaskState;
+
   provider.sendAsync({
     method,
     params,
     from: account.publicAddress,
   }, function (err: any, result: any) {
     if (err) return console.dir(err)
+
     if (result.error) {
       alert(result.error.message)
     }
@@ -153,9 +217,9 @@ const loginWithMetamask = async (dispatch: Dispatch, getState: () => AppState) =
       accountState: {...accounts[currentAccount], isLoggedIn: true, loginToken, loginTokenSignature: result}
     }));
 
-    const recovered = sigUtil.recoverPersonalSignature({ data: loginToken, sig: result.result })
+    const recovered = sigUtil.recoverPersonalSignature({data: loginToken, sig: result.result})
 
-    if (ethUtil.toChecksumAddress(recovered) === ethUtil.toChecksumAddress(account.publicAddress)) {
+    if (ethUtil.toChecksumAddress(recovered)===ethUtil.toChecksumAddress(account.publicAddress)) {
       alert('Successfully recovered signer as ' + account.publicAddress);
     } else {
       alert('Failed to verify signer when comparing ' + result + ' to ' + account.publicAddress);
@@ -170,9 +234,14 @@ export const loginBluezelle = () => async (dispatch: Dispatch, getState: () => A
   if (account) {
     switch (account.wallet) {
       case AccountWallet.METAMASK_EXTENSION_WALLET:
-        await loginWithMetamask(dispatch, getState)
+        await loginWithMetamaskPublicKey(dispatch, getState);
+        await loginWithMetamaskPublicAddress(dispatch, getState);
         break;
       case AccountWallet.CURIUM_EXTENSION_WALLET:
+        dispatch(accountsActions.setAccountState({
+          account: currentAccount,
+          accountState: {...account, isLoggedIn: true}
+        }));
     }
   }
 };

@@ -4,6 +4,7 @@ import {Account} from 'store/Account/account';
 export interface AccountsState {
   // currentAccount is the public address
   currentAccount: string;
+  isLoading: boolean;
   accounts: Accounts;
 }
 export interface Accounts {
@@ -15,6 +16,7 @@ export interface Accounts {
 const initialState: AccountsState = {
   currentAccount: "",
   accounts: {},
+  isLoading:false,
 };
 
 const updateAccounts = (state: AccountsState, action: PayloadAction<Accounts>) => {
@@ -22,11 +24,15 @@ const updateAccounts = (state: AccountsState, action: PayloadAction<Accounts>) =
   return state;
 }
 
-// const setLoginStatus = (state: AccountsState, action: PayloadAction<boolean>) => {
-//   if (state.accounts[state.currentAccount]) {
-//     state.accounts[state.currentAccount].isLoggedIn = action.payload;
-//   }
-// }
+const setLoginStatus = (state: AccountsState, action: PayloadAction<boolean>) => {
+  if (state.accounts[state.currentAccount]) {
+    state.accounts[state.currentAccount].isLoggedIn = action.payload;
+  }
+}
+
+const setIsLoading = (state: AccountsState, action: PayloadAction<boolean>) => {
+  state.isLoading = action.payload
+}
 
 const setAccountState = (state: AccountsState, action: PayloadAction<{ account: string, accountState: Account }>) => {
   state.accounts[action.payload.account] = action.payload.accountState;

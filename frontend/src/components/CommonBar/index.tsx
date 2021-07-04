@@ -7,7 +7,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import useStyles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
 import {sidebarActions} from 'store/Sidebar';
-import {Button} from '@material-ui/core';
+import {Button, CircularProgress, LinearProgress} from '@material-ui/core';
 import {AppState} from 'store';
 import {useHistory} from 'react-router-dom';
 import {accountsActions} from 'store/Account';

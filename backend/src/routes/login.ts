@@ -13,5 +13,5 @@ export const login: RequestHandler = (req, res, next) => {
   }
   const user = new User(publicAddress, uuid());
   users[user.loginToken] = user;
-  return res.json({loginToken: user.loginToken});
+  return res.json({loginResponse: user.loginToken});
 };

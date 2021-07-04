@@ -5,13 +5,14 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import CommonBarHeader from 'components/CommonBarHeader';
 import {accountsActions} from 'store/Account';
-import {manageAccounts} from 'store/Account/thunk';
+import {manageAccounts, manageAccountsFromCurium, manageAccountsFromMetaMask} from 'store/Account/thunk';
 
 
 const AccountPage: React.FC = (props) => {
   const accountsState = useSelector((state: AppState) => state.accountsState);
   const {accounts, currentAccount} = accountsState;
   const metamaskState = useSelector((state: AppState) => state.metamaskState);
+  const curiumState = useSelector((state: AppState) => state.curiumState);
   const dispatch = useDispatch();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,8 +22,29 @@ const AccountPage: React.FC = (props) => {
 
   const connectToMetamaskHandler = async () => {
     await (window.ethereum as any).request({method: 'eth_requestAccounts'});
-    dispatch(manageAccounts())
+    dispatch(manageAccountsFromMetaMask());
   };
+
+  const connectToCuriumHandler = async () => {
+    // const cosmJS = new SigningCosmosClient(
+    //   "https://lcd-cosmoshub.keplr.app",
+    //   accounts[0].address,
+    //   offlineSigner,
+    // );
+    // const result = await window.keplr.signDirect(
+    //   chainId,
+    //   accounts[0].address,
+    //   {
+    //     bodyBytes: new Uint8Array(0),
+    //     chainId,
+    //   }
+    // );
+    //await (window.ethereum as any).request({method: 'eth_requestAccounts'});
+    dispatch(manageAccountsFromCurium());
+  };
+
+  console.log(curiumState.provider);
+  console.log(curiumState.isConnected);
 
   return (
     <div>
@@ -58,6 +80,12 @@ const AccountPage: React.FC = (props) => {
       {/*</Button>*/}
       {/*<br/>*/}
       {/*<br/>*/}
+      {
+        curiumState.provider && !curiumState.isConnected &&
+        <Button onClick={connectToCuriumHandler} color='primary' variant="contained">
+          Connect to Curium Extension
+        </Button>
+      }
       {
         metamaskState.provider && !metamaskState.isConnected &&
         <Button onClick={connectToMetamaskHandler} color='primary' variant="contained">

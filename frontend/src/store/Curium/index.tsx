@@ -1,13 +1,20 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {MetamaskState} from 'store/Metamask';
 
 export interface CuriumState {
   provider: typeof window.ethereum | any | undefined;
   errMsg: string;
+  isConnected: boolean;
 }
 
 const initialState = {
   provider: undefined,
   errMsg: "",
+  isConnected: false,
+}
+
+const setIsConnected = (state: CuriumState, action: PayloadAction<any>) => {
+  state.isConnected = action.payload;
 }
 
 const setError = (state: CuriumState, action: PayloadAction<any>) => {
@@ -34,7 +41,8 @@ const curiumSlice = createSlice({
     setError,
     clearError,
     setProvider,
-    updateState
+    updateState,
+    setIsConnected,
   }
 });
 
