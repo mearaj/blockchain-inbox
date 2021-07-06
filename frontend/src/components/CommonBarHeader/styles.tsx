@@ -1,5 +1,4 @@
 import {makeStyles, Theme} from '@material-ui/core/styles';
-import {drawerWidth} from 'styles/variables';
 
 const useStyles = makeStyles((theme: Theme) => {
     return {
@@ -7,7 +6,7 @@ const useStyles = makeStyles((theme: Theme) => {
         display: 'flex',
         justifyContent: 'center',
       },
-      title : {
+      title: {
         fontWeight: 700,
       }
     };

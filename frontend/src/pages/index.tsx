@@ -11,7 +11,7 @@ import AccountPage from 'pages/Account';
 import OutboxPage from 'pages/Outbox';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
-import {manageAccounts, manageAccountsFromMetaMask} from 'store/Account/thunk';
+import {getAccountsFromMetaMask, getAccountsFromWallets} from 'store/Account/thunk';
 import {Backdrop, CircularProgress} from '@material-ui/core';
 import {loaderActions} from 'store/Loader';
 
@@ -37,10 +37,9 @@ const Pages = (props: AppProps) => {
     window.location.reload();
   }, []);
 
-  const onMetamaskAccountsChanged =  (accounts:string[]) => {
-    //window.location.reload();
-    dispatch(manageAccountsFromMetaMask());
-  };
+  const onMetamaskAccountsChanged = useCallback((accounts: string[]) => {
+    window.location.reload();
+  }, []);
 
   useEffect(() => {
     window.addEventListener("keplr_keystorechange", handleKeplrAccountChange);
@@ -48,18 +47,18 @@ const Pages = (props: AppProps) => {
   });
 
   useEffect(() => {
-    const timerId = setTimeout( ()=> {
-      if (metamaskState.provider) {
-        (metamaskState.provider).on('accountsChanged', onMetamaskAccountsChanged);
+    const timerId = setTimeout(() => {
+      if (window.ethereum) {
+        (window.ethereum as any).on('accountsChanged', onMetamaskAccountsChanged);
       }
-    }, );
-    return ()=> clearTimeout(timerId);
-  },[metamaskState]);
+    },);
+    return () => clearTimeout(timerId);
+  }, [metamaskState, onMetamaskAccountsChanged]);
 
   useEffect(() => {
     const timerId = setTimeout(() => {
       console.log("managed accounts in useEffect called");
-      dispatch(manageAccounts());
+      dispatch(getAccountsFromWallets());
     }, 0);
     return () => clearTimeout(timerId);
   }, [dispatch]);
@@ -82,7 +81,6 @@ const Pages = (props: AppProps) => {
       return () => clearTimeout(timerId);
     }, 0)
   }, []);
-
 
 
   const loginWithMetamask = () => {
@@ -123,7 +121,7 @@ const Pages = (props: AppProps) => {
       <main className={classes.content}>
         {currentView}
       </main>
-      <Backdrop onClick={()=> dispatch(loaderActions.hideLoader())} open={loaderState.show} style={{zIndex: 10000}}>
+      <Backdrop onClick={() => dispatch(loaderActions.hideLoader())} open={loaderState.show} style={{zIndex: 10000}}>
         <CircularProgress/>
       </Backdrop>
     </div>

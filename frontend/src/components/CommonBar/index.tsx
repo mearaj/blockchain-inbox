@@ -5,37 +5,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 
 import useStyles from './styles';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {sidebarActions} from 'store/Sidebar';
-import {Button} from '@material-ui/core';
-import {AppState} from 'store';
-import {useHistory} from 'react-router-dom';
-import {accountsActions} from 'store/Account';
-import {loginBluezelle} from 'store/Account/thunk';
-import {AccountWallet} from 'store/Account/account';
+import ButtonLogInOut from 'components/ButtonLogInOut';
 
 const CommonBar: React.FC = (props) => {
   const classes = useStyles();
-  const accountsState = useSelector((state: AppState) => state.accountsState);
-  const {accounts, currentAccount} = accountsState;
   const dispatch = useDispatch();
-  const history = useHistory();
-
-
-  const handleLoginClick = async () => {
-    await dispatch(loginBluezelle());
-    if (accounts[currentAccount].wallet === AccountWallet.CURIUM_EXTENSION_WALLET) {
-      const result = await window.keplr?.getKey("bluzelleTestNetPublic-22");
-      console.log(result);
-    }
-  };
-
-  const handleLogoutClick = () => {
-    dispatch(accountsActions.setAccountState({
-      account: currentAccount,
-      accountState: {...accounts[currentAccount], isLoggedIn: false, loginToken: ""}
-    }));
-  }
 
   return (
     <>
@@ -55,9 +31,7 @@ const CommonBar: React.FC = (props) => {
               {props.children}
             </div>
             {
-              accounts[currentAccount]?.isLoggedIn ?
-                <Button onClick={handleLogoutClick} variant="contained">Logout</Button>:
-                <Button onClick={handleLoginClick} variant="contained">Login</Button>
+              <ButtonLogInOut/>
             }
           </div>
         </Toolbar>

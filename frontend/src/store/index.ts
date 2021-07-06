@@ -8,6 +8,7 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 import {loaderReducer, LoaderState} from 'store/Loader';
 import storage from 'redux-persist/lib/storage';
 import {persistReducer, persistStore} from 'redux-persist'
+import {composeReducer, ComposeState} from 'store/Compose';
 
 
 // the keys should map with combineReducers key
@@ -17,13 +18,14 @@ export interface AppState {
   metamaskState: MetamaskState,
   curiumState: CuriumState,
   sidebarState: SidebarState,
-  serializableCheck: false
+  composeState: ComposeState,
 }
 
 
 const appReducer = combineReducers({
   loaderState: loaderReducer,
   accountsState: accountsReducer,
+  composeState: composeReducer,
   metamaskState: metamaskReducer,
   curiumState: curiumReducer,
   sidebarState: sidebarReducer,
@@ -41,7 +43,7 @@ if (process.env.NODE_ENV==="development") {
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['accountsState']
+  whitelist:[]
 };
 
 const persistedReducer = persistReducer(persistConfig, appReducer);

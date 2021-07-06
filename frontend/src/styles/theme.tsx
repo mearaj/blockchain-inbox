@@ -1,7 +1,14 @@
 import {createMuiTheme, ThemeOptions} from '@material-ui/core/styles';
+import {colorBluzelle, colorMetamask} from './variables';
 
 const options: ThemeOptions = {
-  palette: {},
+  palette: {
+    common: {
+      colorMetamask,
+      colorBluzelle
+    },
+  },
+
   typography: {},
   overrides: {
     MuiButton: {

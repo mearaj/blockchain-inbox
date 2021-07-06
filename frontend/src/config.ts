@@ -12,6 +12,10 @@ export const bluzelleConfig: SDKOptions = {
   gasPrice: 0.002,
 };
 
+export const CHAIN_ID = "bluzelleTestNetPrivate-133";
+//export const CHAIN_ID = "bluzelleTestNetPublic-22";
+//export const CHAIN_ID = "net-6";
+
 // useEffect(() => {
 //   const timerID = setTimeout(async () => {
 //     const sdk = await bluzelle(bluzelleConfig);

@@ -3,7 +3,7 @@ import React from 'react';
 import useStyles from './styles';
 
 
-const CommonBarHeader:React.FC = (props)=> {
+const CommonBarHeader: React.FC = (props) => {
   const classes = useStyles();
 
   return (

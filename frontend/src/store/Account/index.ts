@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {Account} from 'store/Account/account';
+import {Account, WalletNameEnum} from 'store/Account/account';
 
 export interface AccountsState {
   // currentAccount is the public address
@@ -7,6 +7,7 @@ export interface AccountsState {
   isLoading: boolean;
   accounts: Accounts;
 }
+
 export interface Accounts {
   // key is the public address of account
   [key: string]: Account
@@ -16,10 +17,10 @@ export interface Accounts {
 const initialState: AccountsState = {
   currentAccount: "",
   accounts: {},
-  isLoading:false,
+  isLoading: false,
 };
 
-const updateAccounts = (state: AccountsState, action: PayloadAction<Accounts>) => {
+const setAccounts = (state: AccountsState, action: PayloadAction<Accounts>) => {
   state.accounts = action.payload;
   return state;
 }
@@ -46,8 +47,8 @@ const accountsSlice = createSlice({
   name: 'accountsState',
   initialState: initialState,
   reducers: {
-    updateAccounts,
-    //setLoginStatus,
+    setAccounts,
+    setLoginStatus,
     setAccountState,
     setCurrentAccount,
   }
