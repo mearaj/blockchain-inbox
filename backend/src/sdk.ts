@@ -8,10 +8,16 @@ export const UUID = "blockchain-inbox";
 //   mnemonic: "title child oval endless ladder brand venue burden pill income merry motor large above slight own elbow catalog rubber artwork tiger way talk space"
 // };
 
+// const mintResult = {
+//   address: "bluzelle1pm2902v7z87ektlngvqy23yd4geahd2j03mg3v",
+//   mnemonic: "crunch digital library parent female spell rose comic rotate clock camera snap income outside notable feel scorpion obtain transfer aim water security scene prepare"
+// };
+
 const mintResult = {
-  address: "bluzelle1pm2902v7z87ektlngvqy23yd4geahd2j03mg3v",
-  mnemonic: "crunch digital library parent female spell rose comic rotate clock camera snap income outside notable feel scorpion obtain transfer aim water security scene prepare"
-};
+  address: "bluzelle1dejhaexn6n75mf5v8q2f8aghchh6tekkapyems",
+  mnemonic: "tray piano lift cancel once bag disagree grab illness around orange prepare skull alcohol logic illness flush match feel hurry often theme wide you"
+}
+
 
 const bluzelleConfig: SDKOptions = {
   mnemonic: mintResult.mnemonic,
@@ -30,7 +36,8 @@ export const initSDK = async () => {
   return sdk;
 };
 initSDK().then((res)=> {
-  console.log(res.db);
+  console.log(JSON.stringify(res.db));
+  console.log(JSON.stringify(res.bank));
 })
 // "bluzelle1pm2902v7z87ektlngvqy23yd4geahd2j03mg3v"
 // "crunch digital library parent female spell rose comic rotate clock camera snap income outside notable feel scorpion obtain transfer aim water security scene prepare"

@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@bluzelle/sdk-js": "^1.1.5",
+    "bluzelle": "^3.0.6",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "uuid": "^8.3.2"
