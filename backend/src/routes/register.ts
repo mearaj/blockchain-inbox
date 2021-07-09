@@ -1,6 +1,6 @@
 import {Router} from 'express';
 
-import {initSDK} from 'sdk';
+import {initSDK} from 'db/bluzelleSdk';
 
 export const router = Router();
 

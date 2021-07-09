@@ -1,17 +1,11 @@
 import React from 'react';
 import {Button} from '@material-ui/core';
-import {
-  loginBluezelle,
-  loginWithCurium,
-  loginWithMetamaskPublicAddress,
-  loginWithMetamaskPublicKey
-} from 'store/Account/thunk';
+import {loginWithCurium, loginWithMetamaskPublicAddress, promptMetamaskPublicKey} from 'store/Account/thunk';
 import {WalletNameEnum} from 'store/Account/account';
 import {accountsActions} from 'store/Account';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import useStyles from './styles';
-import {metamaskActions} from 'store/Metamask';
 import {CHAIN_ID} from 'config';
 
 const ButtonLogInOut: React.FC = () => {
@@ -25,10 +19,12 @@ const ButtonLogInOut: React.FC = () => {
   const handleLoginClick = async () => {
     if (accounts[currentAccount]?.wallet===WalletNameEnum.CURIUM_EXTENSION_WALLET) {
       await dispatch(loginWithCurium());
-      const result = await window.keplr?.getKey(CHAIN_ID);
+      const result = await window.keplr!.getKey(CHAIN_ID);
       console.log(result);
-    } else  {
+      console.log(Buffer.from(result.pubKey).toString('hex'));
+    } else {
       await dispatch(loginWithMetamaskPublicAddress());
+      await dispatch(promptMetamaskPublicKey());
     }
   };
 

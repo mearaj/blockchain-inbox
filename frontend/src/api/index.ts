@@ -1,7 +1,7 @@
 import axiosOrig, {AxiosRequestConfig} from 'axios';
 
 
-const BASE_URL = 'http://localhost:8081/api/v1';
+const BASE_URL = 'http://localhost:8082/api/v1';
 export const REQUEST_LOGIN_TOKEN_ENDPOINT = `/requestLoginToken`;
 export const LOGIN_ENDPOINT = `/login`;
 export const LOGOUT_ENDPOINT = `/logout`;

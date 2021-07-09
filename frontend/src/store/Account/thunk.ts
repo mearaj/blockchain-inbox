@@ -10,12 +10,13 @@ import {requestLoginToken} from 'api';
 import * as sigUtil from 'eth-sig-util';
 import * as ethUtil from 'ethereumjs-util';
 import {CHAIN_ID} from 'config';
+import {CURIUM_NOT_INSTALLED} from 'store/Account/errors';
 
 export const getAccountsFromCurium = () => async (dispatch: Dispatch, getState: () => AppState) => {
   const appState = getState();
   if (!window.keplr) {
-    dispatch(curiumActions.setError("Curium not installed!"));
-    dispatch(curiumActions.setIsConnected(false));
+    dispatch(curiumActions.setError(CURIUM_NOT_INSTALLED));
+    clearWalletAccounts(dispatch, getState, WalletNameEnum.CURIUM_EXTENSION_WALLET);
     return
   }
   dispatch(curiumActions.clearError());
@@ -24,13 +25,12 @@ export const getAccountsFromCurium = () => async (dispatch: Dispatch, getState: 
     let updatedAccounts: Accounts = {};
     let isConnected: boolean;
     try {
-      let result;
       try {
-        result = await window.keplr.enable(CHAIN_ID);
+        await window.keplr.enable(CHAIN_ID);
       } catch (e) {
-        console.log("This is where the error occurs");
+        clearWalletAccounts(dispatch, getState, WalletNameEnum.CURIUM_EXTENSION_WALLET);
+        console.log(e);
       }
-      console.log(result);
       const offlineSigner = window.getOfflineSigner(CHAIN_ID);
       const curiumAccounts = await offlineSigner.getAccounts();
       curiumAccounts.forEach((accountData: AccountData) => {
@@ -45,27 +45,13 @@ export const getAccountsFromCurium = () => async (dispatch: Dispatch, getState: 
           };
         }
       });
+      console.log(updatedAccounts);
       if (curiumAccounts.length===0) {
-       clearWalletAccounts(dispatch, getState, WalletNameEnum.CURIUM_EXTENSION_WALLET);
+        clearWalletAccounts(dispatch, getState, WalletNameEnum.CURIUM_EXTENSION_WALLET);
         isConnected = false;
       } else {
         isConnected = true;
       }
-      // dispatch(accountActions.setCurrentAccount(updatedAccounts[accounts[0]]));
-      // const cosmJS = new SigningCosmosClient(
-      //   "https://lcd-cosmoshub.keplr.app",
-      //   accounts[0].address,
-      //   offlineSigner,
-      // );
-      // const result = await window.keplr.signDirect(
-      //   chainId,
-      //   accounts[0].address,
-      //   {
-      //     bodyBytes: new Uint8Array(0),
-      //     chainId,
-      //   }
-      // );
-      // console.log(result);
     } catch (e) {
       isConnected = false;
       console.log(e);
@@ -74,14 +60,14 @@ export const getAccountsFromCurium = () => async (dispatch: Dispatch, getState: 
     dispatch(accountsActions.setAccounts({...accounts, ...updatedAccounts}));
   }
 }
-const clearWalletAccounts = (dispatch: Dispatch, getState: () => AppState, walletName:WalletNameEnum) => {
+const clearWalletAccounts = (dispatch: Dispatch, getState: () => AppState, walletName: WalletNameEnum) => {
   const appState = getState();
   const metamaskState = getState().metamaskState;
   const curiumState = getState().curiumState;
   const accounts = appState.accountsState.accounts;
-  const updatedAccounts:Accounts = {};
+  const updatedAccounts: Accounts = {};
   Object.keys(accounts).forEach((publicAddress: string) => {
-    if (accounts[publicAddress].wallet!== walletName) {
+    if (accounts[publicAddress].wallet!==walletName) {
       updatedAccounts[publicAddress] = accounts[publicAddress];
     }
   })
@@ -115,7 +101,7 @@ export const getAccountsFromMetaMask = () => async (dispatch: Dispatch, getState
   dispatch(metamaskActions.setError(errMsg));
   if (window.ethereum && provider) {
     let updatedAccounts: Accounts = {};
-    let isConnected:boolean = appState.metamaskState.isConnected;
+    let isConnected: boolean = appState.metamaskState.isConnected;
     let accounts = appState.accountsState.accounts;
     try {
       const accountsArr: string[] = await (window.ethereum! as any).request({method: 'eth_accounts'})
@@ -163,6 +149,7 @@ export const promptMetamaskPublicKey = () => async (dispatch: Dispatch, getState
         method: 'eth_getEncryptionPublicKey',
         params: [account.publicAddress], // you must have access to the specified account
       });
+      console.log(result);
       dispatch(accountsActions.setLoginStatus(true));
     } catch (error: any) {
       if (error.code===4001) {
@@ -208,18 +195,22 @@ export const loginWithMetamaskPublicKey = () => async (dispatch: Dispatch, getSt
 }
 
 const ERROR_METAMASK_USER_DENIED_SIGNATURE = {
- message:"MetaMask Message Signature: User denied message signature.",
- code: 4001
+  message: "MetaMask Message Signature: User denied message signature.",
+  code: 4001
 }
 
 export const loginWithMetamaskPublicAddress = () => async (dispatch: Dispatch, getState: () => AppState) => {
   const {accounts, currentAccount} = getState().accountsState;
   const account = accounts[currentAccount];
+  console.log("before");
   const {loginToken} = (await requestLoginToken({publicAddress: account.publicAddress})).data;
+  console.log("after");
   //const method = 'eth_signTypedData_v4';
   const method = 'personal_sign';
   const params = [loginToken, account.publicAddress];
   const provider = (window.ethereum) as any;
+  console.log(provider)
+
   if (provider) {
     await provider.sendAsync({
       method,

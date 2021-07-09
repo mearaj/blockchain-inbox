@@ -1,6 +1,5 @@
 import React from 'react';
 import CommonBar from 'components/CommonBar';
-import {BroadcastMode,} from "@cosmjs/launchpad";
 import useStyles from './styles';
 import CommonBarHeader from 'components/CommonBarHeader';
 import {Button, Card, CardContent, TextField} from '@material-ui/core';
@@ -13,7 +12,8 @@ import {sendMessage} from 'store/Message/thunk';
 import {loaderActions} from 'store/Loader';
 import {CHAIN_ID} from 'config';
 import {coin} from '@cosmjs/proto-signing';
-import * as buffer from 'buffer';
+import {BroadcastMode, makeStdTx, MsgDelegate, MsgSend, StdTx} from '@cosmjs/launchpad';
+import {Coin} from '@cosmjs/amino';
 
 const ComposePage: React.FC = () => {
   const classes = useStyles();
@@ -53,111 +53,57 @@ const ComposePage: React.FC = () => {
     setTimeout(async () => {
       await dispatch(sendMessage(message));
       await dispatch(loaderActions.hideLoader());
-      if (window.keplr) {
-        const result = await window.keplr.getKey(CHAIN_ID);
-        const result2 = window.keplr.getEnigmaUtils(CHAIN_ID);
-        console.log(result)
-        console.log(result2)
-        const pubKey = await result2.getPubkey();
-        console.log(pubKey);
-        console.log(buffer.Buffer.from(pubKey).toString('hex'));
+      const msg: MsgSend = {
+        type: "cosmos-sdk/MsgSend",
+        value: {
+          from_address: currentAccount,
+          to_address: "bluzelle1gwchgddg96fy2pfgjvg22lqrseyrlpsyjh8xah",
+          amount: [coin(1000000, "BLZ")],
+        }
+      };
+
+      const result = await window.keplr!.signAmino(CHAIN_ID, currentAccount, {
+        account_number: currentAccount,
+        chain_id: CHAIN_ID,
+        fee: {
+          amount: [coin(1000000, "BLZ")], gas: '1'
+        },
+        memo: 'This is for result 1',
+        msgs: [msg],
+        sequence: ''
+      });
+      console.log(result)
 
 
-        // const result = await window.keplr.signAmino(
-        //   CHAIN_ID,
-        //   currentAccount,
-        //   {
-        //     fee:{
-        //       amount: [coin(1, "ubnt")],
-        //       gas:'1'
-        //     },
-        //     chain_id:CHAIN_ID,
-        //     account_number: "",
-        //     memo:'',
-        //     sequence: '',
-        //     msgs: [{type:"bluzelle", value:"bluzelle"}]
-        //   }
-        // );
-        // console.log(result);
-        // const result2 = await window.keplr.sendTx(
-        //   CHAIN_ID,
-        //   {
-        //     msg: [{type:"bluzelle", value:"bluzelle"}],
-        //     fee: {
-        //       amount: [coin(1, "ubnt")],
-        //       gas:'1'
-        //     },
-        //     signatures: [result.signature],
-        //     memo: "my memo 1"
-        //   },
-        //   BroadcastMode.Async
-          // currentAccount,
-          // {
-          //   fee:
-          //   chain_id:CHAIN_ID,
-          //   account_number: "",
-          //   memo:'',
-          //   sequence: '',
-          //   msgs: [{type:"bluzelle", value:"bluzelle"}]
-          // }
-        //);
-        //console.log(result2);
+      // let result2;
+      // const signedTx = makeStdTx(result.signed, result.signature);
+      // try {
+      //  result2 = await window.keplr!.sendTx(CHAIN_ID, signedTx, BroadcastMode.Sync);
+      // } catch (e) {
+      //   console.dir(e);
+      // }
+      // console.log(result2);
+
+      // let result3;
+      // const std:StdTx = {
+      //   fee: {
+      //     amount: [coin(1000000, "BLZ")], gas: '1'
+      //   },
+      //   memo: 'This is for result 1',
+      //   msg: [msg],
+      //   signatures: [result.signature]
+      // };
+      // try {
+      //   result3 = await window.keplr!.sendTx(CHAIN_ID, std, BroadcastMode.Async);
+      // } catch (e) {
+      //   console.dir(e);
+      // }
+      // console.log(result3);
 
 
+      // const result4 = await window.keplr!.suggestToken(CHAIN_ID, currentAccount);
+      // console.log(result4);
 
-        //const offlineSigner = (window as any).keplr.getOfflineSigner(CHAIN_ID);
-        // const cosmJS = new SigningCosmosClient(
-        //   "https://lcd-cosmoshub.keplr.app/rest",
-        //   currentAccount,
-        //   offlineSigner,
-        // );
-        // await cosmJS.sign([{type:'',value:''}], {amount:[coin(1,"uatom")], gas:"1"}, undefined)
-        // console.log(cosmJS);
-        // console.log(accountsState);
-        // const result = await window.keplr.signAmino("bluzelle1ns5julcqlw8yx8umjklg5ggrq8waphmw04sgqn", [{
-        //   denom: "ubnt",
-        //   amount: "1",
-        // }]);
-        //console.log(result);
-      //  const result = window.keplr.sendTx(
-      //     CHAIN_ID,
-      //    {
-      //      memo: undefined, signatures: [],
-      //      msg: [{type:'', value:''}],
-      //      fee: {
-      //        amount: [coin(0,"ubnt")],
-      //        gas: "1"
-      //      }
-      //    },
-      //     BroadcastMode.Async
-      // );
-
-        //console.log(result);
-        // const result = await cosmJS.signDirect(
-        //   CHAIN_ID,
-        //   currentAccount,
-        //   {
-        //     bodyBytes: new Uint8Array(8888),
-        //     chainId: CHAIN_ID,
-        //     fee: {
-        //       amount: [coin(1, "ubnt")],
-        //       gas: "1",
-        //     },
-        //     accountNumber: new Long(0),
-        //   },
-        //   // {
-        //   //   preferNoSetFee: true,
-        //   //   preferNoSetMemo: true,
-        //   // }
-        // );
-        // const result = await cosmJS.sendTokens("bluzelle1dejhaexn6n75mf5v8q2f8aghchh6tekkapyems", [{
-        //   denom: "uatom",
-        //   amount: "1",
-        // }]);
-        //console.log(result);
-        //console.log(Buffer.from(result).toString('hex'));
-      }
-      //console.log(result);
     }, 500);
   };
 

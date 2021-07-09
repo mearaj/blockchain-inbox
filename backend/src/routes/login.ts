@@ -14,9 +14,9 @@ router.post(LOGIN_ENDPOINT, (req, res, next) => {
       message: ERROR_INVALID_PUBLIC_ADDRESS
     })
   }
-  const user = new User(publicAddress, uuid());
-  users[user.loginToken] = user;
-  return res.json({loginResponse: user.loginToken});
+  const user = new User(publicAddress);
+  users[user.getPublicAddressHexString()] = user;
+  return res.json({loginResponse: user.getPublicAddressHexString()});
 });
 
 export default router;

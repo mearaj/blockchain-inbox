@@ -1,6 +1,6 @@
 import {PORT, REQUEST_LOGIN_TOKEN_ENDPOINT} from 'config';
 import express from 'express';
-import {initSDK} from 'sdk';
+import {initSDK} from 'db/bluzelleSdk';
 import cors from 'cors';
 import messages from 'routes/messages';
 import login from 'routes/login';

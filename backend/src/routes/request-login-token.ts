@@ -15,9 +15,9 @@ router.post(REQUEST_LOGIN_TOKEN_ENDPOINT, (req, res, next) => {
         message: ERROR_INVALID_PUBLIC_ADDRESS
       })
     }
-    const user = new User(publicAddress, uuid());
-    users[user.loginToken] = user;
-    return res.json({loginToken: user.loginToken});
+    const user = new User(publicAddress);
+    users[user.getPublicAddressHexString()] = user;
+    return res.json({loginToken: user.getPublicAddressHexString()});
   }
 );
 
