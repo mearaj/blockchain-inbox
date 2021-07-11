@@ -6,7 +6,6 @@
 //   algorithm: string;
 // }
 
-import {Users} from 'models/user';
 
-export const users: Users = {};
+export {};
 

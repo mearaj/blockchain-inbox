@@ -1,8 +1,8 @@
 import axiosOrig, {AxiosRequestConfig} from 'axios';
 
 
-const BASE_URL = 'http://localhost:8082/api/v1';
-export const REQUEST_LOGIN_TOKEN_ENDPOINT = `/requestLoginToken`;
+const BASE_URL = 'http://localhost:8081/api/v1';
+export const TOKEN_ENDPOINT = `/login`;
 export const LOGIN_ENDPOINT = `/login`;
 export const LOGOUT_ENDPOINT = `/logout`;
 export const INBOX_ENDPOINT = `/messages`;
@@ -13,7 +13,6 @@ export interface Message {
   from:string;
   message:string;
 }
-
 const config: AxiosRequestConfig = {
   baseURL: BASE_URL,
   headers: {
@@ -23,12 +22,12 @@ const config: AxiosRequestConfig = {
 
 export const requestLoginToken = async (address: { publicAddress: string }) => {
   const axios = axiosOrig.create(config);
-  return await axios.post<{ publicAddress: string, loginToken: string }>(REQUEST_LOGIN_TOKEN_ENDPOINT, address);
+  return await axios.post<{ publicAddress: string, loginToken: string }>(TOKEN_ENDPOINT, address);
 }
 
 export const login = async (address: { publicAddress: string }) => {
   const axios = axiosOrig.create(config);
-  return await axios.post<{ publicAddress: string, loginToken: string }>(REQUEST_LOGIN_TOKEN_ENDPOINT, address);
+  return await axios.post<{ publicAddress: string, loginToken: string }>(TOKEN_ENDPOINT, address);
 }
 
 export const sendMessage = async (message:Message) => {

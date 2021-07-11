@@ -5,8 +5,8 @@
   "main": "build/index.js",
   "scripts": {
     "build": "tsc -w",
-    "dev:watch": "NODE_PATH=./src nodemon src/index.ts",
-    "dev": "NODE_PATH=./src ts-node src/index.ts"
+    "dev:watch": "NODE_PATH=./src env-cmd ./src/config/dev.env nodemon src/index.ts",
+    "dev": "NODE_PATH=./src env-cmd ./src/config/dev.env ts-node src/index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +19,7 @@
     "bluzelle": "^3.0.6",
     "cors": "^2.8.5",
     "date-fns": "^2.22.1",
+    "env-cmd": "^10.1.0",
     "eth-sig-util": "^3.0.1",
     "ethereumjs-util": "^7.1.0",
     "ethers": "^5.4.1",
@@ -30,8 +31,8 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.11",
-    "@types/express": "^4.17.12",
-    "@types/node": "^15.12.5",
+    "@types/express": "^4.17.13",
+    "@types/node": "^15.14.2",
     "@types/uuid": "^8.3.1",
     "nodemon": "^2.0.9",
     "ts-node": "^10.0.0",

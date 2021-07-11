@@ -28,17 +28,26 @@ const bluzelleConfig: SDKOptions = {
 
 let bluzelleSdk: BluzelleSdk;
 
+// the bluzelleSdk doesn't throws error if invalid url is provided, hence crashing after 5000 milliseconds if
+// it's still undefined
+setTimeout(()=> {
+  if (!bluzelleSdk) {
+    console.log("bluzelleSdk is not defined!, exiting app...");
+    process.exit(1);
+  }
+}, 5000);
+
 export const initSDK = async () => {
   if (bluzelleSdk!==undefined) {
     return bluzelleSdk;
   }
   bluzelleSdk = await bluzelle(bluzelleConfig);
+  if (!bluzelleSdk) {
+    throw ("Unable to initialize bluzelleSdk...");
+  }
   return bluzelleSdk;
 };
-initSDK().then((res) => {
-  console.log(JSON.stringify(res.db));
-  console.log(JSON.stringify(res.bank));
-  res.db
-})
+initSDK().then(() => console.log("bluzelleSdkInitialized"));
 // "bluzelle1pm2902v7z87ektlngvqy23yd4geahd2j03mg3v"
 // "crunch digital library parent female spell rose comic rotate clock camera snap income outside notable feel scorpion obtain transfer aim water security scene prepare"
+

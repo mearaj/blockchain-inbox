@@ -1,6 +1,6 @@
 import * as sigUtil from 'eth-sig-util';
 import * as ethUtil from 'ethereumjs-util';
-import * as ethers from 'ethers';
+import {Wallet} from 'ethers';
 import {toBuffer} from 'ethereumjs-util';
 
 //console.log(sigUtil);
@@ -19,7 +19,7 @@ import {toBuffer} from 'ethereumjs-util';
 // );
 
 const mnemonic = "title child oval endless ladder brand venue burden pill income merry motor large above slight own elbow catalog rubber artwork tiger way talk space";
-const wallet = ethers.Wallet.fromMnemonic(mnemonic);
+const wallet = Wallet.fromMnemonic(mnemonic);
 
 const publicKey = sigUtil.getEncryptionPublicKey("492ad10447630a32f04db6be0009829fab9435cf1d00bc0341b2a5a80ddc281a")
 const encryptedMessage = sigUtil.encrypt(
