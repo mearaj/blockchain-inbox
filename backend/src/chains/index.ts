@@ -2,44 +2,19 @@
 // Ref https://chainid.network/chains.json
 // Ref https://github.com/taylorjdawson/eth-chains/blob/main/src/types.ts
 
-import {ethChains} from 'chains/eth-chains';
-import {bluzelleChain} from 'chains/bluzelle-chain';
+import chains from 'chains/chains';
+import {Chain} from 'chains/chain';
 
-export interface Chain {
-  name: string
-  chainId: number
-  shortName: string
-  chain: string
-  network: string
-  networkId: number
-  nativeCurrency: NativeCurrency
-  rpc: string[]
-  faucets: string[]
-  infoURL: string
-  explorers?: Explorer[]
-  icon?:string
-  slip44?:number
-  ens?: {registry:string}
-  parent?: {chain:string, type:string}
-}
+export const ethChains: { name: string, chain: string }[] = chains.filter((chain: Chain) => chain.chain.toLowerCase()==="eth").map((chain) => (
+  {
+    name: chain.name,
+    chain: chain.chain
+  }
+));
 
-export interface NativeCurrency {
-  name: string
-  symbol: string
-  decimals: number
-}
+export const allowedChainNames: { name: string, chain: string }[] = [...ethChains, {
+  name: "Bluzelle Mainnet",
+  chain: "Bluzelle"
+}];
 
-export interface Explorer {
-  name: string
-  url: string
-  icon?: string
-  standard: string
-}
-
-export interface Chains {
-  [key: number]: Chain
-}
-
-export const filteredChains = [...ethChains, bluzelleChain];
-
-export default filteredChains;
+export default allowedChainNames;

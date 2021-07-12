@@ -1,6 +1,5 @@
 import {connect, model, Schema} from 'mongoose';
-import {MONGO_URI} from '../config';
-
+import {MONGO_URI} from './../config';
 
 
 let mongooseConnection: typeof import('mongoose');
@@ -11,7 +10,7 @@ export const initMongodb = async ()=> {
   mongooseConnection = await connect(MONGO_URI, {
     useNewUrlParser: true,
     useCreateIndex: true,
-    useUnifiedTopology: true,
+    //useUnifiedTopology: true,
   })
   return mongooseConnection
 }

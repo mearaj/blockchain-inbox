@@ -1,6 +1,6 @@
-export interface TokenRequest {
-  publicKey: string;
-  blockchainName: string;
+export interface LoginToken {
+  token:string;
+  createdAt:number;
 }
 
 export interface TokenResponse {
