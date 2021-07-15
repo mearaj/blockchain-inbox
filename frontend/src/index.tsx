@@ -10,6 +10,7 @@ import theme from 'styles/theme';
 import {Provider} from 'react-redux';
 import {persistor, store} from 'store';
 
+
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>

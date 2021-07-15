@@ -9,7 +9,7 @@ export const authGuard: RequestHandler = async (req, res, next) => {
     if (!authHeader || (authHeader && authHeader.trim().length === 0)) {
       return res.status(401).json({
         error: {
-          message: "Unauthenticated! 1"
+          message: "Not authorized!"
         }
       })
     }
@@ -19,7 +19,7 @@ export const authGuard: RequestHandler = async (req, res, next) => {
     if (!account) {
       return res.status(401).json({
         error: {
-          message: "Unauthenticated! 2"
+          message: "Not authorized"
         }
       })
     }

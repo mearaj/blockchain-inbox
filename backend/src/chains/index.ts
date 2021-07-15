@@ -2,19 +2,29 @@
 // Ref https://chainid.network/chains.json
 // Ref https://github.com/taylorjdawson/eth-chains/blob/main/src/types.ts
 
-import chains from 'chains/chains';
-import {Chain} from 'chains/chain';
+export interface Chain {
+  name: string;
+  chain: string;
+}
 
-export const ethChains: { name: string, chain: string }[] = chains.filter((chain: Chain) => chain.chain.toLowerCase()==="eth").map((chain) => (
-  {
-    name: chain.name,
-    chain: chain.chain
-  }
-));
+import {getAllChains, IChainData} from 'evm-chains';
 
-export const allowedChainNames: { name: string, chain: string }[] = [...ethChains, {
+export const ethChains: Chain[] = getAllChains().filter(
+  (chain: IChainData) => chain.chain.toLowerCase() === "eth")
+  .map((chain) => ({
+      name: chain.name,
+      chain: chain.chain
+    }
+  ));
+
+export const allowedChainNames:Chain[] = [...ethChains, {
   name: "Bluzelle Mainnet",
   chain: "Bluzelle"
 }];
+
+export const getChainIfSupported = (chainName:string): Chain | undefined => {
+  return allowedChainNames.find((eachChain)=> eachChain.name === chainName);
+}
+
 
 export default allowedChainNames;

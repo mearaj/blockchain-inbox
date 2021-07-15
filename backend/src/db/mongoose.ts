@@ -10,7 +10,7 @@ export const initMongodb = async ()=> {
   mongooseConnection = await connect(MONGO_URI, {
     useNewUrlParser: true,
     useCreateIndex: true,
-    //useUnifiedTopology: true,
+    useUnifiedTopology: true,
   })
   return mongooseConnection
 }

@@ -29,3 +29,4 @@ app.listen(PORT, () => {
 
 
 
+export {validateLoginToken} from 'validators/validateLoginToken';

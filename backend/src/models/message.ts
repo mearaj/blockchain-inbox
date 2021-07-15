@@ -3,10 +3,11 @@ import {Schema} from 'mongoose';
 export interface Message {
   creatorPublicKey: string,
   creatorChainName: string,
+  creatorEncryptedMessage: string,
   recipientPublicKey: string,
   recipientChainName: string,
+  recipientEncryptedMessage: string,
   timestamp: number,
-  message: string,
 }
 
 export const messageSchema = new Schema<Message>(

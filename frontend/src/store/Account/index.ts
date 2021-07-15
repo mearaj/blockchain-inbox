@@ -22,7 +22,6 @@ const initialState: AccountsState = {
 
 const setAccounts = (state: AccountsState, action: PayloadAction<Accounts>) => {
   state.accounts = action.payload;
-  return state;
 }
 
 const setLoginStatus = (state: AccountsState, action: PayloadAction<boolean>) => {
@@ -45,7 +44,7 @@ const setCurrentAccount = (state: AccountsState, action: PayloadAction<string>) 
 
 const accountsSlice = createSlice({
   name: 'accountsState',
-  initialState: initialState,
+  initialState,
   reducers: {
     setAccounts,
     setLoginStatus,

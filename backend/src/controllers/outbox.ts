@@ -1,10 +1,12 @@
 import {RequestHandler} from 'express';
 import {OutboxMessageModel} from 'models/outbox';
+import {Account} from 'models/account';
 
 
 export const getOutboxController: RequestHandler = async (req, res, next) => {
   try {
-    const results = await OutboxMessageModel.find();
+    const account = (req as any).account as Account;
+    const results = await OutboxMessageModel.find({creatorPublicKey:account.publicKey});
     return res.json(results);
   } catch (e) {
     return res.status(500).send();

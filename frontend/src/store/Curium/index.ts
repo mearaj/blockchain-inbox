@@ -22,7 +22,7 @@ const clearError = (state: CuriumState) => {
   state.errMsg = "";
 }
 
-const updateState = (state: CuriumState, action: PayloadAction<any>) => {
+const updateState = (state: CuriumState, action: PayloadAction<CuriumState>) => {
   return {...state, ...action.payload};
 }
 

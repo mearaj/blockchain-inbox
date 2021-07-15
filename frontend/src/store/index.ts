@@ -1,25 +1,25 @@
-import {applyMiddleware, combineReducers, createStore} from 'redux';
+import {combineReducers} from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import {metamaskReducer, MetamaskState} from 'store/Metamask';
-import {sidebarReducer, SidebarState} from 'store/Sidebar';
-import {curiumReducer, CuriumState} from 'store/Curium';
-import {accountsReducer, AccountsState} from 'store/Account';
-import {composeWithDevTools} from 'redux-devtools-extension';
-import {loaderReducer, LoaderState} from 'store/Loader';
+import {metamaskReducer} from 'store/Metamask';
+import {sidebarReducer} from 'store/Sidebar';
+import {curiumReducer} from 'store/Curium';
+import {accountsReducer} from 'store/Account';
+import {loaderReducer} from 'store/Loader';
 import storage from 'redux-persist/lib/storage';
 import {persistReducer, persistStore} from 'redux-persist'
-import {composeReducer, ComposeState} from 'store/Compose';
+import {composeReducer} from 'store/Compose';
+import {configureStore} from '@reduxjs/toolkit';
 
 
-// the keys should map with combineReducers key
-export interface AppState {
-  loaderState: LoaderState,
-  accountsState: AccountsState,
-  metamaskState: MetamaskState,
-  curiumState: CuriumState,
-  sidebarState: SidebarState,
-  composeState: ComposeState,
-}
+// // the keys should map with combineReducers key
+// export interface AppState {
+//   loaderState: LoaderState,
+//   accountsState: AccountsState,
+//   metamaskState: MetamaskState,
+//   curiumState: CuriumState,
+//   sidebarState: SidebarState,
+//   composeState: ComposeState,
+// }
 
 
 const appReducer = combineReducers({
@@ -31,21 +31,30 @@ const appReducer = combineReducers({
   sidebarState: sidebarReducer,
 })
 
-let composedEnhancer: any;
+let devTools: boolean;
 
 // we use redux-devtools-extension during development and not in production
 if (process.env.NODE_ENV==="development") {
-  composedEnhancer = composeWithDevTools(applyMiddleware(thunkMiddleware));
+  devTools = true;
 } else {
-  composedEnhancer = applyMiddleware(thunkMiddleware);
+  devTools = false;
 }
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist:[]
+  whitelist: []
 };
 
+export type AppState = ReturnType<typeof appReducer>
+
 const persistedReducer = persistReducer(persistConfig, appReducer);
-export const store = createStore(persistedReducer, undefined, composedEnhancer);
+//export const store = createStore(persistedReducer, undefined, composedEnhancer);
+export const store = configureStore({
+  reducer: persistedReducer,
+  devTools,
+  middleware: [thunkMiddleware],
+});
 export const persistor = persistStore(store);
+
+
