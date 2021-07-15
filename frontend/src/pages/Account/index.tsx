@@ -5,17 +5,15 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import CommonBarHeader from 'components/CommonBarHeader';
 import {accountsActions} from 'store/Account';
-import {getAccountsFromCurium, getAccountsFromMetaMask, getAccountsFromWallets} from 'store/Account/thunk';
+import {getAccountsFromCurium, getAccountsFromWallets} from 'store/Account/thunk';
 import CommonCardHeader from 'components/CommonCardHeader';
 import {WalletNameEnum} from 'store/Account/account';
 import theme from 'styles/theme';
 
 
-
 const AccountPage: React.FC = (props) => {
   const accountsState = useSelector((state: AppState) => state.accountsState);
   const {accounts, currentAccount} = accountsState;
-  const metamaskState = useSelector((state: AppState) => state.metamaskState);
   const curiumState = useSelector((state: AppState) => state.curiumState);
   const dispatch = useDispatch();
 
@@ -28,7 +26,6 @@ const AccountPage: React.FC = (props) => {
 
   const connectToMetamaskHandler = async () => {
     await (window.ethereum as any).request({method: 'eth_requestAccounts'});
-    dispatch(getAccountsFromMetaMask());
   };
 
   const connectToCuriumHandler = async () => {
@@ -133,16 +130,6 @@ const AccountPage: React.FC = (props) => {
           <br/>
           <Button onClick={connectToCuriumHandler} color='primary' variant="contained">
             Connect to Curium Extension
-          </Button>
-          <br/>
-        </div>
-      }
-      {
-        window.ethereum && !metamaskState.isConnected &&
-        <div>
-          <br/>
-          <Button onClick={connectToMetamaskHandler} color='primary' variant="contained">
-            Connect to Metamask Extension
           </Button>
           <br/>
         </div>

@@ -1,6 +1,5 @@
 import {combineReducers} from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import {metamaskReducer} from 'store/Metamask';
 import {sidebarReducer} from 'store/Sidebar';
 import {curiumReducer} from 'store/Curium';
 import {accountsReducer} from 'store/Account';
@@ -26,7 +25,6 @@ const appReducer = combineReducers({
   loaderState: loaderReducer,
   accountsState: accountsReducer,
   composeState: composeReducer,
-  metamaskState: metamaskReducer,
   curiumState: curiumReducer,
   sidebarState: sidebarReducer,
 })

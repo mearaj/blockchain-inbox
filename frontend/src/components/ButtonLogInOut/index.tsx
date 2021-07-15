@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button} from '@material-ui/core';
-import {loginWithCurium, loginWithMetamaskPublicAddress, promptMetamaskPublicKey} from 'store/Account/thunk';
+import {loginWithCurium} from 'store/Account/thunk';
 import {WalletNameEnum} from 'store/Account/account';
 import {accountsActions} from 'store/Account';
 import {useDispatch, useSelector} from 'react-redux';
@@ -22,9 +22,6 @@ const ButtonLogInOut: React.FC = () => {
       const result = await window.keplr!.getKey(CHAIN_ID);
       console.log(result);
       console.log(Buffer.from(result.pubKey).toString('hex'));
-    } else {
-      await dispatch(loginWithMetamaskPublicAddress());
-      await dispatch(promptMetamaskPublicKey());
     }
   };
 

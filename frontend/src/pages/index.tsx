@@ -11,7 +11,7 @@ import AccountPage from 'pages/Account';
 import OutboxPage from 'pages/Outbox';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
-import {getAccountsFromMetaMask, getAccountsFromWallets} from 'store/Account/thunk';
+import {getAccountsFromWallets} from 'store/Account/thunk';
 import {Backdrop, CircularProgress} from '@material-ui/core';
 import {loaderActions} from 'store/Loader';
 
@@ -25,8 +25,8 @@ const Pages = (props: AppProps) => {
     console.log("handleKeplrAccountChange, Key store in Keplr is changed. You may need to refetch the account info.");
   }
 
+
   const accountState = useSelector((state: AppState) => state.accountsState);
-  const metamaskState = useSelector((state: AppState) => state.metamaskState);
   const loaderState = useSelector((state: AppState) => state.loaderState);
   const {accounts, currentAccount} = accountState;
   const dispatch = useDispatch();
@@ -53,7 +53,7 @@ const Pages = (props: AppProps) => {
       }
     },);
     return () => clearTimeout(timerId);
-  }, [metamaskState, onMetamaskAccountsChanged]);
+  }, [onMetamaskAccountsChanged]);
 
   useEffect(() => {
     const timerId = setTimeout(() => {
