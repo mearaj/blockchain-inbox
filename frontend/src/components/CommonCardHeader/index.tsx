@@ -1,10 +1,16 @@
-import logo from 'assets/png/logo.png';
 import React from 'react';
+import useStyles from './styles';
+import Logo from 'svg/Logo';
 
-const CommonCardHeader: React.FC = () => {
+const CommonCardHeader: React.FC = (props) => {
+  const classes = useStyles();
+
   return (
-    <div style={{display: 'flex', backgroundColor: '#3f51b5', justifyContent: "center"}}>
-      <img src={logo} style={{height: 56}} alt="Bluzelle Logo"/>
+    <div className={classes.root}>
+      <Logo className={classes.logo}/>
+      <div className={classes.header}>
+        {props.children}
+      </div>
     </div>
   )
 };

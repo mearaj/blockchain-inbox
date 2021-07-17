@@ -1,12 +1,11 @@
-import {createMuiTheme, ThemeOptions} from '@material-ui/core/styles';
-import {colorBluzelle, colorMetamask} from './variables';
+import {createTheme, ThemeOptions} from '@material-ui/core/styles';
+import {deepPurple, pink, purple} from '@material-ui/core/colors';
 
 const options: ThemeOptions = {
   palette: {
-    common: {
-      colorMetamask,
-      colorBluzelle
-    },
+    primary: deepPurple,
+    secondary: pink,
+    common: {},
   },
 
   typography: {},
@@ -15,10 +14,21 @@ const options: ThemeOptions = {
       root: {
         textTransform: "none"
       }
+    },
+    MuiFormControl: {
+      root: {
+        marginBottom: 24,
+      },
+    },
+    MuiFormLabel: {
+      root: {
+        marginBottom: 8,
+        display: 'block',
+      }
     }
   }
 };
 
-const theme = createMuiTheme(options);
+const theme = createTheme(options);
 
 export default theme

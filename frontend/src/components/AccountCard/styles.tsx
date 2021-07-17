@@ -1,24 +1,21 @@
 import {makeStyles} from '@material-ui/core/styles';
-import {drawerWidth} from 'styles/variables';
 
 
 const useStyles = makeStyles((theme) => {
   return {
-    root: {
-
-    },
     accountCard: {
       wordBreak: 'break-all',
       marginBottom: 12,
+      backgroundColor: theme.palette.common.white,
+      color: theme.palette.common.black,
+      position: 'relative',
       '&$active,&:hover': {
-        backgroundColor:theme.palette.secondary.light,
+        backgroundColor: theme.palette.primary.main,
         color: theme.palette.common.white,
         cursor: 'pointer'
       }
     },
-    active: {
-
-    }
+    active: {}
   }
 });
 

@@ -1,8 +1,7 @@
 import React from 'react';
 import CommonBar from 'components/CommonBar';
 import useStyles from './styles';
-import CommonBarHeader from 'components/CommonBarHeader';
-import {Button, Card, CardContent, TextField} from '@material-ui/core';
+import {Button, Card, CardContent, FormControl, FormLabel, MenuItem, Select, TextField} from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import CommonCardHeader from 'components/CommonCardHeader';
@@ -12,30 +11,37 @@ import {sendMessage} from 'store/Message/thunk';
 import {loaderActions} from 'store/Loader';
 import {CHAIN_ID} from 'config';
 import {coin} from '@cosmjs/proto-signing';
-import {BroadcastMode, makeStdTx, MsgDelegate, MsgSend, StdTx} from '@cosmjs/launchpad';
-import {Coin} from '@cosmjs/amino';
+import {MsgSend} from '@cosmjs/launchpad';
+import {allChains} from 'chains';
 
 const ComposePage: React.FC = () => {
   const classes = useStyles();
   const accountsState = useSelector((state: AppState) => state.accountsState);
   const composeState = useSelector((state: AppState) => state.composeState);
-  const {to, message} = composeState;
+  const {recipientPublicKey, message, recipientChainName} = composeState;
   const {currentAccount} = accountsState;
   const dispatch = useDispatch()
-  const ID_TO = "ID_TO";
+  const ID_RECIPIENT_PUBLIC_KEY = "ID_RECIPIENT_PUBLIC_KEY";
+  const ID_SENDER_PUBLIC_KEY = "ID_SENDER_PUBLIC_KEY";
   const ID_MESSAGE = "ID_MESSAGE"
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const ID = event.target.id;
     const value = event.target.value;
     switch (ID) {
-      case ID_TO:
+      case ID_RECIPIENT_PUBLIC_KEY:
         dispatch(composeActions.setTo(value));
         break;
       case ID_MESSAGE:
         dispatch(composeActions.setMessage(value));
     }
   }
+
+  const handleRecipientChainNameChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    dispatch(composeActions.setRecipientChainName(event.target.value as string));
+  };
+
+
   // useEffect(() => {
   //   dispatch(composeActions.setTo(to));
   //   dispatch(composeActions.setFrom(from));
@@ -46,8 +52,8 @@ const ComposePage: React.FC = () => {
     let message: Message =
       {
         message: composeState.message,
-        from: composeState.from,
-        to: composeState.to
+        from: composeState.senderPublicKey,
+        to: composeState.recipientPublicKey
       }
     dispatch(loaderActions.showLoader());
     setTimeout(async () => {
@@ -56,14 +62,13 @@ const ComposePage: React.FC = () => {
       const msg: MsgSend = {
         type: "cosmos-sdk/MsgSend",
         value: {
-          from_address: currentAccount,
+          from_address: currentAccount?.publicKey || "",
           to_address: "bluzelle1gwchgddg96fy2pfgjvg22lqrseyrlpsyjh8xah",
           amount: [coin(1000000, "BLZ")],
         }
       };
-
-      const result = await window.keplr!.signAmino(CHAIN_ID, currentAccount, {
-        account_number: currentAccount,
+      const result = await window.keplr!.signAmino(CHAIN_ID, currentAccount?.publicKey || "", {
+        account_number: currentAccount?.publicKey || "",
         chain_id: CHAIN_ID,
         fee: {
           amount: [coin(1000000, "BLZ")], gas: '1'
@@ -110,35 +115,57 @@ const ComposePage: React.FC = () => {
   return (
     <div className={classes.root}>
       <CommonBar>
-        <CommonBarHeader>
-          Compose
-        </CommonBarHeader>
+        Compose
       </CommonBar>
       <Card>
         <CommonCardHeader/>
         <CardContent>
           <form onSubmit={handleSubmit}>
+
             <div>
+              <FormLabel htmlFor={ID_RECIPIENT_PUBLIC_KEY}>Enter Recipient's Public Key</FormLabel>
               <TextField
                 fullWidth={true}
-                label="To"
                 onChange={handleChange}
-                value={to}
-                id={ID_TO}
-                placeholder="Enter recipient wallet address here"
+                value={recipientPublicKey}
+                id={ID_RECIPIENT_PUBLIC_KEY}
+                placeholder="Example 0x3d932...."
+                variant="outlined"
               />
             </div>
-            <br/>
+            <FormControl fullWidth>
+              <FormLabel id="chainNameLabel">Select Recipient Chain</FormLabel>
+              <Select
+                fullWidth={true}
+                variant="outlined"
+                value={recipientChainName}
+                onChange={handleRecipientChainNameChange}
+                id="chainName"
+                //style={{width: '100%'}}
+                labelId="chainNameLabel"
+              >
+                {
+                  allChains.map((chain) => (
+                    <MenuItem value={chain.name} key={chain.name}>
+                      {chain.name}
+                    </MenuItem>
+                  ))
+                }
+              </Select>
+            </FormControl>
             <div>
+              <FormLabel htmlFor={ID_SENDER_PUBLIC_KEY}>My Public Key</FormLabel>
               <TextField
                 fullWidth={true}
-                label="From"
+                id={ID_SENDER_PUBLIC_KEY}
                 disabled
-                value={currentAccount}
+                multiline={true}
+                value={currentAccount?.publicKey}
+                variant="outlined"
               />
             </div>
-            <br/>
             <div>
+              <FormLabel htmlFor={ID_MESSAGE}>Enter your message</FormLabel>
               <TextField
                 multiline
                 fullWidth
@@ -147,10 +174,9 @@ const ComposePage: React.FC = () => {
                 onChange={handleChange}
                 value={message}
                 variant="outlined"
-                label="Message"
+                placeholder="Enter your message here..."
               />
             </div>
-            <br/>
             <div style={{display: 'flex', justifyContent: 'flex-end'}}>
               <Button type="reset" variant="contained" color={'primary'}>Clear</Button>
               <Button type="submit" style={{marginLeft: 24}} variant="contained" color={'primary'}>Send</Button>

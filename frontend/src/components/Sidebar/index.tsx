@@ -7,7 +7,7 @@ import {useTheme} from '@material-ui/core/styles';
 
 import logo from 'assets/png/logo.png';
 import clsx from 'clsx';
-import {AccountBox, AddBox, PresentToAll, SmsFailed} from '@material-ui/icons';
+import {AccountBox, AddBox, Person, PresentToAll, SmsFailed} from '@material-ui/icons';
 import {BrowserRouterProps, useHistory, useLocation} from 'react-router-dom';
 
 import useStyles from './styles';
@@ -17,6 +17,7 @@ import {AppState} from 'store';
 import {Dispatch} from 'redux';
 import {sidebarActions} from 'store/Sidebar';
 import {PayloadAction} from '@reduxjs/toolkit';
+import LogoFull from 'svg/LogoFull';
 
 interface SidebarProps extends BrowserRouterProps {
 }
@@ -35,7 +36,7 @@ export const Sidebar = (props: SidebarProps) => {
   }, [location]);
 
   const isPathActive = (checkPath: string) => {
-    return pathName===checkPath;
+    return pathName.startsWith(checkPath);
   }
 
   const activeLinkClassName = (checkPath: string): string => {
@@ -44,9 +45,8 @@ export const Sidebar = (props: SidebarProps) => {
   const drawer = (
     <div>
       <div className={clsx(classes.toolbar, classes.logoContainer)}>
-        <img src={logo} style={{height: 56}} alt="Bluzelle Logo"/>
+        <LogoFull/>
       </div>
-      <Divider/>
       <br/>
       <nav className={classes.nav}>
 
@@ -54,7 +54,6 @@ export const Sidebar = (props: SidebarProps) => {
           onClick={() => history.push("/account")}
           size="large"
           className={activeLinkClassName("/account")}
-          color="primary"
         >
           <AccountBox className={classes.linkIcon}/>
           <Typography className={classes.linkName}>My Account</Typography>
@@ -64,7 +63,6 @@ export const Sidebar = (props: SidebarProps) => {
           onClick={() => history.push("/compose")}
           size="large"
           className={activeLinkClassName("/compose")}
-          color="primary"
         >
           <AddBox className={classes.linkIcon}/>
           <Typography className={classes.linkName}>
@@ -76,7 +74,6 @@ export const Sidebar = (props: SidebarProps) => {
           onClick={() => history.push("/inbox")}
           size="large"
           className={activeLinkClassName("/inbox")}
-          color="primary"
         >
           <InboxIcon className={classes.linkIcon}/>
           <Typography className={classes.linkName}>
@@ -88,7 +85,6 @@ export const Sidebar = (props: SidebarProps) => {
           onClick={() => history.push("/sent")}
           size="large"
           className={activeLinkClassName("/sent")}
-          color="primary"
         >
           <PresentToAll className={classes.linkIcon}/>
           <Typography className={classes.linkName}>Sent</Typography>
@@ -98,14 +94,22 @@ export const Sidebar = (props: SidebarProps) => {
           onClick={() => history.push("/outbox")}
           size="large"
           className={activeLinkClassName("/outbox")}
-          color="primary"
         >
           <SmsFailed className={classes.linkIcon}/>
           <Typography className={classes.linkName}>Outbox</Typography>
         </Button>
 
+
+        <Button
+          onClick={() => history.push("/login")}
+          size="large"
+          className={activeLinkClassName("/login")}
+        >
+          <Person className={classes.linkIcon}/>
+          <Typography className={classes.linkName}>Login</Typography>
+        </Button>
+
       </nav>
-      <Divider/>
     </div>
   );
 

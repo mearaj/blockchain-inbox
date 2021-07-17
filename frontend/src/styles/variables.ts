@@ -1,8 +1,5 @@
 // colors
 
-export const colorMetamask = '#F5841E';
-export const colorBluzelle = '#3f51b5';
-
 
 // Sizes
 export const drawerWidth = 300

@@ -20,7 +20,6 @@ declare module "@material-ui/core/styles/createPalette" {
   }
 
   interface CommonColors {
-    colorBluzelle: string;
-    colorMetamask: string;
+
   }
 }

@@ -4,10 +4,10 @@ import {JWT_SECRET, LOGIN_TOKEN_THRESHOLD} from 'config';
 import * as sigUtil from 'eth-sig-util';
 import * as ethUtil from 'ethereumjs-util';
 import {Buffer} from 'buffer';
-import {getChainIfSupported} from 'chains';
 import * as jwt from 'jsonwebtoken';
 import {verifyBluzSignature} from 'utils/verifyBluzSignature';
 import {LoginRequestBody} from 'models/token';
+import {allowedChains} from 'chains';
 
 export const router = Router();
 
@@ -44,7 +44,7 @@ export const loginController: RequestHandler = async (req, res, next) => {
       }
     });
   }
-  const chain = getChainIfSupported(chainName);
+  const chain = allowedChains.find((chain)=> chain.name === chainName);
   if (!chain) {
     return res.status(404).send({
       error: {
@@ -79,7 +79,7 @@ export const loginController: RequestHandler = async (req, res, next) => {
     });
     account.authTokens = [...account.authTokens, token];
     await account.save();
-    return res.json(token);
+    return res.json({auth:token});
   } else {
     return res.status(400).json("Invalid Signature!");
   }

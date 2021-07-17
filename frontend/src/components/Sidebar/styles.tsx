@@ -14,8 +14,9 @@ const useStyles = makeStyles((theme: Theme) => {
         },
       },
       toolbar: theme.mixins.toolbar,
+
       logoContainer: {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: 'transparent',
         display: "flex",
         alignItems: "center",
         justifyContent: "center"
@@ -27,15 +28,21 @@ const useStyles = makeStyles((theme: Theme) => {
       },
       drawerPaper: {
         width: drawerWidth,
+        backgroundImage: `linear-gradient(
+        ${theme.palette.primary.main} 0%,
+         ${theme.palette.primary.light} 50%,
+         ${theme.palette.primary.dark} 100%
+        )`
       },
       linkButton: {
         display: 'flex',
         width: '100%',
         justifyContent: 'flex-start',
         marginBottom: 6,
+        color: theme.palette.common.white,
         "&.active, &:hover": {
-          color: theme.palette.common.white,
-          backgroundColor: theme.palette.primary.dark,
+          color: theme.palette.primary.main,
+          backgroundColor: theme.palette.common.white,
         }
       },
       linkIcon: {},

@@ -3,11 +3,8 @@ export interface TokenRequestBody {
   chainName: string;
 }
 
-export interface TokenResponse {
-  uuid: string;
-  publicKey: string;
-  blockchainName: string;
-  signature: string;
+export interface TokenResponseBody {
+  token:string;
 }
 
 export interface LoginRequestBody {
@@ -15,6 +12,10 @@ export interface LoginRequestBody {
   publicKey: string;
   chainName: string;
   signature: string;
+}
+
+export interface LoginResponseBody {
+  auth: string;
 }
 
 export interface LoginToken {

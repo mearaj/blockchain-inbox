@@ -23,6 +23,14 @@ const useStyles = makeStyles((theme: Theme) => {
         alignItems: "center",
         justifyContent: "center"
       },
+      title: {
+        fontWeight: 700,
+      },
+      titleContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexGrow:1,
+      },
     };
   }
 );

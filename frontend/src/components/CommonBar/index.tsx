@@ -8,6 +8,7 @@ import useStyles from './styles';
 import {useDispatch} from 'react-redux';
 import {sidebarActions} from 'store/Sidebar';
 import ButtonLogInOut from 'components/ButtonLogInOut';
+import {Typography} from '@material-ui/core';
 
 const CommonBar: React.FC = (props) => {
   const classes = useStyles();
@@ -27,8 +28,10 @@ const CommonBar: React.FC = (props) => {
             <MenuIcon/>
           </IconButton>
           <div style={{display: 'flex', flexGrow: 1, alignItems: 'center'}}>
-            <div style={{flexGrow: 1}}>
-              {props.children}
+            <div className={classes.titleContainer}>
+              <Typography variant="h5" className={classes.title}>
+                {props.children}
+              </Typography>
             </div>
             {
               <ButtonLogInOut/>

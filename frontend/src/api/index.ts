@@ -2,17 +2,35 @@ import axiosOrig, {AxiosRequestConfig} from 'axios';
 
 
 const BASE_URL = 'http://localhost:8081/api/v1';
-export const TOKEN_ENDPOINT = `/login`;
+export const TOKEN_ENDPOINT = `/token`;
 export const LOGIN_ENDPOINT = `/login`;
 export const LOGOUT_ENDPOINT = `/logout`;
 export const INBOX_ENDPOINT = `/messages`;
 export const SEND_MESSAGES_ENDPOINT = `/messages`;
 
 export interface Message {
-  to:string;
-  from:string;
-  message:string;
+  to: string;
+  from: string;
+  message: string;
 }
+
+export interface TokenRequestBody {
+  publicKey: string;
+  chainName: string;
+}
+
+export interface TokenResponseBody {
+  token: string;
+}
+export interface LoginRequestBody extends TokenRequestBody {
+  signature:string;
+  token:string;
+}
+
+export interface LoginResponseBody {
+  auth: string;
+}
+
 const config: AxiosRequestConfig = {
   baseURL: BASE_URL,
   headers: {
@@ -20,17 +38,17 @@ const config: AxiosRequestConfig = {
   }
 }
 
-export const requestLoginToken = async (address: { publicAddress: string }) => {
+export const requestLoginToken = async (tokenRequestBody: TokenRequestBody): Promise<TokenResponseBody> => {
   const axios = axiosOrig.create(config);
-  return await axios.post<{ publicAddress: string, loginToken: string }>(TOKEN_ENDPOINT, address);
+  return (await axios.post<TokenResponseBody>(TOKEN_ENDPOINT, tokenRequestBody)).data;
 }
 
-export const login = async (address: { publicAddress: string }) => {
+export const login = async (loginRequestBody:LoginRequestBody) => {
   const axios = axiosOrig.create(config);
-  return await axios.post<{ publicAddress: string, loginToken: string }>(TOKEN_ENDPOINT, address);
+  return (await axios.post<LoginResponseBody>(LOGIN_ENDPOINT, loginRequestBody)).data;
 }
 
-export const sendMessage = async (message:Message) => {
+export const sendMessage = async (message: Message) => {
   const axios = axiosOrig.create(config);
   return await axios.post<Message>(SEND_MESSAGES_ENDPOINT, message);
 }

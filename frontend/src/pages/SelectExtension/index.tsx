@@ -17,10 +17,6 @@ const SelectExtensionPage: React.FC = (props) => {
       <Button color="primary" variant="outlined" href="https://github.com/bluzelle/blz-extension" target="_blank">
         Curium Extension
       </Button>
-      <br/>
-      <Button color="primary" variant="outlined" href="https://metamask.io/download.html" target="_blank">
-        Metamask Extension
-      </Button>
     </div>
   )
 }

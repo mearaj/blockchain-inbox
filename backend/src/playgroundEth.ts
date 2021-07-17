@@ -51,7 +51,6 @@ const generateWalletFromMnemonic = (
   if (!privateKey) {
     throw new Error("null hd key");
   }
-  console.log(Buffer.from(privateKey).toString("hex"));
   return privateKey;
 }
 
@@ -87,7 +86,7 @@ const playgroundBluz = async () => {
 
   // encrypting message
   const message = "This is the message that should be encrypted/decrypted";
-  const encrypted = await eccrypto.encrypt(Buffer.from(publicKey,'hex'), Buffer.from(message));
+  const encrypted = await eccrypto.encrypt(Buffer.from(publicKey, 'hex'), Buffer.from(message));
   const decrypted = await eccrypto.decrypt(Buffer.from(pvtKey), encrypted);
   // console.log(encrypted);
   // console.log(decrypted.toString());
@@ -117,14 +116,14 @@ const playgroundBluz = async () => {
   // } catch (e) {
   //   console.log(e);
   // }
-  // const msg = await bluzelleSDK.db.q.Read({uuid:'uuid', key:'firstKey'});
-  // const msg2 = await bluzelleSDK.db.q.Read({uuid:'uuid2', key:'firstKey'});
-  // console.log(msg);
-  // console.log(new TextDecoder().decode(msg.value));
-  // console.log(Object.keys(msg2));
-  // console.log(new TextDecoder().decode(msg2.value));
-  // console.log(await bluzelleSDK.db.q.Keys({uuid:'uuid'}));
-  // console.log(await bluzelleSDK.bank.q.Balance({'address': bluzelleSDK.bank.address, denom:'ubnt'}));
+  const msg = await bluzelleSDK.db.q.Read({uuid: 'uuid', key: 'firstKey'});
+  const msg2 = await bluzelleSDK.db.q.Read({uuid: 'uuid2', key: 'firstKey'});
+  console.log(msg);
+  console.log(new TextDecoder().decode(msg.value));
+  console.log(Object.keys(msg2));
+  console.log(new TextDecoder().decode(msg2.value));
+  console.log(await bluzelleSDK.db.q.Keys({uuid: 'uuid'}));
+  console.log(await bluzelleSDK.bank.q.Balance({'address': bluzelleSDK.bank.address, denom: 'ubnt'}));
 
   return "terminating...."
 };

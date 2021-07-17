@@ -1,25 +1,12 @@
 import {combineReducers} from 'redux';
-import thunkMiddleware from 'redux-thunk';
 import {sidebarReducer} from 'store/Sidebar';
 import {curiumReducer} from 'store/Curium';
 import {accountsReducer} from 'store/Account';
 import {loaderReducer} from 'store/Loader';
-import storage from 'redux-persist/lib/storage';
+import storage from 'redux-persist/lib/storage/session';
 import {persistReducer, persistStore} from 'redux-persist'
 import {composeReducer} from 'store/Compose';
 import {configureStore} from '@reduxjs/toolkit';
-
-
-// // the keys should map with combineReducers key
-// export interface AppState {
-//   loaderState: LoaderState,
-//   accountsState: AccountsState,
-//   metamaskState: MetamaskState,
-//   curiumState: CuriumState,
-//   sidebarState: SidebarState,
-//   composeState: ComposeState,
-// }
-
 
 const appReducer = combineReducers({
   loaderState: loaderReducer,
@@ -29,19 +16,18 @@ const appReducer = combineReducers({
   sidebarState: sidebarReducer,
 })
 
-let devTools: boolean;
+let devTools: boolean = false;
 
 // we use redux-devtools-extension during development and not in production
 if (process.env.NODE_ENV==="development") {
   devTools = true;
-} else {
-  devTools = false;
 }
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: []
+  //whitelist: []
+  blacklist: ['register']
 };
 
 export type AppState = ReturnType<typeof appReducer>
@@ -51,7 +37,10 @@ const persistedReducer = persistReducer(persistConfig, appReducer);
 export const store = configureStore({
   reducer: persistedReducer,
   devTools,
-  middleware: [thunkMiddleware],
+  middleware: (getDefaultMiddleware) => [
+    // Ref https://github.com/rt2zz/redux-persist/issues/988
+    ...getDefaultMiddleware({serializableCheck: {ignoredActions: ["persist/PERSIST"]}}),
+  ],
 });
 export const persistor = persistStore(store);
 

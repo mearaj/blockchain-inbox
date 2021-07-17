@@ -1,44 +1,44 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {Account, WalletNameEnum} from 'store/Account/account';
+import {Account} from 'store/Account/account';
 
 export interface AccountsState {
-  // currentAccount is the public address
-  currentAccount: string;
-  isLoading: boolean;
-  accounts: Accounts;
+  currentAccount: Account | undefined;
+  accounts: Account[];
 }
-
-export interface Accounts {
-  // key is the public address of account
-  [key: string]: Account
-}
-
 
 const initialState: AccountsState = {
-  currentAccount: "",
-  accounts: {},
-  isLoading: false,
+  currentAccount: undefined,
+  accounts: [],
 };
 
-const setAccounts = (state: AccountsState, action: PayloadAction<Accounts>) => {
+const setAccounts = (state: AccountsState, action: PayloadAction<Account[]>) => {
   state.accounts = action.payload;
 }
 
-const setLoginStatus = (state: AccountsState, action: PayloadAction<boolean>) => {
-  if (state.accounts[state.currentAccount]) {
-    state.accounts[state.currentAccount].isLoggedIn = action.payload;
+const setAuth = (state: AccountsState, action: PayloadAction<string>) => {
+  if (state.currentAccount) {
+    state.currentAccount.auth = action.payload;
   }
 }
 
-const setIsLoading = (state: AccountsState, action: PayloadAction<boolean>) => {
-  state.isLoading = action.payload
+const setAccountState = (state: AccountsState, action: PayloadAction<{ accountState: Account }>) => {
+  const found = state.accounts
+    .find((eachAccount) => (eachAccount.chainName===action.payload.accountState.chainName) &&
+      eachAccount.publicKey===action.payload.accountState.publicKey);
+  if (!found) {
+    state.accounts.push(action.payload.accountState);
+    return
+  }
+  state.accounts = state.accounts.map((eachAccount) => {
+    if ((eachAccount.publicKey===found.publicKey) &&
+      (eachAccount.chainName===found.chainName)) {
+      return {...eachAccount, ...action.payload.accountState}
+    }
+    return eachAccount;
+  })
 }
 
-const setAccountState = (state: AccountsState, action: PayloadAction<{ account: string, accountState: Account }>) => {
-  state.accounts[action.payload.account] = action.payload.accountState;
-}
-
-const setCurrentAccount = (state: AccountsState, action: PayloadAction<string>) => {
+const setCurrentAccount = (state: AccountsState, action: PayloadAction<Account>) => {
   state.currentAccount = action.payload;
 }
 
@@ -47,7 +47,7 @@ const accountsSlice = createSlice({
   initialState,
   reducers: {
     setAccounts,
-    setLoginStatus,
+    setAuth,
     setAccountState,
     setCurrentAccount,
   }

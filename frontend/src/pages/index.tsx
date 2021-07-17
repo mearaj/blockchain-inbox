@@ -4,7 +4,6 @@ import InboxPage from 'pages/Inbox';
 
 import {Redirect, Route, Switch, useLocation} from 'react-router-dom';
 import useStyles from './styles';
-import SelectExtensionPage from 'pages/SelectExtension';
 import ComposePage from 'pages/Compose';
 import SentPage from 'pages/Sent';
 import AccountPage from 'pages/Account';
@@ -14,6 +13,7 @@ import {AppState} from 'store';
 import {getAccountsFromWallets} from 'store/Account/thunk';
 import {Backdrop, CircularProgress} from '@material-ui/core';
 import {loaderActions} from 'store/Loader';
+import Login from 'pages/Login';
 
 interface AppProps {
 }
@@ -31,7 +31,7 @@ const Pages = (props: AppProps) => {
   const {accounts, currentAccount} = accountState;
   const dispatch = useDispatch();
   const location = useLocation();
-  const isLoggedIn = accounts[currentAccount]?.isLoggedIn;
+  const auth = currentAccount?.auth || "";
 
   const handleChainChanged = useCallback((_chainId) => {
     window.location.reload();
@@ -106,15 +106,14 @@ const Pages = (props: AppProps) => {
 
   let currentView: ReactElement = (<Switch>
     <Route exact path={"/"}><Redirect to="/inbox"/></Route>
+    <Route exact path={"/login"} component={Login}/>
     <Route exact path={"/account"} component={AccountPage}/>
-    <Route exact path={"/compose"} component={() => isLoggedIn ? <ComposePage/>:<Redirect to="/account"/>}/>
-    <Route exact path={"/sent"} component={() => isLoggedIn ? <SentPage/>:<Redirect to="/account"/>}/>
-    <Route exact path={"/inbox"} component={() => isLoggedIn ? <InboxPage/>:<Redirect to="/account"/>}/>
-    <Route exact path={"/outbox"} component={() => isLoggedIn ? <OutboxPage/>:<Redirect to="/account"/>}/>
+    <Route exact path={"/compose"} component={ComposePage}/>
+    <Route exact path={"/sent"} component={SentPage}/>
+    <Route exact path={"/inbox"} component={InboxPage}/>
+    <Route exact path={"/outbox"} component={OutboxPage}/>
   </Switch>)
-  if (!window.keplr && !window.ethereum) {
-    currentView = <SelectExtensionPage/>
-  }
+
   return (
     <div className={classes.root}>
       <Sidebar/>
@@ -127,6 +126,5 @@ const Pages = (props: AppProps) => {
     </div>
   );
 }
-
 
 export default Pages;

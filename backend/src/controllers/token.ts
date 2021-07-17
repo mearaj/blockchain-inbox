@@ -1,7 +1,7 @@
 import {RequestHandler} from 'express';
 import {AccountModel} from 'models/account';
 import {Error} from 'mongoose';
-import {LoginToken, TokenRequestBody} from 'models/token';
+import {LoginRequestBody, LoginToken, TokenRequestBody, TokenResponseBody} from 'models/token';
 import {v4 as uuid} from 'uuid';
 import {validateLoginToken} from 'validators/validateLoginToken';
 
@@ -25,6 +25,7 @@ export const requestLoginToken: RequestHandler = async (req, res, next) => {
     await account.save();
     return res.json({token: loginToken.token});
   } catch (e: unknown) {
+    console.log(e);
     return res.status(400).json({error: {message: (e as Error)?.message}});
   }
 };
