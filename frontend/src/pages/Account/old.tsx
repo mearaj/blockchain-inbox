@@ -5,7 +5,7 @@
 // import {AppState} from 'store';
 // import {accountsActions} from 'store/Account';
 // import {getAccountsFromCurium, getAccountsFromWallets} from 'store/Account/thunk';
-// import CommonCardHeader from 'components/CommonCardHeader';
+// import CommonAccordionHeader from 'components/CommonAccordionHeader';
 // import theme from 'styles/theme';
 //
 //
@@ -52,7 +52,7 @@
 //       {
 //         accounts &&
 //         <Card>
-//           <CommonCardHeader/>
+//           <CommonAccordionHeader/>
 //           <CardContent>
 //             <RadioGroup value={currentAccount} onChange={handleChange}>
 //               {

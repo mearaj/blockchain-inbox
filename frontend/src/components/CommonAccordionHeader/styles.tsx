@@ -4,7 +4,7 @@ import {drawerWidth} from 'styles/variables';
 
 const useStyles = makeStyles((theme: Theme) => {
     return {
-      root: {
+      content: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -18,7 +18,16 @@ const useStyles = makeStyles((theme: Theme) => {
         fontWeight: 'bold',
       },
       logo: {
-        height: 30
+        height: '100%',
+        marginRight: 24,
+      },
+      expandedMore: {
+        fill: theme.palette.common.white,
+        fontSize: 36,
+      },
+      accordionSummary: {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.common.white,
       },
     };
   },

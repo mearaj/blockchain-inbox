@@ -3,7 +3,7 @@ import {evmChains} from './chains';
 
 export enum AllowedChainEnum {
   ETH = "ETH",
-  BLUZELLE = "Bluzelle"
+  Bluzelle = "Bluzelle"
 }
 
 

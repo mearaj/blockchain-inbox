@@ -4,7 +4,7 @@ import useStyles from './styles';
 import {Button, Card, CardContent, FormControl, FormLabel, MenuItem, Select, TextField} from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
-import CommonCardHeader from 'components/CommonCardHeader';
+import CommonAccordionHeader from 'components/CommonAccordionHeader';
 import {composeActions} from 'store/Compose';
 import {Message} from 'api';
 import {sendMessage} from 'store/Message/thunk';
@@ -118,7 +118,7 @@ const ComposePage: React.FC = () => {
         Compose
       </CommonBar>
       <Card>
-        <CommonCardHeader/>
+        <CommonAccordionHeader/>
         <CardContent>
           <form onSubmit={handleSubmit}>
 

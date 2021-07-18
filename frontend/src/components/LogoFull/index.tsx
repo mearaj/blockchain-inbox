@@ -1,6 +1,6 @@
 import React from 'react';
 import Logo from 'svg/Logo';
-import useStyles from './styles';
+import useStyles from 'components/LogoFull/styles';
 import clsx from 'clsx';
 import {BrowserRouterProps} from 'react-router-dom';
 

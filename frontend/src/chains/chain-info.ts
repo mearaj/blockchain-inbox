@@ -38,4 +38,10 @@ export interface ChainShortInfo {
   name: string;
   chain: string;
 }
+// Refers to the chain property of ChainInfo
+export enum AllowedChainEnum {
+  ETH = "ETH",
+  BLUZELLE = "Bluzelle"
+}
+
 

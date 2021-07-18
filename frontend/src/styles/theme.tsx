@@ -1,5 +1,5 @@
 import {createTheme, ThemeOptions} from '@material-ui/core/styles';
-import {deepPurple, pink, purple} from '@material-ui/core/colors';
+import {deepPurple, pink} from '@material-ui/core/colors';
 
 const options: ThemeOptions = {
   palette: {
@@ -15,17 +15,6 @@ const options: ThemeOptions = {
         textTransform: "none"
       }
     },
-    MuiFormControl: {
-      root: {
-        marginBottom: 24,
-      },
-    },
-    MuiFormLabel: {
-      root: {
-        marginBottom: 8,
-        display: 'block',
-      }
-    }
   }
 };
 

@@ -1,5 +1,5 @@
 import CommonBar from 'components/CommonBar';
-import {Button} from '@material-ui/core';
+import {Accordion, AccordionDetails, AccordionSummary, Button} from '@material-ui/core';
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
@@ -7,7 +7,8 @@ import {getAccountsFromCurium, getAccountsFromWallets} from 'store/Account/thunk
 
 import useStyles from './styles';
 import AccountCard from 'components/AccountCard';
-import CommonCardHeader from 'components/CommonCardHeader';
+import Login from 'components/Login';
+import CommonAccordionHeader from 'components/CommonAccordionHeader';
 
 
 const AccountPage: React.FC = (props) => {
@@ -49,43 +50,34 @@ const AccountPage: React.FC = (props) => {
     return (
       <div className={classes.root}>
         <CommonBar>My Account</CommonBar>
-        {
-          accounts &&
-          accounts.map((eachAccount) => (
-            <AccountCard
-              account={eachAccount}
-              key={`${eachAccount.publicKey}:${eachAccount.chainName}`}
-            />
-          ))
-        }
-        {
-          accounts &&
-          accounts.map((eachAccount) => (
-            <AccountCard
-              account={eachAccount}
-              key={`${eachAccount.publicKey}:${eachAccount.chainName}`}
-            />
-          ))
-        }
-        {
-          accounts &&
-          accounts.map((eachAccount) => (
-            <AccountCard
-              account={eachAccount}
-              key={`${eachAccount.publicKey}:${eachAccount.chainName}`}
-            />
-          ))
-        }
-        {
-          window.keplr && !curiumState.isConnected &&
-          <div>
-            <br/>
-            <Button onClick={connectToCuriumHandler} color='primary' variant="contained">
-              Connect to Curium Extension
-            </Button>
-            <br/>
-          </div>
-        }
+        <Login/>
+        <Accordion className={classes.accounts}>
+          <CommonAccordionHeader>Accounts</CommonAccordionHeader>
+
+          {
+            accounts &&
+            <AccordionDetails className={classes.accordionDetails}>
+              {
+                accounts.map((eachAccount) => (
+                  <AccountCard
+                    account={eachAccount}
+                    key={`${eachAccount.publicKey}:${eachAccount.chainName}`}
+                  />
+                ))
+              }
+            </AccordionDetails>
+          }
+          {
+            window.keplr && !curiumState.isConnected &&
+            <div>
+              <br/>
+              <Button onClick={connectToCuriumHandler} color='primary' variant="contained">
+                Connect to Curium Extension
+              </Button>
+              <br/>
+            </div>
+          }
+        </Accordion>
       </div>
     )
   }

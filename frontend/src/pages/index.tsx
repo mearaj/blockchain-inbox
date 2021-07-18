@@ -13,7 +13,6 @@ import {AppState} from 'store';
 import {getAccountsFromWallets} from 'store/Account/thunk';
 import {Backdrop, CircularProgress} from '@material-ui/core';
 import {loaderActions} from 'store/Loader';
-import Login from 'pages/Login';
 
 interface AppProps {
 }
@@ -46,6 +45,7 @@ const Pages = (props: AppProps) => {
     return () => window.removeEventListener("keplr_keystorechange", handleKeplrAccountChange);
   });
 
+
   useEffect(() => {
     const timerId = setTimeout(() => {
       if (window.ethereum) {
@@ -58,7 +58,7 @@ const Pages = (props: AppProps) => {
   useEffect(() => {
     const timerId = setTimeout(() => {
       console.log("managed accounts in useEffect called");
-      dispatch(getAccountsFromWallets());
+      //dispatch(getAccountsFromWallets());
     }, 0);
     return () => clearTimeout(timerId);
   }, [dispatch]);
@@ -106,7 +106,6 @@ const Pages = (props: AppProps) => {
 
   let currentView: ReactElement = (<Switch>
     <Route exact path={"/"}><Redirect to="/inbox"/></Route>
-    <Route exact path={"/login"} component={Login}/>
     <Route exact path={"/account"} component={AccountPage}/>
     <Route exact path={"/compose"} component={ComposePage}/>
     <Route exact path={"/sent"} component={SentPage}/>

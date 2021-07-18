@@ -1,37 +1,8 @@
-import {ChainInfo, ChainShortInfo} from 'chains/chain-info';
-import {evmChains} from 'chains/chains';
-
-// Refers to the chain property of ChainInfo
-export enum AllowedChainEnum {
-  ETH = "ETH",
-  BLUZELLE = "Bluzelle"
-}
+import {AllowedChainEnum, ChainInfo, ChainShortInfo} from 'chains/chain-info';
+import {evmChains} from 'chains/data/chains';
+import {bluzelleChain} from 'chains/bluzelle';
 
 
-// export const ethChains: ChainShortInfo[] = evmChains.filter(
-//   (chain: ChainInfo) => chain.chain === AllowedChainEnum.ETH)
-//   .map((chain) => ({
-//       name: chain.name,
-//       chain: chain.chain
-//     }
-//   ));
-
-export const bluzelleChain:ChainInfo = {
-  name: "Bluzelle Mainnet",
-  chain: AllowedChainEnum.BLUZELLE,
-  chainId: 0,
-  faucets: [],
-  infoURL: '',
-  nativeCurrency: {
-    name: "Bluzelle",
-    symbol: "BLZ",
-    decimals: 6
-  },
-  network: '',
-  networkId: 0,
-  rpc: [],
-  shortName: ''
-};
 
 export const isChainSupported = (chain:string) => Object.values(AllowedChainEnum).includes(chain as AllowedChainEnum);
 
@@ -44,3 +15,5 @@ export const allChains:ChainInfo[] = [...evmChains, bluzelleChain].sort((a,b)=> 
   return 0;
 });
 
+
+export * from './eth';

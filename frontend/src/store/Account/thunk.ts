@@ -4,7 +4,8 @@ import {AppState} from 'store/index';
 import {curiumActions} from 'store/Curium';
 import {CHAIN_ID} from 'config';
 import {CURIUM_NOT_INSTALLED} from 'store/Account/errors';
-import {Account} from 'store/Account/account';
+import {Account} from 'store/Account';
+
 
 export const getAccountsFromCurium = () => async (dispatch: Dispatch, getState: () => AppState) => {
   const appState = getState();
@@ -96,5 +97,5 @@ export const loginBluezelle = () => async (dispatch: Dispatch, getState: () => A
 
 export const loginWithCurium = () => async (dispatch: Dispatch, getState: () => AppState) => {
   await getAccountsFromCurium()(dispatch, getState);
-  dispatch(accountsActions.setAuth(""));
+  dispatch(accountsActions.setCurrentAccountAuth(""));
 }

@@ -17,7 +17,7 @@ import {AppState} from 'store';
 import {Dispatch} from 'redux';
 import {sidebarActions} from 'store/Sidebar';
 import {PayloadAction} from '@reduxjs/toolkit';
-import LogoFull from 'svg/LogoFull';
+import LogoFull from 'components/LogoFull';
 
 interface SidebarProps extends BrowserRouterProps {
 }
@@ -98,17 +98,6 @@ export const Sidebar = (props: SidebarProps) => {
           <SmsFailed className={classes.linkIcon}/>
           <Typography className={classes.linkName}>Outbox</Typography>
         </Button>
-
-
-        <Button
-          onClick={() => history.push("/login")}
-          size="large"
-          className={activeLinkClassName("/login")}
-        >
-          <Person className={classes.linkIcon}/>
-          <Typography className={classes.linkName}>Login</Typography>
-        </Button>
-
       </nav>
     </div>
   );

@@ -43,7 +43,7 @@ export const requestLoginToken = async (tokenRequestBody: TokenRequestBody): Pro
   return (await axios.post<TokenResponseBody>(TOKEN_ENDPOINT, tokenRequestBody)).data;
 }
 
-export const login = async (loginRequestBody:LoginRequestBody) => {
+export const login = async (loginRequestBody:LoginRequestBody):Promise<LoginResponseBody> => {
   const axios = axiosOrig.create(config);
   return (await axios.post<LoginResponseBody>(LOGIN_ENDPOINT, loginRequestBody)).data;
 }

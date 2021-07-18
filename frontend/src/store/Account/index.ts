@@ -1,59 +1,35 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {Account} from 'store/Account/account';
+import {createSlice} from '@reduxjs/toolkit';
+import {Account, AccountsState} from 'store/Account/interfaces';
+import {
+  addUpdateAccount,
+  setCurrentAccountAuth,
+  setSelectedAccountAuth,
+  setAccounts,
+  setCurrentAccount,
+  login
+} from 'store/Account/reducers';
 
-export interface AccountsState {
-  currentAccount: Account | undefined;
-  accounts: Account[];
-}
 
 const initialState: AccountsState = {
   currentAccount: undefined,
   accounts: [],
 };
 
-const setAccounts = (state: AccountsState, action: PayloadAction<Account[]>) => {
-  state.accounts = action.payload;
-}
-
-const setAuth = (state: AccountsState, action: PayloadAction<string>) => {
-  if (state.currentAccount) {
-    state.currentAccount.auth = action.payload;
-  }
-}
-
-const setAccountState = (state: AccountsState, action: PayloadAction<{ accountState: Account }>) => {
-  const found = state.accounts
-    .find((eachAccount) => (eachAccount.chainName===action.payload.accountState.chainName) &&
-      eachAccount.publicKey===action.payload.accountState.publicKey);
-  if (!found) {
-    state.accounts.push(action.payload.accountState);
-    return
-  }
-  state.accounts = state.accounts.map((eachAccount) => {
-    if ((eachAccount.publicKey===found.publicKey) &&
-      (eachAccount.chainName===found.chainName)) {
-      return {...eachAccount, ...action.payload.accountState}
-    }
-    return eachAccount;
-  })
-}
-
-const setCurrentAccount = (state: AccountsState, action: PayloadAction<Account>) => {
-  state.currentAccount = action.payload;
-}
-
 const accountsSlice = createSlice({
   name: 'accountsState',
   initialState,
   reducers: {
     setAccounts,
-    setAuth,
-    setAccountState,
+    setCurrentAccountAuth,
+    setSelectedAccountAuth,
+    addUpdateAccount,
     setCurrentAccount,
+    login,
   }
 });
 
 export const accountsReducer = accountsSlice.reducer;
 export const accountsActions = accountsSlice.actions;
 
+export type {Account, AccountsState};
 export default accountsSlice;

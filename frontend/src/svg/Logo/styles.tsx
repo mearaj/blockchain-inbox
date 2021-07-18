@@ -1,5 +1,4 @@
 import {makeStyles, Theme} from '@material-ui/core/styles';
-import {drawerWidth} from 'styles/variables';
 
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -11,6 +10,7 @@ const useStyles = makeStyles((theme: Theme) => {
         height: 48,
         width: 48,
       },
+
       top: {
         fill: theme.palette.common.white
       },
