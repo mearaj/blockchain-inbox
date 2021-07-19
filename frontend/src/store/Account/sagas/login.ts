@@ -2,10 +2,9 @@ import {call, put, select, takeEvery} from 'redux-saga/effects';
 import {accountsActions} from 'store/Account';
 import {login, LoginResponseBody, requestLoginToken, TokenResponseBody} from 'api';
 import {PayloadAction} from '@reduxjs/toolkit';
-import {allChains} from 'chains';
 import {SagaTokenRequestBody} from 'store/Account/interfaces';
 import {AppState} from 'store/reducer';
-import {signToken} from 'chains/common';
+import {allChains, signToken} from 'chains/common';
 
 const getChain = (chainName: string) => allChains.find((chain) => chain.name===chainName);
 

@@ -1,5 +1,5 @@
 import {createTheme, ThemeOptions} from '@material-ui/core/styles';
-import {deepPurple, pink} from '@material-ui/core/colors';
+import {deepPurple, pink, purple} from '@material-ui/core/colors';
 
 const options: ThemeOptions = {
   palette: {

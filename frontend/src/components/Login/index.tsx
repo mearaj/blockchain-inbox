@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import copy from 'copy-to-clipboard';
-import elliptic from 'elliptic';
 import useStyles from 'components/Login/styles';
 import {
   Accordion,
@@ -16,14 +15,20 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import CommonAccordionHeader from 'components/CommonAccordionHeader';
-import {Wallet} from 'ethers';
-import CryptoJS from 'crypto-js';
-import {allChains, isChainSupported} from 'chains';
 import {loaderActions} from 'store/Loader';
 import {accountsActions} from 'store/Account';
-import {genPublicKeyFromPrivateKey, isPrivateKeyFormatValid, isValidHex} from 'chains/validators';
+import {allChains, isChainSupported} from 'chains/common';
+import {genPublicKeyFromPrivateKey} from 'chains/common/getPubKeyFromPvtKey';
+import {isPrivateKeyFormatValid} from 'chains/common/isPrivateKeyFormatValid';
+import {isValidHex} from 'chains/common/isValidHex';
+import {BrowserRouterProps} from 'react-router-dom';
+import clsx from 'clsx';
 
-const Login: React.FC = () => {
+export interface LoginProps extends BrowserRouterProps {
+  className?: string;
+}
+
+const Login: React.FC<LoginProps> = (props: LoginProps) => {
   const classes = useStyles();
   const DEFAULT_SELECT_CHAIN_VALUE = "Select";
   const ID_ACCOUNT_PRIVATE_KEY = "ID_ACCOUNT_PRIVATE_KEY";
@@ -85,33 +90,6 @@ const Login: React.FC = () => {
 
   const getChain = (chainName: string) => allChains.find((chain) => chain.name===chainName);
 
-  const signTokenForEthChain = async (token: string) => {
-    try {
-      const wallet = new Wallet(privateKey);
-      const signature = await wallet.signMessage(token);
-      console.log(signature);
-      return signature;
-    } catch (e) {
-      console.log(e);
-      throw e;
-    }
-  }
-
-  const signTokenForBlzChain = (token: string) => {
-    const secp256k1 = new elliptic.ec("secp256k1");
-    const key = secp256k1.keyFromPrivate(privateKey);
-    const hash = CryptoJS.SHA256(
-      CryptoJS.lib.WordArray.create(token as any)
-    ).toString();
-
-    const signature = key.sign(hash, {
-      canonical: true,
-    });
-    return Buffer.from(new Uint8Array(
-      signature.r.toArray("be", 32).concat(signature.s.toArray("be", 32))
-    )).toString('hex');
-  }
-
   const clearForm = () => {
     setPrivateKey("");
     setChainName(DEFAULT_SELECT_CHAIN_VALUE);
@@ -150,7 +128,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className={classes.root}>
+    <div className={clsx(classes.root, props.className)}>
       <Accordion className={classes.accordion}>
         <CommonAccordionHeader>
           Login
@@ -189,7 +167,6 @@ const Login: React.FC = () => {
                       multiline
                       value={publicKey}
                       id={ID_ACCOUNT_PUBLIC_KEY}
-                      variant="outlined"
                     />
                   </FormControl>
                 </div>
@@ -201,13 +178,10 @@ const Login: React.FC = () => {
                   </InputLabel>
                   <Select
                     fullWidth={true}
-                    //variant="outlined"
                     value={chainName}
                     onChange={handleChainNameChange}
                     id="chainName"
-                    placeholder={"Hello"}
                     defaultValue={DEFAULT_SELECT_CHAIN_VALUE}
-                    //style={{width: '100%'}}
                     labelId="chainNameLabel"
                   >
                     {

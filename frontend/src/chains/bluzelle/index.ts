@@ -1,5 +1,5 @@
-import {ChainInfo} from 'chains/chain-info';
-import {AllowedChainEnum} from '../chain-info';
+import {ChainInfo} from 'chains/common/chainInfo';
+import {AllowedChainEnum} from 'chains/common/chainInfo';
 
 export const bluzelleChain:ChainInfo = {
   name: "Bluzelle Mainnet",

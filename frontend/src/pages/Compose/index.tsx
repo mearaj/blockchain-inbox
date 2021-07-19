@@ -1,7 +1,16 @@
 import React from 'react';
 import CommonBar from 'components/CommonBar';
 import useStyles from './styles';
-import {Button, Card, CardContent, FormControl, FormLabel, MenuItem, Select, TextField} from '@material-ui/core';
+import {
+  Accordion,
+  AccordionDetails,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField
+} from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import CommonAccordionHeader from 'components/CommonAccordionHeader';
@@ -12,10 +21,11 @@ import {loaderActions} from 'store/Loader';
 import {CHAIN_ID} from 'config';
 import {coin} from '@cosmjs/proto-signing';
 import {MsgSend} from '@cosmjs/launchpad';
-import {allChains} from 'chains';
+import {allChains, isChainSupported} from 'chains/common';
 
 const ComposePage: React.FC = () => {
   const classes = useStyles();
+  const DEFAULT_SELECT_CHAIN_VALUE = "Select";
   const accountsState = useSelector((state: AppState) => state.accountsState);
   const composeState = useSelector((state: AppState) => state.composeState);
   const {recipientPublicKey, message, recipientChainName} = composeState;
@@ -117,73 +127,77 @@ const ComposePage: React.FC = () => {
       <CommonBar>
         Compose
       </CommonBar>
-      <Card>
-        <CommonAccordionHeader/>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-
-            <div>
-              <FormLabel htmlFor={ID_RECIPIENT_PUBLIC_KEY}>Enter Recipient's Public Key</FormLabel>
+      <Accordion>
+        <CommonAccordionHeader>New Message</CommonAccordionHeader>
+        <AccordionDetails className={classes.accordionDetails}>
+          <form className={classes.form} onSubmit={handleSubmit}>
+            <div className={classes.formControlContainer}>
               <TextField
                 fullWidth={true}
+                label="Enter Recipient's Public Key"
                 onChange={handleChange}
                 value={recipientPublicKey}
                 id={ID_RECIPIENT_PUBLIC_KEY}
                 placeholder="Example 0x3d932...."
-                variant="outlined"
               />
             </div>
-            <FormControl fullWidth>
-              <FormLabel id="chainNameLabel">Select Recipient Chain</FormLabel>
-              <Select
-                fullWidth={true}
-                variant="outlined"
-                value={recipientChainName}
-                onChange={handleRecipientChainNameChange}
-                id="chainName"
-                //style={{width: '100%'}}
-                labelId="chainNameLabel"
-              >
-                {
-                  allChains.map((chain) => (
-                    <MenuItem value={chain.name} key={chain.name}>
-                      {chain.name}
-                    </MenuItem>
-                  ))
-                }
-              </Select>
-            </FormControl>
-            <div>
-              <FormLabel htmlFor={ID_SENDER_PUBLIC_KEY}>My Public Key</FormLabel>
+            <div className={classes.formControlContainer}>
+
+              <FormControl fullWidth>
+                <InputLabel id="chainNameLabel">
+                  Select Recipient's Chain&nbsp;*
+                </InputLabel>
+                <Select
+                  fullWidth={true}
+                  label="Select Recipient Chain"
+                  value={recipientChainName}
+                  onChange={handleRecipientChainNameChange}
+                  id="chainName"
+                  labelId="chainNameLabel"
+                  defaultValue={DEFAULT_SELECT_CHAIN_VALUE}
+                >
+                  {
+                    allChains.map((chain) => (
+                      <MenuItem disabled={!isChainSupported(chain.chain)} value={chain.name} key={chain.name}>
+                        {chain.name}
+                      </MenuItem>
+                    ))
+                  }
+                </Select>
+              </FormControl>
+            </div>
+            <div className={classes.formControlContainer}>
               <TextField
                 fullWidth={true}
                 id={ID_SENDER_PUBLIC_KEY}
+                label="My Public Key"
                 disabled
                 multiline={true}
                 value={currentAccount?.publicKey}
                 variant="outlined"
               />
             </div>
-            <div>
-              <FormLabel htmlFor={ID_MESSAGE}>Enter your message</FormLabel>
+            <div className={classes.formControlContainer}>
               <TextField
                 multiline
                 fullWidth
                 rows={10}
                 id={ID_MESSAGE}
+                label="Enter your message"
                 onChange={handleChange}
                 value={message}
                 variant="outlined"
                 placeholder="Enter your message here..."
               />
             </div>
-            <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+
+            <div className={classes.footer}>
               <Button type="reset" variant="contained" color={'primary'}>Clear</Button>
               <Button type="submit" style={{marginLeft: 24}} variant="contained" color={'primary'}>Send</Button>
             </div>
           </form>
-        </CardContent>
-      </Card>
+        </AccordionDetails>
+      </Accordion>
     </div>
   );
 }

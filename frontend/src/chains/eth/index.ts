@@ -1,6 +1,6 @@
-import {ChainInfo, ChainShortInfo} from 'chains/chain-info';
+import {ChainInfo, ChainShortInfo} from 'chains/common/chainInfo';
 import {evmChains} from 'chains/data/chains';
-import {AllowedChainEnum} from '../chain-info';
+import {AllowedChainEnum} from 'chains/common/chainInfo';
 
 export const ethChains: ChainShortInfo[] = evmChains.filter(
   (chain: ChainInfo) => chain.chain === AllowedChainEnum.ETH)

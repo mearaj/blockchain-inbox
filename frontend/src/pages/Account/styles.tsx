@@ -5,23 +5,33 @@ const useStyles = makeStyles((theme:Theme) => {
 
   return {
     root: {},
+    login: {
+      marginBottom: 50,
+    },
     accounts: {
       marginTop: 40,
     },
     accordionDetails: {
       flexDirection: 'column',
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gridGap: 24,
+      display: 'block',
     },
     accountCard: {
-      wordBreak: 'break-all',
       marginBottom: 12,
-      '&$active,&:hover': {
-        backgroundColor: theme.palette.secondary.light,
-        color: theme.palette.common.white,
-        cursor: 'pointer'
-      }
+    },
+    accordionSummary: {
+      display: 'flex',
+      minWidth: 0,
+    },
+
+    radio: {
+      flexShrink:0,
+      minWidth: 50,
+    },
+    expandedMoreIcon: {
+      flexShrink: 0,
+      color:'red',
+      fill: 'red',
+      minWidth: 50,
     },
     active: {}
   }

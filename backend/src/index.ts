@@ -27,6 +27,4 @@ app.listen(PORT, () => {
   console.log(`App running on ${PORT}`);
 });
 
-
-
-export {validateLoginToken} from 'validators/validateLoginToken';
+export {verifyPublicKeyFormat} from 'validators/verifyPublicKeyFormat';

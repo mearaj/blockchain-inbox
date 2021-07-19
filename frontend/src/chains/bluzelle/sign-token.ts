@@ -1,4 +1,5 @@
 import elliptic from 'elliptic';
+import CryptoJS from 'crypto-js';
 
 // this function assumes privateKey is validated before call
 export const signTokenForBlzChain = (privateKey: string, token: string) => {

@@ -1,6 +1,6 @@
 import {signTokenForEthChain} from 'chains/eth';
 import {signTokenForBlzChain} from 'chains/bluzelle';
-import {getChain} from 'chains/common/get-chain';
+import {getChain} from 'chains/common/getChain';
 
 export const signToken = async (privateKey: string, chainName: string, token: string): Promise<string> => {
   const chain = getChain(chainName);

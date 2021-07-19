@@ -27,6 +27,7 @@ export interface ChainNativeCurrency {
   decimals: number
 }
 
+
 export interface ChainExplorer {
   name: string,
   url: string,

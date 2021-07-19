@@ -1,18 +1,7 @@
-// This method assumes the format of private key is valid hex
+import {getChain} from 'chains/common/getChain';
 import {Wallet} from 'ethers';
 import elliptic from 'elliptic';
-import {allChains} from 'chains/index';
-import {ValidatorResponse} from 'chains/validator';
-
-const getChain = (chainName: string) => allChains.find((chain) => chain.name===chainName);
-
-export const isValidHex = (hexString: string) => {
-  return /^([A-Fa-f0-9]+)$/.test(hexString);
-}
-
-export interface PublicKeyValidatorResponse extends ValidatorResponse {
-  publicKey: string;
-}
+import {PublicKeyValidatorResponse} from 'chains/common/interfaces';
 
 export const genPublicKeyFromPrivateKey = (privateKey: string, chainName: string): PublicKeyValidatorResponse => {
   const chainInfo = getChain(chainName);
@@ -56,34 +45,4 @@ export const genPublicKeyFromPrivateKey = (privateKey: string, chainName: string
   console.log({error, isValid, publicKey})
 
   return {error, isValid, publicKey};
-}
-
-export const isPrivateKeyFormatValid = (privateKey: string, chainName: string): { error: string, isValid: boolean } => {
-  const chainInfo = getChain(chainName);
-  if (!chainInfo) {
-    return {error: "Chain Info is not provided", isValid: false};
-  }
-  let isValid: boolean = false;
-  let error: string = "Invalid Private Key";
-  switch (chainInfo.chain) {
-    case "ETH":
-      isValid = /^[A-Fa-f0-9]{64}$/.test(privateKey);
-      if (!isValid) {
-        error = "Invalid Private Key!"
-        break;
-      }
-      isValid = true;
-      error = "";
-      break;
-    case "Bluzelle":
-      isValid = /^[A-Fa-f0-9]{64}$/.test(privateKey);
-      if (!isValid) {
-        error = "Invalid Private Key!"
-        break;
-      }
-      isValid = true;
-      error = "";
-      break;
-  }
-  return {error, isValid};
 }
