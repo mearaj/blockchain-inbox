@@ -7,9 +7,6 @@ const useStyles = makeStyles((theme) => {
     root: {
       width: '100%',
     },
-    accordion: {
-
-    },
     accordionDetails: {
       display: 'flex',
     },

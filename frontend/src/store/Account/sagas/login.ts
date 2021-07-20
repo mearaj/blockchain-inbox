@@ -14,8 +14,6 @@ const getChain = (chainName: string) => allChains.find((chain) => chain.name===c
 export function* loginSaga(action: PayloadAction<SagaTokenRequestBody>) {
   yield put(loaderActions.showLoader());
   const {chainName, publicKey, privateKey} = action.payload;
-  const appState: AppState = yield select();
-  const currentAccount = appState.accountsState.currentAccount;
   const tokenResponse: TokenResponseBody = yield call(requestLoginToken, action.payload);
   const {token} = tokenResponse;
   const chainInfo = getChain(chainName);
@@ -28,9 +26,8 @@ export function* loginSaga(action: PayloadAction<SagaTokenRequestBody>) {
       authResponse = yield call(login, {chainName, publicKey, signature, token});
       auth = authResponse.auth;
       yield put(accountsActions.addUpdateAccount({publicKey, privateKey, chainName, auth}));
-      if (!currentAccount) {
-        yield put(accountsActions.setCurrentAccount({publicKey, privateKey, chainName, auth}));
-      }
+      yield put(accountsActions.setCurrentAccount({publicKey, privateKey, chainName, auth}));
+
     } catch (e) {
       console.log(e);
     }

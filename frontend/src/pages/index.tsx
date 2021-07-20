@@ -89,6 +89,7 @@ const Pages = (props: AppProps) => {
     <Route exact path={"/sent"} component={SentPage}/>
     <Route exact path={"/inbox"} component={InboxPage}/>
     <Route exact path={"/outbox"} component={OutboxPage}/>
+    <Route  path={"*"}><Redirect to={"/account"}/></Route>
   </Switch>)
 
   return (

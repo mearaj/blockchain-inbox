@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => {
   return {
     root: {
       wordBreak: 'break-all',
-      backgroundColor: alpha(theme.palette.common.black,1),
+      backgroundColor: alpha(theme.palette.common.black, 1),
       color: theme.palette.common.white,
       flexGrow: 1,
       display: 'flex',
@@ -15,11 +15,13 @@ const useStyles = makeStyles((theme) => {
         backgroundColor: theme.palette.secondary.dark,
       }
     },
+    // used by root
     current: {},
     title: {},
-    header: {
+    accordionSummary: {
       display: 'flex',
       alignItems: 'center',
+      padding: 3
     },
     radio: {
       flexShrink: 0,
@@ -28,9 +30,7 @@ const useStyles = makeStyles((theme) => {
         color: theme.palette.common.white,
       }
     },
-    checked: {
-
-    },
+    checked: {},
     radioCurrent: {
       flexShrink: 0,
       color: theme.palette.common.white,
@@ -40,18 +40,20 @@ const useStyles = makeStyles((theme) => {
       display: 'flex',
       alignItems: 'center',
       minWidth: 0,
-      color: alpha(theme.palette.common.white,0.9),
+      color: alpha(theme.palette.common.white, 0.9),
     },
     labelChainName: {
+      display:'inline',
       fontSize: 24,
-      flexShrink:0,
+      flexShrink: 0,
       fontWeight: 'bold',
       marginRight: 6,
       lineHeight: 0.9,
     },
     labelPublicKey: {
+      display: 'inline',
       fontSize: 16,
-      color: alpha(theme.palette.common.white,0.7),
+      color: alpha(theme.palette.common.white, 0.7),
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
       overflow: 'hidden',
@@ -59,45 +61,26 @@ const useStyles = makeStyles((theme) => {
     labelCurrent: {
       color: theme.palette.secondary.main,
     },
-    expandedMoreIconButton: {
-      flexShrink: 0,
-      fontSize: 36,
-      transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1) 0s',
-      color: theme.palette.common.white,
-      marginLeft: 'auto'
-    },
-    expandedMoreIconButtonRotated: {
-      flexShrink: 0,
-      transform: 'rotate(180deg)',
-      transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1) 0s',
-    },
     expandedMoreIcon: {
       fontSize: 36,
-    },
-    expandedMoreIconCurrent: {
       flexShrink: 0,
-      fontSize: 36,
       color: theme.palette.common.white,
-    },
-    body: {
+      transform: 'rotate(0deg)',
       transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1) 0s',
-      maxHeight: 500,
+      '&$rotatedIcon': {
+        transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1) 0s',
+        transform: 'rotate(180deg)'
+      }
     },
-    bodyCollapsed: {
-      transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1) 0s',
-      maxHeight: 0,
-      overflow: 'hidden'
+    expandedMoreIconButton: {
+      marginLeft: 'auto',
     },
-    cardContent: {
-      display: 'flex',
-      flexGrow: 1,
-      flexDirection: 'column',
-      padding: 3,
-    },
+    rotatedIcon: {},
+
     publicKeyRow: {
       display: 'flex',
       flexDirection: 'column',
-      paddingLeft: 45,
+      paddingLeft: 32,
     },
     buttonPrimary: {
       width: 200,
@@ -112,10 +95,7 @@ const useStyles = makeStyles((theme) => {
       marginTop: 6,
       marginBottom: 6,
     },
-    publicKeyContainer: {
-      display: 'flex',
-      minWidth: 0,
-    },
+
     publicKey: {
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',

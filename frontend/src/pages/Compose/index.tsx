@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import CommonBar from 'components/CommonBar';
 import {Prompt} from 'react-router-dom';
 import useStyles from './styles';
@@ -15,124 +15,107 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import CommonAccordionHeader from 'components/CommonAccordionHeader';
-import {composeActions} from 'store/Compose';
-import {Message} from 'api';
-import {sendMessage} from 'store/Message/thunk';
-import {loaderActions} from 'store/Loader';
-import {CHAIN_ID} from 'config';
-import {coin} from '@cosmjs/proto-signing';
-import {MsgSend} from '@cosmjs/launchpad';
 import {allChains, isChainSupported} from 'chains/common';
 
 const ComposePage: React.FC = () => {
   const classes = useStyles();
-  const DEFAULT_SELECT_CHAIN_VALUE = "Select";
   const accountsState = useSelector((state: AppState) => state.accountsState);
-  const composeState = useSelector((state: AppState) => state.composeState);
-  const {recipientPublicKey, message, recipientChainName} = composeState;
   const {currentAccount} = accountsState;
-  const dispatch = useDispatch()
+
+  const DEFAULT_SELECT_CHAIN_VALUE = "Select";
   const ID_RECIPIENT_PUBLIC_KEY = "ID_RECIPIENT_PUBLIC_KEY";
-  const ID_SENDER_PUBLIC_KEY = "ID_SENDER_PUBLIC_KEY";
   const ID_MESSAGE = "ID_MESSAGE"
+  const [recipientChainName, setRecipientChainName] = useState<string>(DEFAULT_SELECT_CHAIN_VALUE);
+  const [recipientPublicKey, setRecipientPublicKey] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+
+
+  const dispatch = useDispatch()
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const ID = event.target.id;
     const value = event.target.value;
     switch (ID) {
       case ID_RECIPIENT_PUBLIC_KEY:
-        dispatch(composeActions.setTo(value));
+        setRecipientPublicKey(value);
         break;
       case ID_MESSAGE:
-        dispatch(composeActions.setMessage(value));
+        setMessage(message);
+        break;
     }
   }
-
-  const handleRecipientChainNameChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    dispatch(composeActions.setRecipientChainName(event.target.value as string));
-  };
-
-
-  // useEffect(() => {
-  //   dispatch(composeActions.setTo(to));
-  //   dispatch(composeActions.setFrom(from));
-  // },[dispatch, from, to])
+  const handleChainNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setRecipientChainName(value);
+  }
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    let message: Message =
-      {
-        creatorPublicKey: composeState.senderPublicKey,
-        creatorChainName: composeState.senderPublicKey,
-        recipientPublicKey: composeState.recipientPublicKey,
-        recipientChainName: composeState.recipientPublicKey,
-        message: composeState.message,
-      }
-    dispatch(loaderActions.showLoader());
-    setTimeout(async () => {
-      await dispatch(sendMessage(message));
-      await dispatch(loaderActions.hideLoader());
-      const msg: MsgSend = {
-        type: "cosmos-sdk/MsgSend",
-        value: {
-          from_address: currentAccount?.publicKey || "",
-          to_address: "bluzelle1gwchgddg96fy2pfgjvg22lqrseyrlpsyjh8xah",
-          amount: [coin(1000000, "BLZ")],
-        }
-      };
-      const result = await window.keplr!.signAmino(CHAIN_ID, currentAccount?.publicKey || "", {
-        account_number: currentAccount?.publicKey || "",
-        chain_id: CHAIN_ID,
-        fee: {
-          amount: [coin(1000000, "BLZ")], gas: '1'
-        },
-        memo: 'This is for result 1',
-        msgs: [msg],
-        sequence: ''
-      });
-      console.log(result)
+    // dispatch(loaderActions.showLoader());
+    // setTimeout(async () => {
+    //   await dispatch(sendMessage(message));
+    //   await dispatch(loaderActions.hideLoader());
+    //   const msg: MsgSend = {
+    //     type: "cosmos-sdk/MsgSend",
+    //     value: {
+    //       from_address: currentAccount?.publicKey || "",
+    //       to_address: "bluzelle1gwchgddg96fy2pfgjvg22lqrseyrlpsyjh8xah",
+    //       amount: [coin(1000000, "BLZ")],
+    //     }
+    //   };
+    //   const result = await window.keplr!.signAmino(CHAIN_ID, currentAccount?.publicKey || "", {
+    //     account_number: currentAccount?.publicKey || "",
+    //     chain_id: CHAIN_ID,
+    //     fee: {
+    //       amount: [coin(1000000, "BLZ")], gas: '1'
+    //     },
+    //     memo: 'This is for result 1',
+    //     msgs: [msg],
+    //     sequence: ''
+    //   });
+    //   console.log(result)
 
 
-      // let result2;
-      // const signedTx = makeStdTx(result.signed, result.signature);
-      // try {
-      //  result2 = await window.keplr!.sendTx(CHAIN_ID, signedTx, BroadcastMode.Sync);
-      // } catch (e) {
-      //   console.dir(e);
-      // }
-      // console.log(result2);
+    // let result2;
+    // const signedTx = makeStdTx(result.signed, result.signature);
+    // try {
+    //  result2 = await window.keplr!.sendTx(CHAIN_ID, signedTx, BroadcastMode.Sync);
+    // } catch (e) {
+    //   console.dir(e);
+    // }
+    // console.log(result2);
 
-      // let result3;
-      // const std:StdTx = {
-      //   fee: {
-      //     amount: [coin(1000000, "BLZ")], gas: '1'
-      //   },
-      //   memo: 'This is for result 1',
-      //   msg: [msg],
-      //   signatures: [result.signature]
-      // };
-      // try {
-      //   result3 = await window.keplr!.sendTx(CHAIN_ID, std, BroadcastMode.Async);
-      // } catch (e) {
-      //   console.dir(e);
-      // }
-      // console.log(result3);
+    // let result3;
+    // const std:StdTx = {
+    //   fee: {
+    //     amount: [coin(1000000, "BLZ")], gas: '1'
+    //   },
+    //   memo: 'This is for result 1',
+    //   msg: [msg],
+    //   signatures: [result.signature]
+    // };
+    // try {
+    //   result3 = await window.keplr!.sendTx(CHAIN_ID, std, BroadcastMode.Async);
+    // } catch (e) {
+    //   console.dir(e);
+    // }
+    // console.log(result3);
 
 
-      // const result4 = await window.keplr!.suggestToken(CHAIN_ID, currentAccount);
-      // console.log(result4);
+    // const result4 = await window.keplr!.suggestToken(CHAIN_ID, currentAccount);
+    // console.log(result4);
 
-    }, 500);
+    // }, 500);
   };
 
   return (
     <div className={classes.root}>
       <Prompt
         when={
-          !!composeState.message.replace(" ", "") ||
-          !!composeState.recipientPublicKey.replace(" ", "")
+          !!message.replace(" ", "") ||
+          !!recipientPublicKey.replace(" ", "")
         }
-        message={(location)=> "Are you sure you want to exit? Any changes will be lost!"}
+        message={(location) => "Are you sure you want to exit? Any changes will be lost!"}
       />
       <CommonBar>
         Compose
@@ -159,13 +142,17 @@ const ComposePage: React.FC = () => {
                 </InputLabel>
                 <Select
                   fullWidth={true}
-                  label="Select Recipient Chain"
                   value={recipientChainName}
-                  onChange={handleRecipientChainNameChange}
-                  id="chainName"
+                  onChange={handleChainNameChange}
                   labelId="chainNameLabel"
                   defaultValue={DEFAULT_SELECT_CHAIN_VALUE}
                 >
+                  {
+                    recipientChainName===DEFAULT_SELECT_CHAIN_VALUE &&
+                    <MenuItem value={DEFAULT_SELECT_CHAIN_VALUE} key={DEFAULT_SELECT_CHAIN_VALUE}>
+                      {DEFAULT_SELECT_CHAIN_VALUE}
+                    </MenuItem>
+                  }
                   {
                     allChains.map((chain) => (
                       <MenuItem disabled={!isChainSupported(chain.chain)} value={chain.name} key={chain.name}>
@@ -179,7 +166,6 @@ const ComposePage: React.FC = () => {
             <div className={classes.formControlContainer}>
               <TextField
                 fullWidth={true}
-                id={ID_SENDER_PUBLIC_KEY}
                 label="My Public Key"
                 disabled
                 multiline={true}
@@ -200,7 +186,6 @@ const ComposePage: React.FC = () => {
                 placeholder="Enter your message here..."
               />
             </div>
-
             <div className={classes.footer}>
               <Button type="reset" variant="contained" color={'primary'}>Clear</Button>
               <Button type="submit" style={{marginLeft: 24}} variant="contained" color={'primary'}>Send</Button>

@@ -1,12 +1,12 @@
 import CommonBar from 'components/CommonBar';
 import {Button} from '@material-ui/core';
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Account, accountsActions, AppState} from 'store';
 import {getAccountsFromCurium} from 'store/Account/thunk';
 
 import useStyles from './styles';
-import AccountCard from 'components/AccountCard';
+import AccountAccordion from 'components/AccountAccordion';
 import Login from 'components/Login';
 
 
@@ -16,7 +16,12 @@ const AccountPage: React.FC = (props) => {
     const {accounts, currentAccount} = accountsState;
     const curiumState = useSelector((state: AppState) => state.curiumState);
     const dispatch = useDispatch();
+    const [loginExpanded, setLoginExpanded] = useState(false);
 
+
+  const handleLoginAccordionChange = (event: React.ChangeEvent<{}>, expanded: boolean) => {
+      setLoginExpanded(expanded);
+  };
 
     const handleChange = (account: Account) => {
       dispatch(accountsActions.setCurrentAccount(account));
@@ -43,15 +48,18 @@ const AccountPage: React.FC = (props) => {
       //await (window.ethereum as any).request({method: 'eth_requestAccounts'});
       dispatch(getAccountsFromCurium());
     };
+    useEffect(()=> {
+      setLoginExpanded(false);
+    },[accounts]);
 
     return (
       <div className={classes.root}>
         <CommonBar>My Account</CommonBar>
-        <Login className={classes.login}/>
+        <Login  expanded={loginExpanded} onChange={handleLoginAccordionChange} className={classes.login}/>
         {
           accounts &&
           accounts.map((eachAccount) => (
-            <AccountCard
+            <AccountAccordion
               account={eachAccount}
               className={classes.accountCard}
               key={`${eachAccount.publicKey}:${eachAccount.chainName}`}

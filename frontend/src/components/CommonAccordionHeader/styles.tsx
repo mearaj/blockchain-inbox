@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme: Theme) => {
         padding: 6,
       },
       header: {
+        display: 'flex',
         flexGrow: 1,
         color: theme.palette.common.white,
         fontSize: 24,
