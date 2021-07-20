@@ -1,5 +1,6 @@
 import React from 'react';
 import CommonBar from 'components/CommonBar';
+import {Prompt} from 'react-router-dom';
 import useStyles from './styles';
 import {
   Accordion,
@@ -61,9 +62,11 @@ const ComposePage: React.FC = () => {
     event.preventDefault();
     let message: Message =
       {
+        creatorPublicKey: composeState.senderPublicKey,
+        creatorChainName: composeState.senderPublicKey,
+        recipientPublicKey: composeState.recipientPublicKey,
+        recipientChainName: composeState.recipientPublicKey,
         message: composeState.message,
-        from: composeState.senderPublicKey,
-        to: composeState.recipientPublicKey
       }
     dispatch(loaderActions.showLoader());
     setTimeout(async () => {
@@ -124,6 +127,13 @@ const ComposePage: React.FC = () => {
 
   return (
     <div className={classes.root}>
+      <Prompt
+        when={
+          !!composeState.message.replace(" ", "") ||
+          !!composeState.recipientPublicKey.replace(" ", "")
+        }
+        message={(location)=> "Are you sure you want to exit? Any changes will be lost!"}
+      />
       <CommonBar>
         Compose
       </CommonBar>

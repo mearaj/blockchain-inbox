@@ -9,9 +9,13 @@ export const INBOX_ENDPOINT = `/messages`;
 export const SEND_MESSAGES_ENDPOINT = `/messages`;
 
 export interface Message {
-  to: string;
-  from: string;
+  recipientPublicKey: string;
+  recipientChainName: string;
+  creatorPublicKey: string;
+  creatorChainName: string;
+  timestamp?:string;
   message: string;
+  id?: string;
 }
 
 export interface TokenRequestBody {

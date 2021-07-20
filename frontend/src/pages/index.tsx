@@ -36,32 +36,10 @@ const Pages = (props: AppProps) => {
     window.location.reload();
   }, []);
 
-  const onMetamaskAccountsChanged = useCallback((accounts: string[]) => {
-    window.location.reload();
-  }, []);
-
   useEffect(() => {
     window.addEventListener("keplr_keystorechange", handleKeplrAccountChange);
     return () => window.removeEventListener("keplr_keystorechange", handleKeplrAccountChange);
   });
-
-
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      if (window.ethereum) {
-        (window.ethereum as any).on('accountsChanged', onMetamaskAccountsChanged);
-      }
-    },);
-    return () => clearTimeout(timerId);
-  }, [onMetamaskAccountsChanged]);
-
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      console.log("managed accounts in useEffect called");
-      //dispatch(getAccountsFromWallets());
-    }, 0);
-    return () => clearTimeout(timerId);
-  }, [dispatch]);
 
   useEffect(() => {
     const timerId = setTimeout(async () => {

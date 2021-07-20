@@ -20,12 +20,17 @@ export function* logoutSaga(action: PayloadAction<Account>) {
     }
   } catch (e) {
     console.log(e);
-    try {
-      yield call(isLoggedIn, account.auth);
-    } catch (e) {
-      yield put(accountsActions.setAccounts(newAccounts));
-      if (currentAccount?.auth===account.auth) {
-        yield put(accountsActions.setCurrentAccount(newAccounts[0]));
+    if (e.message!=="Network Error") {
+      try {
+        yield call(isLoggedIn, account.auth);
+      } catch (e) {
+        console.log(e);
+        if (e.message!=="Network Error") {
+          yield put(accountsActions.setAccounts(newAccounts));
+          if (currentAccount?.auth===account.auth) {
+            yield put(accountsActions.setCurrentAccount(newAccounts[0]));
+          }
+        }
       }
     }
   }
