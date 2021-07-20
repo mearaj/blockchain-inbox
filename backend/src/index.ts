@@ -1,4 +1,4 @@
-import {PORT, TOKEN_ENDPOINT} from 'config';
+import {PORT} from 'config';
 import express from 'express';
 import {initSDK} from 'db/bluzelleSdk';
 import cors from 'cors';
@@ -6,7 +6,7 @@ import outbox from 'routes/outbox';
 import login from 'routes/login';
 import token from 'routes/token';
 import {initMongodb} from 'db/mongoose';
-import {authGuard} from 'middlewares/auth';
+import logout from 'routes/logout';
 
 const app = express();
 app.use(express.json());
@@ -17,6 +17,7 @@ const initApp = async () => {
   await initSDK();
   app.use(token);
   app.use(login);
+  app.use(logout);
   app.use(outbox);
 }
 

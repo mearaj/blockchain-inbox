@@ -5,11 +5,14 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import {SagaTokenRequestBody} from 'store/Account/interfaces';
 import {AppState} from 'store/reducer';
 import {allChains, signToken} from 'chains/common';
+import {logoutSaga} from 'store/Account/sagas/logout';
+import {loaderActions} from 'store/Loader';
 
 const getChain = (chainName: string) => allChains.find((chain) => chain.name===chainName);
 
 
-export function* requestLoginTokenSaga(action: PayloadAction<SagaTokenRequestBody>) {
+export function* loginSaga(action: PayloadAction<SagaTokenRequestBody>) {
+  yield put(loaderActions.showLoader());
   const {chainName, publicKey, privateKey} = action.payload;
   const appState: AppState = yield select();
   const currentAccount = appState.accountsState.currentAccount;
@@ -32,11 +35,14 @@ export function* requestLoginTokenSaga(action: PayloadAction<SagaTokenRequestBod
       console.log(e);
     }
   }
+  yield put(loaderActions.hideLoader());
 }
 
 export function* accountsWatcherSaga() {
-  const response: TokenResponseBody = yield takeEvery(accountsActions.login.type, requestLoginTokenSaga);
+  const response: TokenResponseBody = yield takeEvery(accountsActions.login.type, loginSaga);
+  const response2: TokenResponseBody = yield takeEvery(accountsActions.logout.type, logoutSaga);
   console.log(response);
+  console.log(response2);
   // const action: PayloadAction<TokenRequestBody> = yield take(accountsActions.login.type);
   // console.log(action);
   // const loginToken: TokenResponseBody = yield call(requestLoginToken, action.payload);

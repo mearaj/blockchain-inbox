@@ -48,12 +48,27 @@ export const login = async (loginRequestBody:LoginRequestBody):Promise<LoginResp
   return (await axios.post<LoginResponseBody>(LOGIN_ENDPOINT, loginRequestBody)).data;
 }
 
+export const logout = async (authToken:string):Promise<any> => {
+  const newConfig = {...config};
+  newConfig.headers["Authorization"] = 'Bearer ' + authToken;
+  const axios = axiosOrig.create(config);
+  return (await axios.post(LOGOUT_ENDPOINT)).data;
+}
+
+export const isLoggedIn = async (authToken:string):Promise<any> => {
+  const newConfig = {...config};
+  newConfig.headers["Authorization"] = 'Bearer ' + authToken;
+  const axios = axiosOrig.create(config);
+  return (await axios.get(LOGIN_ENDPOINT)).data;
+}
+
+
 export const sendMessage = async (message: Message) => {
   const axios = axiosOrig.create(config);
   return await axios.post<Message>(SEND_MESSAGES_ENDPOINT, message);
 }
 
-const api = {requestLoginToken, login, sendMessage};
+const api = {requestLoginToken, login, sendMessage,logout};
 
 export default api;
 

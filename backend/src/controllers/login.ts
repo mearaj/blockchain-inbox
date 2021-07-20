@@ -9,8 +9,7 @@ import {verifyBluzSignature} from 'utils/verifyBluzSignature';
 import {LoginRequestBody} from 'models/token';
 import {allowedChains} from 'chains';
 
-export const router = Router();
-
+// @Request: Post
 export const loginController: RequestHandler = async (req, res, next) => {
   const {token, publicKey, chainName, signature} = (req.body as LoginRequestBody);
   if (!token || !publicKey || !chainName || !signature) {
@@ -84,3 +83,10 @@ export const loginController: RequestHandler = async (req, res, next) => {
     return res.status(400).json("Invalid Signature!");
   }
 };
+
+
+// @Request: Get
+// Note: This controller assumes authGuard is called before it.
+export const isLoggedInController: RequestHandler = async (req, res, next) => {
+  return res.status(200).send();
+}

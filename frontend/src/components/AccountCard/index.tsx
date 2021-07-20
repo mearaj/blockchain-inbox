@@ -75,7 +75,9 @@ const AccountCard: React.FC<AccountCardProps> = ({account, ...props}) => {
                 </Button>
                 {
                   isLoggedIn(account.auth) ?
-                    <Button variant="contained" className={classes.buttonPrimary}>
+                    <Button variant="contained"
+                            className={classes.buttonPrimary}
+                             onClick={()=> dispatch(accountsActions.logout(account))}>
                       Logout
                     </Button>:
                     <Button variant="contained" className={classes.buttonPrimary}>

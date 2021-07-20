@@ -100,17 +100,14 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    dispatch(loaderActions.showLoader());
     if (!chainName || chainName===DEFAULT_SELECT_CHAIN_VALUE) {
       setChainNameErr("Please select the chain name to Log In...");
-      dispatch(loaderActions.hideLoader());
       return
     }
 
     const chainInfo = getChain(chainName);
     if (chainInfo) {
       const {isValid: isPrivateKeyValid} = isPrivateKeyFormatValid(privateKey, chainName);
-      console.log(isPrivateKeyValid);
       if (isPrivateKeyValid) {
         const {isValid, error, publicKey} = genPublicKeyFromPrivateKey(privateKey, chainName);
         if (!isValid) {
@@ -118,13 +115,12 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
         } else {
           setPrivateKeyErr("");
           setPublicKey(publicKey);
-          dispatch(accountsActions.login({chainName, publicKey, privateKey}));
+          await dispatch(accountsActions.login({chainName, publicKey, privateKey}));
         }
       } else {
         setPrivateKeyErr("Invalid Private Key!Please enter a valid private key!");
       }
     }
-    dispatch(loaderActions.hideLoader());
   };
 
   return (

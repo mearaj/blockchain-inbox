@@ -11,6 +11,7 @@ export interface AccountsState {
   currentAccount: Account | undefined;
   accounts: Account[];
 }
+
 export interface SagaTokenRequestBody extends TokenRequestBody {
   privateKey: string;
 }

@@ -6,7 +6,7 @@ import {
   setSelectedAccountAuth,
   setAccounts,
   setCurrentAccount,
-  login
+  login, logout
 } from 'store/Account/reducers';
 
 
@@ -25,6 +25,7 @@ const accountsSlice = createSlice({
     addUpdateAccount,
     setCurrentAccount,
     login,
+    logout,
   }
 });
 
