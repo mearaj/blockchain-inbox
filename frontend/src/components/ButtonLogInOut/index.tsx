@@ -1,11 +1,11 @@
 import React from 'react';
 import {Button} from '@material-ui/core';
 import {loginWithCurium} from 'store/Account/thunk';
-import {accountsActions} from 'store/Account';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import useStyles from './styles';
 import {CHAIN_ID} from 'config';
+import {accountsActions} from 'store/Account/reducers';
 
 const ButtonLogInOut: React.FC = () => {
   const classes = useStyles();

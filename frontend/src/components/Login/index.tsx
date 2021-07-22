@@ -15,13 +15,11 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import CommonAccordionHeader from 'components/CommonAccordionHeader';
-import {accountsActions} from 'store/Account';
 import {allChains, isChainSupported} from 'chains/common';
-import {genPublicKeyFromPrivateKey} from 'chains/common/getPubKeyFromPvtKey';
-import {isPrivateKeyFormatValid} from 'chains/common/isPrivateKeyFormatValid';
-import {isValidHex} from 'chains/common/isValidHex';
 import {BrowserRouterProps} from 'react-router-dom';
 import clsx from 'clsx';
+import {genPublicKeyFromPrivateKey, isPrivateKeyFormatValid, isValidHex} from 'chains/common/helper';
+import {accountsActions} from 'store/Account/reducers';
 
 export interface LoginProps extends BrowserRouterProps {
   className?: string;
@@ -44,6 +42,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
   const [publicKey, setPublicKey] = useState("");
   const [privateKeyErr, setPrivateKeyErr] = useState("");
   const accountsState = useSelector((state: AppState) => state.accountsState);
+  const {accounts} = accountsState;
   const dispatch = useDispatch();
   const {currentAccount} = accountsState;
   //const dispatch = useDispatch()
@@ -117,7 +116,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
 
   useEffect(() => {
     clearForm();
-  }, [accountsState]);
+  }, [accounts]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

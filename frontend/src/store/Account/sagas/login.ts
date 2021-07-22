@@ -1,12 +1,11 @@
-import {call, put, select, takeEvery} from 'redux-saga/effects';
-import {accountsActions} from 'store/Account';
+import {call, put} from 'redux-saga/effects';
 import {login, LoginResponseBody, requestLoginToken, TokenResponseBody} from 'api';
 import {PayloadAction} from '@reduxjs/toolkit';
 import {SagaTokenRequestBody} from 'store/Account/interfaces';
-import {AppState} from 'store/reducer';
 import {allChains, signToken} from 'chains/common';
-import {logoutSaga} from 'store/Account/sagas/logout';
 import {loaderActions} from 'store/Loader';
+import {accountsActions} from 'store/Account/reducers';
+import {AxiosResponse} from 'axios';
 
 const getChain = (chainName: string) => allChains.find((chain) => chain.name===chainName);
 
@@ -14,8 +13,8 @@ const getChain = (chainName: string) => allChains.find((chain) => chain.name===c
 export function* loginSaga(action: PayloadAction<SagaTokenRequestBody>) {
   yield put(loaderActions.showLoader());
   const {chainName, publicKey, privateKey} = action.payload;
-  const tokenResponse: TokenResponseBody = yield call(requestLoginToken, action.payload);
-  const {token} = tokenResponse;
+  const tokenResponse: AxiosResponse<TokenResponseBody> = yield call(requestLoginToken, action.payload);
+  const {token} = tokenResponse.data;
   const chainInfo = getChain(chainName);
   if (chainInfo) {
     let signature: string;
@@ -35,14 +34,3 @@ export function* loginSaga(action: PayloadAction<SagaTokenRequestBody>) {
   yield put(loaderActions.hideLoader());
 }
 
-export function* accountsWatcherSaga() {
-  const response: TokenResponseBody = yield takeEvery(accountsActions.login.type, loginSaga);
-  const response2: TokenResponseBody = yield takeEvery(accountsActions.logout.type, logoutSaga);
-  console.log(response);
-  console.log(response2);
-  // const action: PayloadAction<TokenRequestBody> = yield take(accountsActions.login.type);
-  // console.log(action);
-  // const loginToken: TokenResponseBody = yield call(requestLoginToken, action.payload);
-  // console.log(action, loginToken);
-  // return {action,loginToken};
-}

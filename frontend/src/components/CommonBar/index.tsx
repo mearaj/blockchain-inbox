@@ -6,9 +6,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 
 import useStyles from './styles';
 import {useDispatch} from 'react-redux';
-import {sidebarActions} from 'store/Sidebar';
 import ButtonLogInOut from 'components/ButtonLogInOut';
 import {Typography} from '@material-ui/core';
+import {sidebarActions} from 'store/Sidebar/reducers';
 
 const CommonBar: React.FC = (props) => {
   const classes = useStyles();

@@ -1,4 +1,4 @@
-import React, {ReactElement, useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import Sidebar from 'components/Sidebar';
 import InboxPage from 'pages/Inbox';
 
@@ -10,7 +10,6 @@ import AccountPage from 'pages/Account';
 import OutboxPage from 'pages/Outbox';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
-import {getAccountsFromWallets} from 'store/Account/thunk';
 import {Backdrop, CircularProgress} from '@material-ui/core';
 import {loaderActions} from 'store/Loader';
 
@@ -82,21 +81,19 @@ const Pages = (props: AppProps) => {
     // }
   };
 
-  let currentView: ReactElement = (<Switch>
-    <Route exact path={"/"}><Redirect to="/inbox"/></Route>
-    <Route exact path={"/account"} component={AccountPage}/>
-    <Route exact path={"/compose"} component={ComposePage}/>
-    <Route exact path={"/sent"} component={SentPage}/>
-    <Route exact path={"/inbox"} component={InboxPage}/>
-    <Route exact path={"/outbox"} component={OutboxPage}/>
-    <Route  path={"*"}><Redirect to={"/account"}/></Route>
-  </Switch>)
-
   return (
     <div className={classes.root}>
       <Sidebar/>
       <main className={classes.content}>
-        {currentView}
+        <Switch>
+          <Route exact path={"/"}><Redirect to="/inbox"/></Route>
+          <Route exact path={"/account"} component={AccountPage}/>
+          <Route exact path={"/compose"} component={ComposePage}/>
+          <Route exact path={"/sent"} component={SentPage}/>
+          <Route exact path={"/inbox"} component={InboxPage}/>
+          <Route exact path={"/outbox"} component={OutboxPage}/>
+          <Route path={"*"}><Redirect to={"/account"}/></Route>
+        </Switch>
       </main>
       <Backdrop onClick={() => dispatch(loaderActions.hideLoader())} open={loaderState.show} style={{zIndex: 10000}}>
         <CircularProgress/>

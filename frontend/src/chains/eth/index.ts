@@ -13,4 +13,4 @@ export const ethChains: ChainShortInfo[] = evmChains.filter(
 
 //export {signTokenForEthChain}
 
-export {signTokenForEthChain} from 'chains/eth/sign-token';
+export {signTokenForEthChain} from 'chains/eth/helper';

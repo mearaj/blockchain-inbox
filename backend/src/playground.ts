@@ -6,6 +6,8 @@ import {Wallet} from 'ethers';
 import * as sigUtil from 'eth-sig-util';
 import * as ethUtil from 'ethereumjs-util';
 
+
+
 //console.log(sigUtil);
 
 // const encryptedMessage = ethUtil.bufferToHex(

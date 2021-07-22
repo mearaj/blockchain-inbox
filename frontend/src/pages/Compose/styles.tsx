@@ -14,6 +14,15 @@ const useStyles = makeStyles((theme) => {
     accordionDetails: {
       display: 'flex'
     },
+    leaseFormGroup: {
+      display: 'grid',
+      gridAutoFlow: 'column',
+      gridColumnGap: 30,
+    },
+    leaseLabel: {
+      display: 'flex',
+      marginBottom: 10,
+    },
     footer: {
       display: 'flex',
       alignItems: 'center',

@@ -3,7 +3,7 @@ import {AllowedChainEnum} from 'chains/common/chainInfo';
 
 export const bluzelleChain:ChainInfo = {
   name: "Bluzelle Mainnet",
-  chain: AllowedChainEnum.BLUZELLE,
+  chain: AllowedChainEnum.Bluzelle,
   chainId: 0,
   faucets: [],
   infoURL: '',
@@ -18,4 +18,4 @@ export const bluzelleChain:ChainInfo = {
   shortName: ''
 };
 
-export {signTokenForBlzChain} from './sign-token';
+export {signTokenForBlzChain} from './helper';

@@ -1,9 +1,5 @@
 export * from './allChains';
 export * from './chainInfo';
-export * from './getChain';
-export * from './getPubKeyFromPvtKey';
-export * from './interfaces';
-export * from './isChainSupported';
-export * from  './isPrivateKeyFormatValid';
-export * from './isValidHex';
-export * from './signToken';
+export * from './helper';
+export type {PublicKeyValidatorResponse} from 'chains/common/helper';
+export type {ValidatorResponse} from 'chains/common/helper';

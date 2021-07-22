@@ -9,7 +9,7 @@ import App from './pages';
 import theme from 'styles/theme';
 import {Provider} from 'react-redux';
 import {persistor, store} from 'store';
-
+import './chains/common/allChains'
 
 ReactDOM.render(
   <Provider store={store}>

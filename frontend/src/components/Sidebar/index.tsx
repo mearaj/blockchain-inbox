@@ -15,9 +15,9 @@ import {Button, Typography} from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import {Dispatch} from 'redux';
-import {sidebarActions} from 'store/Sidebar';
 import {PayloadAction} from '@reduxjs/toolkit';
 import LogoFull from 'components/LogoFull';
+import {sidebarActions} from 'store/Sidebar/reducers';
 
 interface SidebarProps extends BrowserRouterProps {
 }

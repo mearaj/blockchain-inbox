@@ -12,9 +12,9 @@ export interface ChainInfo {
   faucets: string[],
   explorers?: ChainExplorer[],
   infoURL: string
-  slip44?:number;
+  slip44?: number;
   icon?: string;
-  ens?: {registry:string}
+  ens?: { registry: string }
   parent?: {
     chain: string,
     type: string
@@ -39,10 +39,10 @@ export interface ChainShortInfo {
   name: string;
   chain: string;
 }
+
 // Refers to the chain property of ChainInfo
 export enum AllowedChainEnum {
   ETH = "ETH",
-  BLUZELLE = "Bluzelle"
+  Bluzelle = "Bluzelle"
 }
-
 

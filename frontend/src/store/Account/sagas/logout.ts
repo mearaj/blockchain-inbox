@@ -1,9 +1,10 @@
 import {call, put, select} from 'redux-saga/effects';
-import {Account, accountsActions} from 'store/Account';
+import {Account} from 'store/Account';
 import {isLoggedIn, logout} from 'api';
 import {PayloadAction} from '@reduxjs/toolkit';
 import {AppState} from 'store/reducer';
 import {loaderActions} from 'store/Loader';
+import {accountsActions} from 'store/Account/reducers';
 
 export function* logoutSaga(action: PayloadAction<Account>) {
   yield put(loaderActions.showLoader());

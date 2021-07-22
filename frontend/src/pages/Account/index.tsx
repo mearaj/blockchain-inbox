@@ -9,7 +9,6 @@ import useStyles from './styles';
 import AccountAccordion from 'components/AccountAccordion';
 import Login from 'components/Login';
 
-
 const AccountPage: React.FC = (props) => {
     const classes = useStyles();
     const accountsState = useSelector((state: AppState) => state.accountsState);
@@ -65,16 +64,16 @@ const AccountPage: React.FC = (props) => {
               key={`${eachAccount.publicKey}:${eachAccount.chainName}`}
             />))
         }
-        {
-          window.keplr && !curiumState.isConnected &&
-          <div>
-            <br/>
-            <Button onClick={connectToCuriumHandler} color='primary' variant="contained">
-              Connect to Curium Extension
-            </Button>
-            <br/>
-          </div>
-        }
+        {/*{*/}
+        {/*  window.keplr && !curiumState.isConnected &&*/}
+        {/*  <div>*/}
+        {/*    <br/>*/}
+        {/*    <Button onClick={connectToCuriumHandler} color='primary' variant="contained">*/}
+        {/*      Connect to Curium Extension*/}
+        {/*    </Button>*/}
+        {/*    <br/>*/}
+        {/*  </div>*/}
+        {/*}*/}
       </div>
     )
   }

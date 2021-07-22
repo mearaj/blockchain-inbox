@@ -1,21 +1,25 @@
-import axiosOrig, {AxiosRequestConfig} from 'axios';
+import axiosOrig, {AxiosRequestConfig, AxiosResponse} from 'axios';
+import {Lease} from '@bluzelle/sdk-js/lib/codec/crud/lease';
 
 
 const BASE_URL = 'http://localhost:8081/api/v1';
 export const TOKEN_ENDPOINT = `/token`;
 export const LOGIN_ENDPOINT = `/login`;
 export const LOGOUT_ENDPOINT = `/logout`;
-export const INBOX_ENDPOINT = `/messages`;
-export const SEND_MESSAGES_ENDPOINT = `/messages`;
+export const INBOX_ENDPOINT = `/inbox`;
+export const OUTBOX_END_POINT = `/outbox`;
+export const SENT_END_POINT = `/sent`;
 
-export interface Message {
+export interface OutboxMessage {
   recipientPublicKey: string;
   recipientChainName: string;
+  recipientEncryptedMessage: string,
   creatorPublicKey: string;
   creatorChainName: string;
+  creatorEncryptedMessage: string,
+  lease:Lease;
   timestamp?:string;
-  message: string;
-  id?: string;
+  uuid?: string;
 }
 
 export interface TokenRequestBody {
@@ -42,9 +46,9 @@ const config: AxiosRequestConfig = {
   }
 }
 
-export const requestLoginToken = async (tokenRequestBody: TokenRequestBody): Promise<TokenResponseBody> => {
+export const requestLoginToken = async (tokenRequestBody: TokenRequestBody): Promise<AxiosResponse> => {
   const axios = axiosOrig.create(config);
-  return (await axios.post<TokenResponseBody>(TOKEN_ENDPOINT, tokenRequestBody)).data;
+  return await axios.post<AxiosResponse>(TOKEN_ENDPOINT, tokenRequestBody);
 }
 
 export const login = async (loginRequestBody:LoginRequestBody):Promise<LoginResponseBody> => {
@@ -52,27 +56,38 @@ export const login = async (loginRequestBody:LoginRequestBody):Promise<LoginResp
   return (await axios.post<LoginResponseBody>(LOGIN_ENDPOINT, loginRequestBody)).data;
 }
 
-export const logout = async (authToken:string):Promise<any> => {
+export const setAuthHeader = (authToken:string, config:AxiosRequestConfig):AxiosRequestConfig => {
   const newConfig = {...config};
   newConfig.headers["Authorization"] = 'Bearer ' + authToken;
-  const axios = axiosOrig.create(config);
-  return (await axios.post(LOGOUT_ENDPOINT)).data;
+  return newConfig;
 }
 
-export const isLoggedIn = async (authToken:string):Promise<any> => {
-  const newConfig = {...config};
-  newConfig.headers["Authorization"] = 'Bearer ' + authToken;
-  const axios = axiosOrig.create(config);
-  return (await axios.get(LOGIN_ENDPOINT)).data;
+export const logout = async (authToken:string):Promise<AxiosResponse> => {
+  const newConfig = setAuthHeader(authToken, config);
+  const axios = axiosOrig.create(newConfig);
+  return await axios.post(LOGOUT_ENDPOINT);
+}
+
+export const isLoggedIn = async (authToken:string):Promise<AxiosResponse> => {
+  const newConfig = setAuthHeader(authToken, config);
+  const axios = axiosOrig.create(newConfig);
+  return await axios.get(LOGIN_ENDPOINT);
 }
 
 
-export const sendMessage = async (message: Message) => {
-  const axios = axiosOrig.create(config);
-  return await axios.post<Message>(SEND_MESSAGES_ENDPOINT, message);
+export const sendMessage = async (authToken:string, message: OutboxMessage) => {
+  const newConfig = setAuthHeader(authToken, config);
+  const axios = axiosOrig.create(newConfig);
+  return await axios.post<OutboxMessage>(OUTBOX_END_POINT, message);
 }
 
-const api = {requestLoginToken, login, sendMessage,logout};
+export const getOutbox = async (authToken:string) => {
+  const newConfig = setAuthHeader(authToken, config);
+  const axios = axiosOrig.create(newConfig);
+  return await axios.get(OUTBOX_END_POINT);
+}
+
+const api = {requestLoginToken, login, sendMessage, getOutbox,logout};
 
 export default api;
 

@@ -44,3 +44,28 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+
+
+## Issues
+1. [Decrypting Multiple Messages In Metamask](https://stackoverflow.com/questions/66862869/meatamask-eth-decrypt-decrypt-multiple-message-once)
+
+## Credentials for testing
+```
+[
+  {
+   chainName: "ETH"
+   privateKey: "f8210c704104e93990ad5b6c8067995a4a902a1d7f80e2243550ed58563dc346",
+   publicKey: "0x04c5c1252a6dfea04a615eeefeead48a27c86420c35c01695cf1dc4148b8d96c1c18cf469c63313afbf69d8f87ea011ab92da6c6f832698d33f5d83e914ff82f6e"
+  },
+  {
+    chainName:  "Bluzelle",
+    privateKey: "crunch digital library parent female spell rose comic rotate clock camera snap income outside notable feel scorpion obtain transfer aim water security scene prepare",
+    publicKey: "0208bca55febd601b17cf589b5ab3f030166da624c5af36f2ea1c6954469417807"
+  }
+]
+```
+
+
+

@@ -1,10 +1,10 @@
 import {Dispatch} from 'redux';
-import {accountsActions} from 'store/Account/index';
 import {AppState} from 'store/index';
 import {curiumActions} from 'store/Curium';
 import {CHAIN_ID} from 'config';
 import {CURIUM_NOT_INSTALLED} from 'store/Account/errors';
 import {Account} from 'store/Account';
+import {accountsActions} from 'store/Account/reducers';
 
 
 export const getAccountsFromCurium = () => async (dispatch: Dispatch, getState: () => AppState) => {

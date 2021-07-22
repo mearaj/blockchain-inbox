@@ -1,6 +1,7 @@
 import {RequestHandler} from 'express';
 import {OutboxMessageModel} from 'models/outbox';
 import {Account} from 'models/account';
+import {v4 as uuid} from 'uuid';
 
 
 export const getOutboxController: RequestHandler = async (req, res, next) => {
@@ -29,15 +30,17 @@ export const getOutboxMessageByIdController: RequestHandler = async (req, res, n
 
 export const saveOutboxMessageController: RequestHandler = async (req, res, next) => {
   const message = new OutboxMessageModel(req.body);
+  message.uuid = uuid();
   try {
     const result = await message.save();
     return res.status(201).json({
       id: result.id
     });
   } catch (e) {
+    console.log(e);
     return res.status(400).json({
         error: {
-          message: "Please enter a valid request..."
+          message: "Invalid Request!"
         }
       }
     );

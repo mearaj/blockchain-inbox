@@ -1,17 +1,19 @@
 import {combineReducers} from 'redux';
 import {loaderReducer} from 'store/Loader';
-import {accountsReducer} from 'store/Account';
 import {curiumReducer} from 'store/Curium';
-import {sidebarReducer} from 'store/Sidebar';
 import storage from 'redux-persist/lib/storage/session';
 import {persistReducer} from 'redux-persist';
 import {alertMessageReducer} from 'store/AlertMessage';
+import {sidebarReducer} from 'store/Sidebar/reducers';
+import {accountsReducer} from 'store/Account/reducers';
+import {messagesReducer} from 'store/Message';
 
 
 const appReducer = combineReducers({
+  accountsState: accountsReducer,
+  messagesState: messagesReducer,
   alertMessageState: alertMessageReducer,
   loaderState: loaderReducer,
-  accountsState: accountsReducer,
   curiumState: curiumReducer,
   sidebarState: sidebarReducer,
 })
@@ -20,7 +22,7 @@ export const persistConfig = {
   key: 'root',
   storage,
   //whitelist: []
-  blacklist: ['register']
+  blacklist: ['register','loaderState']
 };
 
 
