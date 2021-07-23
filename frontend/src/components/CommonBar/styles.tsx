@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => {
       titleContainer: {
         display: 'flex',
         justifyContent: 'center',
-        flexGrow:1,
+        flexGrow: 1,
       },
     };
   }

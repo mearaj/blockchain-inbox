@@ -19,7 +19,7 @@ export const signTokenForBlzChain = (privateKey: string, token: string) => {
   )).toString('hex');
 }
 
-export const isBluzellePublicKeyFormatValid = (publicKey: string):{ isValid: boolean, error: string } => {
+export const isBluzellePublicKeyFormatValid = (publicKey: string): { isValid: boolean, error: string } => {
   let error = HELPER_MSG_BLUZELLE_PUBLIC_KEY;
   const isValid = /^[A-Fa-f0-9]{66}$/.test(publicKey);
   if (isValid) {

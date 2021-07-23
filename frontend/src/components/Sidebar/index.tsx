@@ -1,13 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import {useTheme} from '@material-ui/core/styles';
-
-import logo from 'assets/png/logo.png';
 import clsx from 'clsx';
-import {AccountBox, AddBox, Person, PresentToAll, SmsFailed} from '@material-ui/icons';
+import {AccountBox, AddBox, PresentToAll, SmsFailed} from '@material-ui/icons';
 import {BrowserRouterProps, useHistory, useLocation} from 'react-router-dom';
 
 import useStyles from './styles';
@@ -125,7 +122,7 @@ export const Sidebar = (props: SidebarProps) => {
           {drawer}
         </Drawer>
       </Hidden>
-      <Hidden  smDown implementation="css">
+      <Hidden smDown implementation="css">
         <Drawer
           classes={{
             paper: classes.drawerPaper,

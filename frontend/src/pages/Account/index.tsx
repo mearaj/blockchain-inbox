@@ -1,13 +1,12 @@
 import CommonBar from 'components/CommonBar';
-import {Button} from '@material-ui/core';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Account, accountsActions, AppState} from 'store';
 import {getAccountsFromCurium} from 'store/Account/thunk';
 
 import useStyles from './styles';
-import AccountAccordion from 'components/AccountAccordion';
 import Login from 'components/Login';
+import AccountsAccordion from 'components/AccountsAccordion';
 
 const AccountPage: React.FC = (props) => {
     const classes = useStyles();
@@ -18,9 +17,9 @@ const AccountPage: React.FC = (props) => {
     const [loginExpanded, setLoginExpanded] = useState(false);
 
 
-  const handleLoginAccordionChange = (event: React.ChangeEvent<{}>, expanded: boolean) => {
+    const handleLoginAccordionChange = (event: React.ChangeEvent<{}>, expanded: boolean) => {
       setLoginExpanded(expanded);
-  };
+    };
 
     const handleChange = (account: Account) => {
       dispatch(accountsActions.setCurrentAccount(account));
@@ -47,37 +46,20 @@ const AccountPage: React.FC = (props) => {
       //await (window.ethereum as any).request({method: 'eth_requestAccounts'});
       dispatch(getAccountsFromCurium());
     };
-    useEffect(()=> {
+    useEffect(() => {
       setLoginExpanded(false);
-    },[accounts]);
+    }, [accounts]);
 
     return (
       <div className={classes.root}>
         <CommonBar>My Account</CommonBar>
-        <Login  expanded={loginExpanded} onChange={handleLoginAccordionChange} className={classes.login}/>
+        <Login expanded={loginExpanded} onChange={handleLoginAccordionChange} className={classes.login}/>
         {
-          accounts &&
-          accounts.map((eachAccount) => (
-            <AccountAccordion
-              account={eachAccount}
-              className={classes.accountCard}
-              key={`${eachAccount.publicKey}:${eachAccount.chainName}`}
-            />))
+          <AccountsAccordion/>
         }
-        {/*{*/}
-        {/*  window.keplr && !curiumState.isConnected &&*/}
-        {/*  <div>*/}
-        {/*    <br/>*/}
-        {/*    <Button onClick={connectToCuriumHandler} color='primary' variant="contained">*/}
-        {/*      Connect to Curium Extension*/}
-        {/*    </Button>*/}
-        {/*    <br/>*/}
-        {/*  </div>*/}
-        {/*}*/}
       </div>
     )
   }
 ;
-
 
 export default AccountPage;

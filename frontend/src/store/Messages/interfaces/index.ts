@@ -1,7 +1,7 @@
-import {OutboxMessage} from 'api';
+import {InboxMessage, OutboxMessage} from 'api';
 
 export interface MessagesState {
-  inbox: string,
+  inbox: InboxMessage[],
   outbox: OutboxMessage[],
   sent: string,
 }

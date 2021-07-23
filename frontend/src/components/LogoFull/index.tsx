@@ -6,7 +6,7 @@ import {BrowserRouterProps} from 'react-router-dom';
 
 interface LogoFullProps extends BrowserRouterProps {
   className?: string;
-  logoClassName?:string;
+  logoClassName?: string;
 }
 
 const LogoFull: React.FC<LogoFullProps> = (props) => {

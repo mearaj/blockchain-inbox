@@ -3,7 +3,7 @@ import useStyles from './styles';
 import {Button, CircularProgress} from '@material-ui/core';
 import CommonBar from 'components/CommonBar';
 
-const CuriumExtensionRequired: React.FC<PropsWithChildren<any>> = (props) => {
+const CuriumRequired: React.FC<PropsWithChildren<any>> = (props) => {
 
   const [curium, setCurium] = useState(window.keplr);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,4 +47,4 @@ const CuriumExtensionRequired: React.FC<PropsWithChildren<any>> = (props) => {
   return children;
 }
 
-export default CuriumExtensionRequired;
+export default CuriumRequired;

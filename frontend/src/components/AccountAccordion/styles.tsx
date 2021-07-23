@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => {
       color: alpha(theme.palette.common.white, 0.9),
     },
     labelChainName: {
-      display:'inline',
+      display: 'inline',
       fontSize: 24,
       flexShrink: 0,
       fontWeight: 'bold',

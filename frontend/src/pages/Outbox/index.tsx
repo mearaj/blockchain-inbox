@@ -1,12 +1,16 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import CommonBar from 'components/CommonBar';
-import {DataGrid} from '@material-ui/data-grid'
 
 import useStyles from './styles';
-import CuriumExtensionRequired from 'guards/CuriumRequired';
+import CuriumRequired from 'guards/CuriumRequired';
 import {AppState, messagesAction} from 'store';
 import {useDispatch, useSelector} from 'react-redux';
-import columns from './columns';
+import {OutboxMessage} from 'api';
+import clsx from 'clsx';
+import TouchRipple from '@material-ui/core/ButtonBase/TouchRipple';
+import {getLeaseString} from 'utils/helpers';
+import {Card} from '@material-ui/core';
+import BluzelleAccountRequired from 'guards/BluzelleAccountRequired';
 
 const OutboxPage: React.FC = () => {
   const classes = useStyles();
@@ -14,28 +18,69 @@ const OutboxPage: React.FC = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    const timerId = setTimeout(async () => {
-      dispatch(messagesAction.getOutbox());
-    },);
-    return () => clearTimeout(timerId);
+    // const timerId = setTimeout(async () => {
+    //   dispatch(messagesAction.getOutbox());
+    // });
+    // return () => clearTimeout(timerId);
   }, []);
 
+  const getRowComponent = (eachOutbox: OutboxMessage) => {
+    const RowComponent: React.FC = () => {
+      const touchRipple = useRef(null);
+      return (
+        <Card
+          onClick={() => {
+            (touchRipple?.current as any)?.start();
+            setTimeout(() => {
+              (touchRipple?.current as any)?.stop({});
+            }, 1000);
+          }}
+          className={classes.grid}
+        >
+          <div className={classes.column}>
+            {eachOutbox.recipientChainName} {eachOutbox.creatorPublicKey}
+          </div>
+          <div className={classes.column}>
+            {eachOutbox.creatorEncryptedMessage}
+          </div>
+          <div className={classes.column}>
+            {getLeaseString(eachOutbox.lease)}
+          </div>
+          <TouchRipple ref={touchRipple}/>
+        </Card>
+      )
+    }
+    return <RowComponent key={eachOutbox.uuid}/>;
+  }
 
-  console.log(outbox);
+
   return (
-    <CuriumExtensionRequired>
-      <div className={classes.root}>
-        <CommonBar>Outbox</CommonBar>
-        {
-          <DataGrid
-            rows={outbox.map((eachOutbox) => ({...eachOutbox, id: eachOutbox.uuid}))}
-            columns={columns}
-            className={classes.table}
-            pageSize={5}
-          />
-        }
-      </div>
-    </CuriumExtensionRequired>
+    <CuriumRequired>
+      <BluzelleAccountRequired>
+        <div className={classes.root}>
+          <CommonBar>Outbox</CommonBar>
+          {
+            outbox &&
+            <div className={clsx(classes.grid, classes.gridHeader)}>
+              <div className={clsx(classes.column, classes.columnHeader)}>
+                To
+              </div>
+              <div className={clsx(classes.column, classes.columnHeader)}>
+                Message
+              </div>
+              <div className={clsx(classes.column, classes.columnHeader)}>
+                Lease
+              </div>
+            </div>
+          }
+          {
+            outbox.map((eachOutbox: OutboxMessage) => {
+              return getRowComponent(eachOutbox);
+            })
+          }
+        </div>
+      </BluzelleAccountRequired>
+    </CuriumRequired>
   );
 }
 

@@ -1,5 +1,5 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {OutboxMessage, sendMessage} from 'api';
+import api, {OutboxMessage} from 'api';
 import {call, put, select} from 'redux-saga/effects';
 import {loaderActions} from 'store/Loader';
 import {AppState} from 'store/reducer';
@@ -10,7 +10,7 @@ export function* sendMessageSaga(action: PayloadAction<OutboxMessage>) {
   const currentAccount = appState.accountsState.currentAccount;
   const message = action.payload;
   try {
-    yield call(sendMessage, currentAccount!.auth, message);
+    yield call(api.sendMessage, currentAccount!.auth, message);
   } catch (e) {
     console.log(e);
   }

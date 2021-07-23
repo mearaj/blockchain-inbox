@@ -7,7 +7,10 @@ import {v4 as uuid} from 'uuid';
 export const getOutboxController: RequestHandler = async (req, res, next) => {
   try {
     const account = (req as any).account as Account;
-    const results = await OutboxMessageModel.find({creatorPublicKey:account.publicKey});
+    const results = await OutboxMessageModel.find({
+      creatorPublicKey: account.publicKey,
+      creatorChainName: account.chainName
+    });
     return res.json(results);
   } catch (e) {
     return res.status(500).send();

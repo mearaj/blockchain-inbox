@@ -6,7 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 
 import useStyles from './styles';
 import {useDispatch} from 'react-redux';
-import ButtonLogInOut from 'components/ButtonLogInOut';
+import ButtonMyAccounts from 'components/ButtonMyAccounts';
 import {Typography} from '@material-ui/core';
 import {sidebarActions} from 'store/Sidebar/reducers';
 
@@ -34,7 +34,7 @@ const CommonBar: React.FC = (props) => {
               </Typography>
             </div>
             {
-              <ButtonLogInOut/>
+              <ButtonMyAccounts/>
             }
           </div>
         </Toolbar>

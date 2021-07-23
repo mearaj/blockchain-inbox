@@ -1,4 +1,4 @@
-import {alpha, makeStyles, Theme} from '@material-ui/core/styles';
+import {makeStyles, Theme} from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => {
     return {
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => {
       },
       button: {
         color: theme.palette.common.white,
-        "@global .MuiButton-label" : {
+        "@global .MuiButton-label": {
           color: `${theme.palette.common.white} !important`,
         }
       },

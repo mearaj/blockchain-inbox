@@ -7,6 +7,7 @@ import login from 'routes/login';
 import token from 'routes/token';
 import {initMongodb} from 'db/mongoose';
 import logout from 'routes/logout';
+import inbox from 'routes/inbox';
 
 const app = express();
 app.use(express.json());
@@ -19,6 +20,7 @@ const initApp = async () => {
   app.use(login);
   app.use(logout);
   app.use(outbox);
+  app.use(inbox);
 }
 
 

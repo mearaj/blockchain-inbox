@@ -43,7 +43,7 @@ export const getAccountsFromCurium = () => async (dispatch: Dispatch, getState: 
 
       console.log(updatedAccounts);
       if (curiumAccounts.length===0) {
-        clearWalletAccounts(dispatch, getState,"Curium");
+        clearWalletAccounts(dispatch, getState, "Curium");
         isConnected = false;
       } else {
         isConnected = true;

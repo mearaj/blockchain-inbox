@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {LoaderState} from './interfaces';
-import {showLoader, hideLoader, toggleLoader} from './reducers';
+import {hideLoader, showLoader, toggleLoader} from './reducers';
 
 const initialState: LoaderState = {
   show: false

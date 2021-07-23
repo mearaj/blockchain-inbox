@@ -6,8 +6,8 @@ import {AccordionSummary} from '@material-ui/core';
 import {BrowserRouterProps} from 'react-router-dom';
 import clsx from 'clsx';
 
-export interface CommonAccordionHeaderProps extends BrowserRouterProps{
-  className?:string;
+export interface CommonAccordionHeaderProps extends BrowserRouterProps {
+  className?: string;
 }
 
 const CommonAccordionHeader: React.FC<CommonAccordionHeaderProps> = (props) => {

@@ -6,7 +6,8 @@ import {
   Accordion,
   AccordionDetails,
   Button,
-  FormControl, FormHelperText,
+  FormControl,
+  FormHelperText,
   FormLabel,
   InputLabel,
   MenuItem,
@@ -16,20 +17,13 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import CommonAccordionHeader from 'components/CommonAccordionHeader';
-import {
-  allChains,
-  AllowedChainEnum,
-  getChainByName,
-  isChainSupported,
-  isPrivateKeyFormatValid,
-  isPublicKeyFormatValid
-} from 'chains/common';
-import CuriumExtensionRequired from 'guards/CuriumRequired';
+import {allChains, AllowedChainEnum, getChainByName, isChainSupported, isPublicKeyFormatValid} from 'chains/common';
+import CuriumRequired from 'guards/CuriumRequired';
 import BluzelleAccountRequired from 'guards/BluzelleAccountRequired';
 import {ethChains} from 'chains';
 import {HELPER_MSG_ETH_PUBLIC_KEY} from 'chains/eth/helper';
 import {HELPER_MSG_BLUZELLE_PUBLIC_KEY} from 'chains/bluzelle/helper';
-import {messagesAction} from 'store/Message';
+import {messagesAction} from 'store/Messages';
 
 enum KeyValues {
   ID_RECIPIENT_CHAIN_NAME = "ID_RECIPIENT_CHAIN_NAME",
@@ -150,7 +144,7 @@ const ComposePage: React.FC = () => {
       }
       return;
     }
-    if (message.trim().replace(" ","") === "") {
+    if (message.trim().replace(" ", "")==="") {
       setMessageErr("A message cannot be empty!");
       return;
     }
@@ -158,12 +152,12 @@ const ComposePage: React.FC = () => {
     dispatch(messagesAction.sendMessage({
       creatorChainName: currentAccount!.chainName,
       creatorPublicKey: currentAccount!.publicKey,
-      lease:{
-        seconds:lease.seconds === ""? 0: lease.seconds,
-        minutes:lease.minutes === ""? 0: lease.minutes,
-        hours:lease.hours === ""? 0: lease.hours,
-        days:lease.days === ""? 0: lease.days,
-        years:lease.years === ""? 0: lease.years,
+      lease: {
+        seconds: lease.seconds==="" ? 0:lease.seconds,
+        minutes: lease.minutes==="" ? 0:lease.minutes,
+        hours: lease.hours==="" ? 0:lease.hours,
+        days: lease.days==="" ? 0:lease.days,
+        years: lease.years==="" ? 0:lease.years,
       },
       creatorEncryptedMessage: message,
       recipientEncryptedMessage: message,
@@ -228,7 +222,7 @@ const ComposePage: React.FC = () => {
   };
 
   return (
-    <CuriumExtensionRequired>
+    <CuriumRequired>
       <BluzelleAccountRequired>
         <div className={classes.root}>
           <Prompt
@@ -374,7 +368,7 @@ const ComposePage: React.FC = () => {
           </Accordion>
         </div>
       </BluzelleAccountRequired>
-    </CuriumExtensionRequired>
+    </CuriumRequired>
   );
 }
 

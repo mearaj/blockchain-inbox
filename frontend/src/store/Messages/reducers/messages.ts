@@ -1,4 +1,4 @@
-import {MessagesState} from 'store/Message/interfaces';
+import {MessagesState} from 'store/Messages/interfaces';
 import {PayloadAction} from '@reduxjs/toolkit';
 import {OutboxMessage} from 'api';
 

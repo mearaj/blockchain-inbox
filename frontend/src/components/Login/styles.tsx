@@ -1,5 +1,4 @@
 import {makeStyles} from '@material-ui/core/styles';
-import {green} from '@material-ui/core/colors';
 
 
 const useStyles = makeStyles((theme) => {
@@ -15,8 +14,8 @@ const useStyles = makeStyles((theme) => {
     },
 
     formControlContainer: {
-     marginTop: 20,
-     marginBottom: 30,
+      marginTop: 20,
+      marginBottom: 30,
     },
     copyToClipboard: {
       width: 200,

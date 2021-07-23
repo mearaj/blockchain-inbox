@@ -1,6 +1,6 @@
 import {call, put, select} from 'redux-saga/effects';
 import {Account} from 'store/Account';
-import {isLoggedIn, logout} from 'api';
+import api, {logout} from 'api';
 import {PayloadAction} from '@reduxjs/toolkit';
 import {AppState} from 'store/reducer';
 import {loaderActions} from 'store/Loader';
@@ -23,7 +23,7 @@ export function* logoutSaga(action: PayloadAction<Account>) {
     console.log(e);
     if (e.message!=="Network Error") {
       try {
-        yield call(isLoggedIn, account.auth);
+        yield call(api.getLoginStatus, account.auth);
       } catch (e) {
         console.log(e);
         if (e.message!=="Network Error") {

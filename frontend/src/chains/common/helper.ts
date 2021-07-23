@@ -8,7 +8,6 @@ import {isEthPublicKeyFormatValid} from 'chains/eth/helper';
 import {isBluzellePublicKeyFormatValid} from 'chains/bluzelle/helper';
 
 
-
 export interface ValidatorResponse {
   isValid: boolean;
   error: string;
@@ -103,7 +102,7 @@ export const isPrivateKeyFormatValid = (privateKey: string, chainName: string): 
   }
   return {error, isValid};
 }
-export const isPublicKeyFormatValid =  (chainName: string, publicKey: string): { isValid: boolean, error: string } => {
+export const isPublicKeyFormatValid = (chainName: string, publicKey: string): { isValid: boolean, error: string } => {
   const chainDetail = getChainByName(chainName);
   let isValid: boolean = false;
   let error = "Chain not supported!";

@@ -1,6 +1,6 @@
 import {ChainInfo} from 'chains/common/chainInfo';
 
-export const evmChains:ChainInfo[] = [
+export const evmChains: ChainInfo[] = [
   {
     name: "Ethereum Mainnet",
     chain: "ETH",

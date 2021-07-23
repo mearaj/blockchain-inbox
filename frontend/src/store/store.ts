@@ -16,10 +16,10 @@ export const store = configureStore({
   reducer: persistedReducer,
   devTools,
   middleware: (getDefaultMiddleware) => [
-      // Ref https://github.com/rt2zz/redux-persist/issues/988
-      ...getDefaultMiddleware({serializableCheck: {ignoredActions: ["persist/PERSIST"]}, thunk: false}),
-      sageMiddleware,
-    ],
+    // Ref https://github.com/rt2zz/redux-persist/issues/988
+    ...getDefaultMiddleware({serializableCheck: {ignoredActions: ["persist/PERSIST"]}, thunk: false}),
+    sageMiddleware,
+  ],
 });
 
 sageMiddleware.run(rootSaga);

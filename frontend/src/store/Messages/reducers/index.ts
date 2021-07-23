@@ -1,11 +1,12 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {MessagesState} from 'store/Message/interfaces';
+import {MessagesState} from 'store/Messages/interfaces';
 
-import {getOutbox, setOutbox} from 'store/Message/reducers/outbox';
-import {sendMessage} from 'store/Message/reducers/messages';
+import {getOutbox, setOutbox} from 'store/Messages/reducers/outbox';
+import {sendMessage} from 'store/Messages/reducers/messages';
+import {getInbox, setInbox} from 'store/Messages/reducers/inbox';
 
 export const initialState: MessagesState = {
-  inbox:'',
+  inbox: [],
   sent: '',
   outbox: [],
 };
@@ -16,6 +17,8 @@ export const messagesSlice = createSlice({
     sendMessage,
     getOutbox,
     setOutbox,
+    getInbox,
+    setInbox
   }
 });
 

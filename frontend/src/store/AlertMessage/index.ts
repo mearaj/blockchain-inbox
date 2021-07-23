@@ -1,7 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {
-  setAlertMessageState
-} from './reducers';
+import {setAlertMessageState} from './reducers';
 import {AlertMessage} from 'store/AlertMessage/interface';
 
 const initialState: AlertMessage = {

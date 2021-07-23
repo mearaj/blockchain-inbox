@@ -1,8 +1,8 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import Sidebar from 'components/Sidebar';
 import InboxPage from 'pages/Inbox';
 
-import {Redirect, Route, Switch, useLocation} from 'react-router-dom';
+import {Redirect, Route, Switch} from 'react-router-dom';
 import useStyles from './styles';
 import ComposePage from 'pages/Compose';
 import SentPage from 'pages/Sent';
@@ -13,10 +13,7 @@ import {AppState} from 'store';
 import {Backdrop, CircularProgress} from '@material-ui/core';
 import {loaderActions} from 'store/Loader';
 
-interface AppProps {
-}
-
-const Pages = (props: AppProps) => {
+const Pages: React.FC = (props) => {
   const classes = useStyles();
 
   const handleKeplrAccountChange = () => {
@@ -24,16 +21,9 @@ const Pages = (props: AppProps) => {
   }
 
 
-  const accountState = useSelector((state: AppState) => state.accountsState);
   const loaderState = useSelector((state: AppState) => state.loaderState);
-  const {accounts, currentAccount} = accountState;
   const dispatch = useDispatch();
-  const location = useLocation();
-  const auth = currentAccount?.auth || "";
 
-  const handleChainChanged = useCallback((_chainId) => {
-    window.location.reload();
-  }, []);
 
   useEffect(() => {
     window.addEventListener("keplr_keystorechange", handleKeplrAccountChange);
@@ -58,28 +48,6 @@ const Pages = (props: AppProps) => {
       return () => clearTimeout(timerId);
     }, 0)
   }, []);
-
-
-  const loginWithMetamask = () => {
-    // if (metamaskState.provider) {
-    //   metamaskState.provider
-    //     .request({
-    //       method: 'eth_getEncryptionPublicKey',
-    //       params: [accounts[0]], // you must have access to the specified account
-    //     })
-    //     .then((result: string) => {
-    //       console.log(result)
-    //     })
-    //     .catch((error: { code: number }) => {
-    //       if (error.code===4001) {
-    //         // EIP-1193 userRejectedRequest error
-    //         console.log("We can't encrypt anything without the key.");
-    //       } else {
-    //         console.error(error);
-    //       }
-    //     });
-    // }
-  };
 
   return (
     <div className={classes.root}>

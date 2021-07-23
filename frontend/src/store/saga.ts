@@ -1,7 +1,7 @@
 import createSagaMiddleware from 'redux-saga';
 import {all, call} from 'redux-saga/effects'
 import {accountsWatcherSaga} from 'store/Account/sagas';
-import {messagesWatcherSaga} from 'store/Message';
+import {messagesWatcherSaga} from 'store/Messages';
 
 export const sageMiddleware = createSagaMiddleware();
 
