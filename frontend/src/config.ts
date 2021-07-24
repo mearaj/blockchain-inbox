@@ -12,8 +12,9 @@ export const bluzelleConfig: SDKOptions = {
   gasPrice: 0.002,
 };
 
-// private
-export const CHAIN_ID = "bluzelleTestNetPrivate-133";
+
+const BLUZELLE_TESTNET_PRIVATE_CHAIN_ID = "bluzelleTestNetPrivate-133";
+export const BLUZELLE_CHAIN_ID = BLUZELLE_TESTNET_PRIVATE_CHAIN_ID;
 
 // public
 //export const CHAIN_ID = "bluzelleTestNetPublic-22";

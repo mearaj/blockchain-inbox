@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import CommonBar from 'components/CommonBar';
 
 import useStyles from './styles';
@@ -11,18 +11,47 @@ import TouchRipple from '@material-ui/core/ButtonBase/TouchRipple';
 import {getLeaseString} from 'utils/helpers';
 import {Card} from '@material-ui/core';
 import BluzelleAccountRequired from 'guards/BluzelleAccountRequired';
+import {getDecryptedMessageFromPrivateKey} from 'chains';
 
 const OutboxPage: React.FC = () => {
   const classes = useStyles();
   const outbox = useSelector((appState: AppState) => appState.messagesState.outbox);
+  const [outboxDecrypted, setOutboxDecrypted] = useState<OutboxMessage[]>([]);
+  const currentAccount = useSelector((appState: AppState) => appState.accountsState.currentAccount);
 
   const dispatch = useDispatch();
   useEffect(() => {
-    // const timerId = setTimeout(async () => {
-    //   dispatch(messagesAction.getOutbox());
-    // });
-    // return () => clearTimeout(timerId);
+    const timerId = setTimeout(async () => {
+      dispatch(messagesAction.getOutbox());
+    });
+    return () => clearTimeout(timerId);
   }, []);
+
+  useEffect(() => {
+    const timerId = setTimeout(async () => {
+        const outboxDecryptedPromise = Promise.all(outbox.map(async (eachOutbox) => {
+            try {
+              const eachMessageObject = await getDecryptedMessageFromPrivateKey(
+                currentAccount!.privateKey,
+                currentAccount!.chainName,
+                eachOutbox.creatorEncryptedMessage
+              );
+              return {
+                ...eachOutbox,
+                message: eachMessageObject.decryptedMessage,
+              }
+            } catch (e) {
+              console.log(e);
+              return eachOutbox
+            }
+          })
+        );
+        const outboxDecryptedMessages = await outboxDecryptedPromise;
+        setOutboxDecrypted(outboxDecryptedMessages);
+      }
+    );
+    return () => clearTimeout(timerId);
+  }, [outbox])
 
   const getRowComponent = (eachOutbox: OutboxMessage) => {
     const RowComponent: React.FC = () => {
@@ -33,7 +62,7 @@ const OutboxPage: React.FC = () => {
             (touchRipple?.current as any)?.start();
             setTimeout(() => {
               (touchRipple?.current as any)?.stop({});
-            }, 1000);
+            },);
           }}
           className={classes.grid}
         >
@@ -41,7 +70,7 @@ const OutboxPage: React.FC = () => {
             {eachOutbox.recipientChainName} {eachOutbox.creatorPublicKey}
           </div>
           <div className={classes.column}>
-            {eachOutbox.creatorEncryptedMessage}
+            {eachOutbox.message}
           </div>
           <div className={classes.column}>
             {getLeaseString(eachOutbox.lease)}
@@ -60,7 +89,7 @@ const OutboxPage: React.FC = () => {
         <div className={classes.root}>
           <CommonBar>Outbox</CommonBar>
           {
-            outbox &&
+            outboxDecrypted &&
             <div className={clsx(classes.grid, classes.gridHeader)}>
               <div className={clsx(classes.column, classes.columnHeader)}>
                 To
@@ -74,7 +103,7 @@ const OutboxPage: React.FC = () => {
             </div>
           }
           {
-            outbox.map((eachOutbox: OutboxMessage) => {
+            outboxDecrypted.map((eachOutbox: OutboxMessage) => {
               return getRowComponent(eachOutbox);
             })
           }

@@ -12,7 +12,7 @@ export interface ButtonMyAccountsProps extends BrowserRouterProps {
   className?: string;
 }
 
-const ButtonMyAccounts: React.FC<ButtonMyAccountsProps> = (props) => {
+export const ButtonMyAccounts: React.FC<ButtonMyAccountsProps> = (props) => {
   const classes = useStyles();
   const className = props;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

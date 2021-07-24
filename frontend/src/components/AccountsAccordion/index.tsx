@@ -5,7 +5,7 @@ import {AppState} from 'store';
 import useStyles from './styles';
 import AccountAccordion from 'components/AccountAccordion';
 
-const AccountsAccordion: React.FC = (props) => {
+export const AccountsAccordion: React.FC = (props) => {
     const classes = useStyles();
     const accountsState = useSelector((state: AppState) => state.accountsState);
     const {accounts} = accountsState;

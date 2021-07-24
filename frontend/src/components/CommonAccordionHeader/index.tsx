@@ -10,7 +10,7 @@ export interface CommonAccordionHeaderProps extends BrowserRouterProps {
   className?: string;
 }
 
-const CommonAccordionHeader: React.FC<CommonAccordionHeaderProps> = (props) => {
+export const CommonAccordionHeader: React.FC<CommonAccordionHeaderProps> = (props) => {
   const classes = useStyles();
   const {className, ...otherProps} = props;
 

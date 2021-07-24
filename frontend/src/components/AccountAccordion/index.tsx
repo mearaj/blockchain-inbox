@@ -20,7 +20,7 @@ export interface AccountAccordionProps extends BrowserRouterProps {
   onChange?: (event: React.ChangeEvent<{}>, expanded: boolean) => void;
 }
 
-const AccountAccordion: React.FC<AccountAccordionProps> = (props) => {
+export const AccountAccordion: React.FC<AccountAccordionProps> = (props) => {
     const {account, className, expanded, onChange} = props;
     const classes = useStyles();
     const accountsState = useSelector((state: AppState) => state.accountsState);

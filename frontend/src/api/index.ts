@@ -16,6 +16,7 @@ export interface InboxMessage {
   creatorPublicKey: string;
   creatorChainName: string;
   lease: Lease;
+  message?:string;
   timestamp?: string;
   uuid?: string;
 }

@@ -2,7 +2,7 @@ import {Buffer} from 'buffer';
 import elliptic from 'elliptic';
 import CryptoJS from 'crypto-js';
 import {verifyBluzSignature} from './utils/verifyBluzSignature';
-import {Wallet} from 'ethers';
+import {ethers, Wallet} from 'ethers';
 import * as sigUtil from 'eth-sig-util';
 import * as ethUtil from 'ethereumjs-util';
 

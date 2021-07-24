@@ -1,11 +1,10 @@
 import {Dispatch} from 'redux';
 import {AppState} from 'store/index';
 import {curiumActions} from 'store/Curium';
-import {CHAIN_ID} from 'config';
+import {BLUZELLE_CHAIN_ID} from 'config';
 import {CURIUM_NOT_INSTALLED} from 'store/Account/errors';
 import {Account} from 'store/Account';
 import {accountsActions} from 'store/Account/reducers';
-
 
 export const getAccountsFromCurium = () => async (dispatch: Dispatch, getState: () => AppState) => {
   const appState = getState();
@@ -14,6 +13,7 @@ export const getAccountsFromCurium = () => async (dispatch: Dispatch, getState: 
     clearWalletAccounts(dispatch, getState, "Curium");
     return
   }
+
   dispatch(curiumActions.clearError());
   if (window.getOfflineSigner) {
     let accounts = appState.accountsState.accounts;
@@ -21,12 +21,12 @@ export const getAccountsFromCurium = () => async (dispatch: Dispatch, getState: 
     let isConnected: boolean;
     try {
       try {
-        await window.keplr.enable(CHAIN_ID);
+        await window.keplr.enable(BLUZELLE_CHAIN_ID);
       } catch (e) {
         clearWalletAccounts(dispatch, getState, "Curium");
         console.log(e);
       }
-      const offlineSigner = window.getOfflineSigner(CHAIN_ID);
+      const offlineSigner = window.getOfflineSigner(BLUZELLE_CHAIN_ID);
       const curiumAccounts = await offlineSigner.getAccounts();
       // curiumAccounts.forEach((accountData: AccountData) => {
       //   if (accounts[accountData.address]) {

@@ -10,7 +10,7 @@ import ButtonMyAccounts from 'components/ButtonMyAccounts';
 import {Typography} from '@material-ui/core';
 import {sidebarActions} from 'store/Sidebar/reducers';
 
-const CommonBar: React.FC = (props) => {
+export const CommonBar: React.FC = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 

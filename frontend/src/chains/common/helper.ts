@@ -1,11 +1,14 @@
 import {Wallet} from 'ethers';
 import elliptic from 'elliptic';
+import EthCrypto from 'eth-crypto';
 import {AllowedChainEnum, ChainInfo} from 'chains/common/chainInfo';
 import {signTokenForEthChain} from 'chains/eth';
 import {bluzelleChain, signTokenForBlzChain} from 'chains/bluzelle';
 import {evmChains} from 'chains/data/chains';
 import {isEthPublicKeyFormatValid} from 'chains/eth/helper';
 import {isBluzellePublicKeyFormatValid} from 'chains/bluzelle/helper';
+import * as ethUtil from 'ethereumjs-util';
+import eccrypto from 'eccrypto';
 
 
 export interface ValidatorResponse {
@@ -141,3 +144,80 @@ export const signToken = async (privateKey: string, chainName: string, token: st
   }
   return signature;
 };
+
+
+export const getEncryptedMessageFromPublicKey = async (publicKey: string, chainName: string, message: string):
+  Promise<{ error: string, isValid: boolean, encryptedMessage: string }> => {
+  const chainInfo = getChainByName(chainName);
+  if (!chainInfo) {
+    return {error: "Chain not supported!", isValid: false, encryptedMessage: ""};
+  }
+  let isValid: boolean = false;
+  let error: string = "Invalid Public Key";
+  let encryptedMessage = "";
+  switch (chainInfo.chain) {
+    case "ETH":
+      try {
+        const encrypted = await EthCrypto.encryptWithPublicKey(
+          publicKey.substr(2),
+          JSON.stringify(message)
+        );
+        encryptedMessage = EthCrypto.cipher.stringify(encrypted);
+        isValid = true;
+        error = "";
+      } catch (e) {
+        isValid = false;
+        error = e.message || "Unknown error!";
+        encryptedMessage = "";
+      }
+      break;
+    case "Bluzelle":
+      try {
+        const encrypted = await EthCrypto.encryptWithPublicKey(
+          publicKey,
+          JSON.stringify(message)
+        );
+        encryptedMessage = EthCrypto.cipher.stringify(encrypted);
+        isValid = true;
+        error = "";
+      } catch (e) {
+        isValid = false;
+        error = e.message || "Unknown error!";
+        encryptedMessage = "";
+      }
+      break;
+  }
+  return {error, isValid, encryptedMessage};
+}
+
+
+export const getDecryptedMessageFromPrivateKey = async (privateKey: string, chainName: string, message: string):
+  Promise<{ error: string, isValid: boolean, decryptedMessage: string }> => {
+  const chainInfo = getChainByName(chainName);
+  if (!chainInfo) {
+    return {error: "Chain not supported!", isValid: false, decryptedMessage: ""};
+  }
+  let isValid: boolean = false;
+  let error: string = "Invalid Private Key";
+  let decryptedMessage = "";
+  switch (chainInfo.chain) {
+    case "ETH":
+    case "Bluzelle":
+      try {
+        const encryptedObject = EthCrypto.cipher.parse(message);
+        const decrypted = await EthCrypto.decryptWithPrivateKey(
+          privateKey,
+          encryptedObject,
+        );
+        decryptedMessage = JSON.parse(decrypted);
+        isValid = true;
+        error = "";
+      } catch (e) {
+        isValid = false;
+        error = e.message || "Unknown error!";
+        decryptedMessage = "";
+      }
+      break;
+  }
+  return {error, isValid, decryptedMessage: decryptedMessage};
+}

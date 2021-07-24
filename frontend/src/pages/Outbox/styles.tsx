@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme) => {
       wordBreak: 'break-all',
       padding: '10px 20px',
       backgroundColor: alpha(theme.palette.primary.light, 0.1),
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis'
       //borderTop: `1px solid ${alpha(theme.palette.primary.light,0.2)}`,
     },
     columnHeader: {
