@@ -13,3 +13,9 @@ export const pageBodySectionsStyle: {} = {
     justifyContent: 'space-between'
   }
 };
+
+export const flexCenterStyle: {} = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+};

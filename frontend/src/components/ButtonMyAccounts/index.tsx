@@ -15,18 +15,19 @@ export interface ButtonMyAccountsProps extends BrowserRouterProps {
 
 export const ButtonMyAccounts: React.FC<ButtonMyAccountsProps> = (props) => {
   const classes = useStyles();
-  const className = props;
+  const {className} = props;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const accountsState = useSelector((state: AppState) => state.accountsState);
   const history = useHistory();
   const {accounts} = accountsState;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (accounts && accounts.length!==0) {
-      setAnchorEl(event.currentTarget);
-    } else {
-      history.push('./account');
-    }
+    setAnchorEl(event.currentTarget);
+    // if (accounts && accounts.length!==0) {
+    //
+    // } else {
+    //   history.push('./account');
+    // }
   };
 
   const handleClose = () => {
@@ -41,13 +42,13 @@ export const ButtonMyAccounts: React.FC<ButtonMyAccountsProps> = (props) => {
           onClick={handleClick}
           variant="contained"
         >
-          My Accounts
+          My Account
         </Button>
       }
 
       {
-        accounts &&
-        accounts.length!==0 &&
+        // accounts &&
+        // accounts.length!==0 &&
         anchorEl &&
         <Menu
           className={classes.accountsMenu}
@@ -66,7 +67,7 @@ export const ButtonMyAccounts: React.FC<ButtonMyAccountsProps> = (props) => {
               <Close/>
             </IconButton>
             <Typography variant="h5">
-              My Accounts
+              My Account
             </Typography>
             <IconButton
               color="primary"

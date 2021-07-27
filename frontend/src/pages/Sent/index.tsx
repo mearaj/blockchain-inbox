@@ -9,7 +9,7 @@ import {SentMessage} from 'api';
 import clsx from 'clsx';
 import TouchRipple from '@material-ui/core/ButtonBase/TouchRipple';
 import {getLeaseString} from 'utils/helpers';
-import {Card} from '@material-ui/core';
+import {Card, Typography} from '@material-ui/core';
 import BluzelleAccountRequired from 'guards/BluzelleAccountRequired';
 import {getDecryptedMessageFromPrivateKey} from 'chains';
 
@@ -89,7 +89,7 @@ const SentPage: React.FC = () => {
         <div className={classes.root}>
           <CommonBar>Sent</CommonBar>
           {
-            sentDecrypted &&
+            sentDecrypted.length !== 0 &&
             <div className={clsx(classes.grid, classes.gridHeader)}>
               <div className={clsx(classes.column, classes.columnHeader)}>
                 To
@@ -99,6 +99,14 @@ const SentPage: React.FC = () => {
               </div>
               <div className={clsx(classes.column, classes.columnHeader)}>
                 Lease
+              </div>
+            </div>
+          }
+          {
+            sent.length===0 &&
+            <div className={classes.emptyContainer}>
+              <div className={classes.emptyTitle}>
+                <Typography variant="h6">Your Sent Messages Is Empty!</Typography>
               </div>
             </div>
           }

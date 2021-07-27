@@ -7,7 +7,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import useStyles from './styles';
 import {useDispatch} from 'react-redux';
 import ButtonMyAccounts from 'components/ButtonMyAccounts';
-import {Typography} from '@material-ui/core';
+import {Button, Typography} from '@material-ui/core';
 import {sidebarActions} from 'store/Sidebar/reducers';
 
 export const CommonBar: React.FC = (props) => {
@@ -27,15 +27,15 @@ export const CommonBar: React.FC = (props) => {
           >
             <MenuIcon/>
           </IconButton>
-          <div style={{display: 'flex', flexGrow: 1, alignItems: 'center'}}>
+
+          <div className={classes.content}>
             <div className={classes.titleContainer}>
               <Typography variant="h5" className={classes.title}>
                 {props.children}
               </Typography>
             </div>
-            {
-              <ButtonMyAccounts/>
-            }
+
+            <ButtonMyAccounts className={classes.buttonAccounts}/>
           </div>
         </Toolbar>
       </AppBar>

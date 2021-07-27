@@ -1,5 +1,6 @@
 import {makeStyles, Theme} from '@material-ui/core/styles';
 import {drawerWidth} from 'styles/variables';
+import {purple} from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme: Theme) => {
     return {
@@ -23,13 +24,26 @@ const useStyles = makeStyles((theme: Theme) => {
         alignItems: "center",
         justifyContent: "center"
       },
+      content: {
+        display: 'flex',
+        flexGrow: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingLeft: 58,
+        [theme.breakpoints.up('md')]: {
+          paddingLeft: 108,
+        },
+      },
+      buttonAccounts: {
+        marginLeft: 'auto',
+      },
       title: {
         fontWeight: 700,
       },
       titleContainer: {
         display: 'flex',
-        justifyContent: 'center',
         flexGrow: 1,
+        justifyContent: 'center'
       },
     };
   }

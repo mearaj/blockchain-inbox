@@ -1,4 +1,5 @@
 import {alpha, makeStyles} from '@material-ui/core/styles';
+import {flexCenterStyle} from 'styles/variables';
 
 
 const useStyles = makeStyles((theme) => {
@@ -37,6 +38,12 @@ const useStyles = makeStyles((theme) => {
       fontSize: 20,
       cursor: 'auto'
     },
+    emptyContainer:{
+      ...flexCenterStyle,
+    },
+    emptyTitle: {
+      color:theme.palette.primary.dark,
+    }
   }
 });
 

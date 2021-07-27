@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme: Theme) => {
       },
       accountsAccordionContainer: {
         maxWidth: 600,
+        minWidth: 400,
         padding: '10px 20px',
         backgroundColor: theme.palette.primary.light
       },

@@ -53,9 +53,7 @@ const AccountPage: React.FC = (props) => {
       <div className={classes.root}>
         <CommonBar>My Account</CommonBar>
         <Login expanded={loginExpanded} onChange={handleLoginAccordionChange} className={classes.login}/>
-        {
-          <AccountsAccordion/>
-        }
+        <AccountsAccordion/>
       </div>
     )
   }

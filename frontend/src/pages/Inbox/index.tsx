@@ -4,12 +4,13 @@ import CommonBar from 'components/CommonBar';
 import useStyles from './styles';
 import {AppState, messagesAction} from 'store';
 import {useDispatch, useSelector} from 'react-redux';
-import {InboxMessage, OutboxMessage} from 'api';
+import {InboxMessage} from 'api';
 import clsx from 'clsx';
 import TouchRipple from '@material-ui/core/ButtonBase/TouchRipple';
 import {getLeaseString} from 'utils/helpers';
 import LoginRequired from 'guards/LoginRequired';
 import {getDecryptedMessageFromPrivateKey} from 'chains';
+import {Typography} from '@material-ui/core';
 
 const InboxPage: React.FC = () => {
   const classes = useStyles();
@@ -95,6 +96,14 @@ const InboxPage: React.FC = () => {
             </div>
             <div className={clsx(classes.column, classes.columnHeader)}>
               Lease
+            </div>
+          </div>
+        }
+        {
+          inboxDecrypted.length===0 &&
+          <div className={classes.emptyContainer}>
+            <div className={classes.emptyTitle}>
+              <Typography variant="h6">Your Inbox Is Empty!</Typography>
             </div>
           </div>
         }
