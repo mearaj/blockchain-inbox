@@ -26,7 +26,7 @@ export const initialState: MessagesState = {
   claimMessageState: "",
   claimMessageSignature: undefined,
   claimMessageSigned: undefined,
-  claimMessageUuid: '',
+  claimMessageId: '',
   inbox: [],
   sent: [],
   outbox: []

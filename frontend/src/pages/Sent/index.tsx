@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CommonBar from 'components/CommonBar';
 
 import useStyles from './styles';
@@ -6,12 +6,11 @@ import CuriumRequired from 'guards/CuriumRequired';
 import {AppState, messagesAction} from 'store';
 import {useDispatch, useSelector} from 'react-redux';
 import {SentMessage} from 'api';
-import clsx from 'clsx';
-import TouchRipple from '@material-ui/core/ButtonBase/TouchRipple';
-import {getLeaseString} from 'utils/helpers';
-import {Card, Typography} from '@material-ui/core';
+import {Typography} from '@material-ui/core';
 import BluzelleAccountRequired from 'guards/BluzelleAccountRequired';
 import {getDecryptedMessageFromPrivateKey} from 'chains';
+import {DataGrid} from '@material-ui/data-grid';
+import columns from 'pages/Sent/interfaces';
 
 const SentPage: React.FC = () => {
   const classes = useStyles();
@@ -29,7 +28,7 @@ const SentPage: React.FC = () => {
 
   useEffect(() => {
     const timerId = setTimeout(async () => {
-        const sentDecryptedPromise = Promise.all(sent.map(async (eachSent) => {
+        const sentDecryptedPromise = await Promise.all(sent.map(async (eachSent) => {
             try {
               const eachMessageObject = await getDecryptedMessageFromPrivateKey(
                 currentAccount!.privateKey,
@@ -53,57 +52,13 @@ const SentPage: React.FC = () => {
     return () => clearTimeout(timerId);
   }, [sent])
 
-  const getRowComponent = (eachSent: SentMessage) => {
-    const RowComponent: React.FC = () => {
-      const touchRipple = useRef(null);
-      return (
-        <Card
-          onClick={() => {
-            (touchRipple?.current as any)?.start();
-            setTimeout(() => {
-              (touchRipple?.current as any)?.stop({});
-            },);
-          }}
-          className={classes.grid}
-        >
-          <div className={classes.column}>
-            {eachSent.recipientChainName} {eachSent.recipientPublicKey}
-          </div>
-          <div className={classes.column}>
-            {eachSent.message}
-          </div>
-          <div className={classes.column}>
-            {getLeaseString(eachSent.lease)}
-          </div>
-          <TouchRipple ref={touchRipple}/>
-        </Card>
-      )
-    }
-    return <RowComponent key={eachSent.uuid}/>;
-  }
-
-
   return (
     <CuriumRequired>
       <BluzelleAccountRequired>
         <div className={classes.root}>
           <CommonBar>Sent</CommonBar>
           {
-            sentDecrypted.length !== 0 &&
-            <div className={clsx(classes.grid, classes.gridHeader)}>
-              <div className={clsx(classes.column, classes.columnHeader)}>
-                To
-              </div>
-              <div className={clsx(classes.column, classes.columnHeader)}>
-                Message
-              </div>
-              <div className={clsx(classes.column, classes.columnHeader)}>
-                Lease
-              </div>
-            </div>
-          }
-          {
-            sent.length===0 &&
+            sentDecrypted.length===0 &&
             <div className={classes.emptyContainer}>
               <div className={classes.emptyTitle}>
                 <Typography variant="h6">Your Sent Messages Is Empty!</Typography>
@@ -111,9 +66,13 @@ const SentPage: React.FC = () => {
             </div>
           }
           {
-            sentDecrypted.map((eachSent: SentMessage) => {
-              return getRowComponent(eachSent);
-            })
+            sentDecrypted.length!==0 &&
+            <DataGrid
+              rows={sentDecrypted}
+              columns={columns}
+              pageSize={sentDecrypted.length}
+              disableSelectionOnClick
+            />
           }
         </div>
       </BluzelleAccountRequired>

@@ -7,6 +7,8 @@ const useStyles = makeStyles((theme: Theme) => {
         height: '100%'
       },
       content: {
+        display: 'flex',
+        flexDirection: 'column',
         flexGrow: 1,
         padding: theme.spacing(3),
         overflow: 'auto',

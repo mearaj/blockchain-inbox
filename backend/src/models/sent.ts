@@ -6,5 +6,5 @@ export interface SentMessage {
   message: string,
   lease: Lease,
   timestamp: number,
-  uuid: string;
+  id: string;
 }

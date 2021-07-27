@@ -6,5 +6,5 @@ export interface InboxMessage {
   message: string,
   lease: Lease,
   timestamp: number,
-  uuid: string;
+  id: string;
 }

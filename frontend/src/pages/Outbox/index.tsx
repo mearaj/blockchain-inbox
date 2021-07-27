@@ -79,7 +79,7 @@ const OutboxPage: React.FC = () => {
         </Card>
       )
     }
-    return <RowComponent key={eachOutbox.uuid}/>;
+    return <RowComponent key={eachOutbox.id}/>;
   }
 
 

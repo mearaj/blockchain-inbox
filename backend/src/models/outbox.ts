@@ -10,7 +10,7 @@ export interface OutboxMessage {
   recipientEncryptedMessage: string,
   lease: Lease,
   timestamp: number,
-  uuid: string;
+  id: string;
 }
 
 export const outboxMessageSchema = new Schema<OutboxMessage>(
@@ -77,7 +77,7 @@ export const outboxMessageSchema = new Schema<OutboxMessage>(
         required: true
       },
     },
-    uuid: {
+    id: {
       type: String,
       required: true,
       trim: true,

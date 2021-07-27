@@ -1,7 +1,7 @@
 import {StdSignature, StdSignDoc} from '@cosmjs/amino'
 
 export interface ClaimMessage {
-  uuid: string;
+  id: string;
   signature: StdSignature,
   signed: StdSignDoc,
 }

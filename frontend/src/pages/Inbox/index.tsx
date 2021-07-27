@@ -77,7 +77,7 @@ const InboxPage: React.FC = () => {
         </div>
       )
     }
-    return <RowComponent key={eachInbox.uuid}/>;
+    return <RowComponent key={eachInbox.id}/>;
   }
 
   return (

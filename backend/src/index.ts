@@ -8,7 +8,7 @@ import token from 'routes/token';
 import {initMongodb} from 'db/mongoose';
 import logout from 'routes/logout';
 import inbox from 'routes/inbox';
-import claims from 'routes/claims';
+import claims from 'routes/claim';
 import sent from 'routes/sent';
 
 const app = express();

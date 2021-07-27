@@ -24,7 +24,7 @@ export const claimMessageClear = (state: MessagesState, action: PayloadAction) =
 }
 
 export const setClaimMessageUuid = (state: MessagesState, action: PayloadAction<string>) => {
-  state.claimMessageUuid = action.payload;
+  state.claimMessageId = action.payload;
 }
 
 export const setClaimMessageSigned = (state: MessagesState, action: PayloadAction<StdSignDoc | undefined>) => {

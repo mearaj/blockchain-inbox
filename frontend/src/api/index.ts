@@ -19,7 +19,7 @@ export interface InboxMessage {
   message: string,
   lease: Lease,
   timestamp: number,
-  uuid: string;
+  id: string;
 }
 
 export interface SentMessage {
@@ -28,7 +28,7 @@ export interface SentMessage {
   message: string,
   lease: Lease,
   timestamp: number,
-  uuid: string;
+  id: string;
 }
 
 
@@ -42,7 +42,7 @@ export interface OutboxMessage {
   lease: Lease;
   message?: string;
   timestamp?: string;
-  uuid?: string;
+  id?: string;
 }
 
 export interface TokenRequestBody {
@@ -64,7 +64,7 @@ export interface LoginResponseBody {
 }
 
 export interface ClaimMessage {
-  uuid: string;
+  id: string;
   signature: StdSignature | undefined,
   signed: StdSignDoc | undefined,
 }

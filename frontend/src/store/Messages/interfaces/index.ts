@@ -5,7 +5,7 @@ import {StdSignature, StdSignDoc} from '@cosmjs/launchpad';
 export interface MessagesState {
   sendMessageState: string,
   claimMessageState: string,
-  claimMessageUuid: string,
+  claimMessageId: string,
   claimMessageSigned: StdSignDoc | undefined,
   claimMessageSignature: StdSignature | undefined,
   inbox: InboxMessage[],

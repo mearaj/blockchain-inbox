@@ -77,7 +77,7 @@ const ComposePage: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [messageErr, setMessageErr] = useState<string>("");
   const messagesState = useSelector((state: AppState) => state.messagesState);
-  const {sendMessageState, claimMessageState, claimMessageUuid} = messagesState;
+  const {sendMessageState, claimMessageState, claimMessageId} = messagesState;
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -168,7 +168,7 @@ const ComposePage: React.FC = () => {
         msgs: [msg],
         sequence: ''
       });
-      if (claimMessageUuid) {
+      if (claimMessageId) {
         dispatch(messagesAction.claimMessage({
           signature: result.signature,
           signed: result.signed
@@ -181,7 +181,7 @@ const ComposePage: React.FC = () => {
         history.push('/outbox');
       }
     }
-    if (claimMessageState!==messagesAction.sendMessageFailure.type) {
+    if (claimMessageState!==messagesAction.sendMessageFailure.type && !claimMessageId) {
       clearForm();
       history.push('/outbox');
     }
@@ -243,11 +243,15 @@ const ComposePage: React.FC = () => {
           recipientPublicKey,
         })
       );
+
+      // make sure we collect message id from backend before sending message with curium
+      while (sendMessageState === messagesAction.sendMessagePending.type) {}
       await sendMessageWithCurium();
     }
   };
-
   useEffect(() => {
+    console.log(sendMessageState);
+    console.log(claimMessageId);
     switch (sendMessageState) {
       case messagesAction.sendMessagePending.type:
         dispatch(loaderActions.showLoader());
@@ -258,6 +262,7 @@ const ComposePage: React.FC = () => {
       case messagesAction.sendMessageSuccess.type:
         dispatch(messagesAction.sendMessageClear());
         dispatch(loaderActions.hideLoader());
+        clearForm();
         break;
     }
   }, [sendMessageState]);

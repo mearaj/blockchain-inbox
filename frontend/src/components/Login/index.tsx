@@ -16,27 +16,18 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import CommonAccordionHeader from 'components/CommonAccordionHeader';
 import {allChains, isChainSupported} from 'chains/common';
-import {BrowserRouterProps} from 'react-router-dom';
 import clsx from 'clsx';
-import {genPublicKeyFromPrivateKey, isPrivateKeyFormatValid, isValidHex} from 'chains/common/helper';
+import {genPublicKeyFromPrivateKey, isPrivateKeyFormatValid} from 'chains/common/helper';
 import {accountsActions} from 'store/Account/reducers';
+import {ID_ACCOUNT_PRIVATE_KEY, ID_ACCOUNT_PUBLIC_KEY, LoginProps} from 'components/Login/interfaces';
+import {ethChains} from 'chains';
 
-export interface LoginProps extends BrowserRouterProps {
-  className?: string;
-  expanded?: boolean;
-  onChange?: (event: React.ChangeEvent<{}>, expanded: boolean) => void;
-}
-
-
-const DEFAULT_SELECT_CHAIN_VALUE = "Select";
-const ID_ACCOUNT_PRIVATE_KEY = "ID_ACCOUNT_PRIVATE_KEY";
-const ID_ACCOUNT_PUBLIC_KEY = "ID_ACCOUNT_PUBLIC_KEY";
 
 const Login: React.FC<LoginProps> = (props: LoginProps) => {
   const {className, expanded, onChange, ...otherProps} = props;
   const [locallyExpanded, setLocallyExpanded] = useState(expanded===undefined ? false:expanded);
   const classes = useStyles();
-  const [chainName, setChainName] = useState(DEFAULT_SELECT_CHAIN_VALUE);
+  const [chainName, setChainName] = useState(ethChains[0].name);
   const [chainNameErr, setChainNameErr] = useState("");
   const [privateKey, setPrivateKey] = useState("");
   const [publicKey, setPublicKey] = useState("");
@@ -44,8 +35,6 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
   const accountsState = useSelector((state: AppState) => state.accountsState);
   const {accounts} = accountsState;
   const dispatch = useDispatch();
-  const {currentAccount} = accountsState;
-  //const dispatch = useDispatch()
 
 
   const handleAccordionChange = (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
@@ -61,11 +50,10 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
     const value = event.target.value;
     switch (ID) {
       case ID_ACCOUNT_PRIVATE_KEY:
-        if (isValidHex(value) || !value) {
-          setPrivateKey(value);
-        }
+        setPrivateKey(value);
         const validatorResponse = isPrivateKeyFormatValid(value, chainName)
         if (validatorResponse.isValid) {
+          // clear any previous error
           if (privateKeyErr) {
             setPrivateKeyErr("");
           }
@@ -104,7 +92,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
 
   const clearForm = () => {
     setPrivateKey("");
-    setChainName(DEFAULT_SELECT_CHAIN_VALUE);
+    setChainName(ethChains[0].name);
     setPublicKey("");
     setChainNameErr("");
     setPrivateKeyErr("");
@@ -120,11 +108,6 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!chainName || chainName===DEFAULT_SELECT_CHAIN_VALUE) {
-      setChainNameErr("Please select the chain name to Log In...");
-      return
-    }
-
     const chainInfo = getChain(chainName);
     if (chainInfo) {
       const {isValid: isPrivateKeyValid} = isPrivateKeyFormatValid(privateKey, chainName);
@@ -159,6 +142,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
             <div className={classes.formControlContainer}>
               <TextField
                 label="Enter Your Private Key*"
+                multiline
                 fullWidth={true}
                 onChange={handleChange}
                 value={privateKey}
@@ -201,15 +185,8 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
                   value={chainName}
                   onChange={handleChainNameChange}
                   id="chainName"
-                  defaultValue={DEFAULT_SELECT_CHAIN_VALUE}
                   labelId="chainNameLabel"
                 >
-                  {
-                    chainName===DEFAULT_SELECT_CHAIN_VALUE &&
-                    <MenuItem value={DEFAULT_SELECT_CHAIN_VALUE} key={DEFAULT_SELECT_CHAIN_VALUE}>
-                      {DEFAULT_SELECT_CHAIN_VALUE}
-                    </MenuItem>
-                  }
                   {
                     allChains.map((chain) => (
                       <MenuItem disabled={!isChainSupported(chain.chain)} value={chain.name} key={chain.name}>
@@ -246,5 +223,6 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
     </Accordion>
   );
 }
+
 
 export default Login;

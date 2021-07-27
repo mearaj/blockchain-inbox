@@ -8,10 +8,10 @@ import {InboxMessage} from 'models/inbox';
 export const getClaimController: RequestHandler = async (req, res, next) => {
   try {
     const claimMessage = req.body as ClaimMessage;
-    if (!claimMessage || !claimMessage.uuid || !claimMessage.signed || !claimMessage.signature) {
+    if (!claimMessage || !claimMessage.id || !claimMessage.signed || !claimMessage.signature) {
       return res.status(404).send();
     }
-    const message = await OutboxMessageModel.findOne({uuid: claimMessage.uuid});
+    const message = await OutboxMessageModel.findOne({id: claimMessage.id});
     if (!message) {
       console.log(claimMessage)
       console.log("Not found!")
@@ -24,7 +24,7 @@ export const getClaimController: RequestHandler = async (req, res, next) => {
       recipientChainName: message.recipientChainName,
       message: message.creatorEncryptedMessage,
       timestamp: message.timestamp,
-      uuid: message.uuid,
+      id: message.id,
     };
     const inboxMessage: InboxMessage = {
       lease: message.lease,
@@ -32,7 +32,7 @@ export const getClaimController: RequestHandler = async (req, res, next) => {
       creatorChainName: message.creatorChainName,
       message: message.recipientEncryptedMessage,
       timestamp: message.timestamp,
-      uuid: message.uuid,
+      id: message.id,
     };
     await bluzelleSDK.db.withTransaction(async () => {
 
@@ -40,7 +40,7 @@ export const getClaimController: RequestHandler = async (req, res, next) => {
       await bluzelleSDK.db.tx.Create({
         creator: bluzelleSDK.db.address,
         uuid: `${message.creatorPublicKey}:${message.creatorChainName}:sent`,
-        key: message.uuid,
+        key: message.id,
         value: new TextEncoder().encode(JSON.stringify(sentMessage)),
         metadata: new Uint8Array(0),
         lease: message.lease,
@@ -49,13 +49,14 @@ export const getClaimController: RequestHandler = async (req, res, next) => {
       await bluzelleSDK.db.tx.Create({
         creator: bluzelleSDK.db.address,
         uuid: `${message.recipientPublicKey}:${message.recipientChainName}:inbox`,
-        key: message.uuid,
+        key: message.id,
         value: new TextEncoder().encode(JSON.stringify(inboxMessage)),
         metadata: new Uint8Array(0),
         lease: message.lease,
       });
+
       try {
-        const deleted = await OutboxMessageModel.deleteOne({uuid: message.uuid});
+        const deleted = await OutboxMessageModel.deleteOne({id: message.id});
         console.log(deleted);
       } catch (e) {
         console.log(e);

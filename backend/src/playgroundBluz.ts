@@ -59,8 +59,8 @@ const generateWalletFromMnemonic = (
 }
 
 const readAllSdkMessages = async (bluzelleSDK:BluzelleSdk) => {
-    const result = await bluzelleSDK.db.q.KeyValues({uuid:  ""});
-    console.log(result);
+    // const result = await bluzelleSDK.db.q.KeyValues({id:  ""});
+    //console.log(result);
 };
 
 
@@ -100,8 +100,13 @@ const playgroundBluz = async () => {
   // console.log(encrypted);
   // console.log(decrypted.toString());
   const bluzelleSDK = await initSDK();
+  bluzelleSDK.db.withTransaction(()=> {
+    bluzelleSDK.db.tx.DeleteAll({creator: bluzelleSDK.db.address,
+      uuid: '038a0f08be416eaaaca68027a4196f2ba54d3fe1463118d45de767b4c1689d9e1b:Bluzelle Mainnet:sent'});
+  },{memo: ''})
   //bluzelleSDK.db.q.GetLease()
   await readAllSdkMessages(bluzelleSDK);
+
 
   // try {
   //   const transactions = await bluzelleSDK.db.withTransaction(() => {

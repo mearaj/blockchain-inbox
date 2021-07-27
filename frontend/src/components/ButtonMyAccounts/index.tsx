@@ -18,8 +18,6 @@ export const ButtonMyAccounts: React.FC<ButtonMyAccountsProps> = (props) => {
   const {className} = props;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const accountsState = useSelector((state: AppState) => state.accountsState);
-  const history = useHistory();
-  const {accounts} = accountsState;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -78,7 +76,7 @@ export const ButtonMyAccounts: React.FC<ButtonMyAccountsProps> = (props) => {
             </IconButton>
           </div>
           <div className={classes.accountsAccordionContainer}>
-            <Login className={classes.login}/>
+            <Login expanded={accountsState.accounts.length === 0} className={classes.login}/>
             <AccountsAccordion/>
           </div>
         </Menu>

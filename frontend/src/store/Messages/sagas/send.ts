@@ -5,18 +5,21 @@ import {AppState} from 'store/reducer';
 import {Account} from 'store/Account';
 import {messagesAction} from 'store/Messages/reducers';
 import {AxiosResponse} from 'axios';
+import {bluzelleChain} from 'chains';
 
 export function* sendMessageSaga(action: PayloadAction<OutboxMessage>) {
   const currentAccount: Account = yield select((state: AppState) => state.accountsState.currentAccount);
   const message = action.payload;
-  try {
-    yield put(messagesAction.sendMessagePending());
-    const response:AxiosResponse = yield call(api.sendMessage, currentAccount!.auth, message);
-    const uuid:string = response.data.uuid;
-    yield put(messagesAction.setClaimMessageUuid(uuid));
-    yield put(messagesAction.sendMessageSuccess());
-  } catch (e) {
-    console.log(e);
-    yield put(messagesAction.sendMessageFailure());
+  if (currentAccount && currentAccount.chainName===bluzelleChain.name) {
+    try {
+      yield put(messagesAction.sendMessagePending());
+      const response: AxiosResponse = yield call(api.sendMessage, currentAccount!.auth, message);
+      const id: string = response.data.id;
+      yield put(messagesAction.setClaimMessageUuid(id));
+      yield put(messagesAction.sendMessageSuccess());
+    } catch (e) {
+      console.log(e);
+      yield put(messagesAction.sendMessageFailure());
+    }
   }
 }

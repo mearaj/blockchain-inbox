@@ -30,14 +30,13 @@ export const getOutboxMessageByIdController: RequestHandler = async (req, res, n
   }
 };
 
-
 export const saveOutboxMessageController: RequestHandler = async (req, res, next) => {
   const message = new OutboxMessageModel(req.body);
-  message.uuid = uuid();
+  message.id = uuid();
   try {
     const result = await message.save();
     return res.status(201).json({
-      uuid: result.uuid
+      id: result.id
     });
   } catch (e) {
     console.log(e);
