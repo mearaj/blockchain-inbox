@@ -4,18 +4,32 @@ import {MessagesState} from 'store/Messages/interfaces';
 import {getOutbox, setOutbox} from 'store/Messages/reducers/outbox';
 import {
   sendMessage,
-  sendMessageCompleted,
+  sendMessageClear,
   sendMessageFailure,
   sendMessagePending,
   sendMessageSuccess
-} from 'store/Messages/reducers/messages';
+} from 'store/Messages/reducers/send';
 import {getInbox, setInbox} from 'store/Messages/reducers/inbox';
+import {
+  claimMessage, claimMessageClear,
+  claimMessageFailure,
+  claimMessagePending,
+  claimMessageSuccess,
+  setClaimMessageSignature,
+  setClaimMessageSigned,
+  setClaimMessageUuid
+} from 'store/Messages/reducers/claim';
+import {getSent, setSent} from 'store/Messages/reducers/sent';
 
 export const initialState: MessagesState = {
   sendMessageState: "",
+  claimMessageState: "",
+  claimMessageSignature: undefined,
+  claimMessageSigned: undefined,
+  claimMessageUuid: '',
   inbox: [],
-  sent: '',
-  outbox: [],
+  sent: [],
+  outbox: []
 };
 export const messagesSlice = createSlice({
   name: 'messagesState',
@@ -25,11 +39,21 @@ export const messagesSlice = createSlice({
     sendMessagePending,
     sendMessageSuccess,
     sendMessageFailure,
-    sendMessageCompleted,
+    sendMessageClear,
+    claimMessage,
+    claimMessagePending,
+    claimMessageSuccess,
+    claimMessageFailure,
+    claimMessageClear,
+    setClaimMessageUuid,
+    setClaimMessageSignature,
+    setClaimMessageSigned,
     getOutbox,
     setOutbox,
     getInbox,
     setInbox,
+    setSent,
+    getSent,
   }
 });
 

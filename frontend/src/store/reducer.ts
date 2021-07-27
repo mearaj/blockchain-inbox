@@ -1,6 +1,5 @@
 import {combineReducers} from 'redux';
 import {loaderReducer} from 'store/Loader';
-import {curiumReducer} from 'store/Curium';
 import storage from 'redux-persist/lib/storage/session';
 import {persistReducer} from 'redux-persist';
 import {alertMessageReducer} from 'store/AlertMessage';
@@ -14,7 +13,6 @@ const appReducer = combineReducers({
   messagesState: messagesReducer,
   alertMessageState: alertMessageReducer,
   loaderState: loaderReducer,
-  curiumState: curiumReducer,
   sidebarState: sidebarReducer,
 })
 
@@ -22,7 +20,7 @@ export const persistConfig = {
   key: 'root',
   storage,
   //whitelist: []
-  blacklist: ['register', 'loaderState']
+  blacklist: ['register', 'loaderState','curiumAccount']
 };
 
 

@@ -5,14 +5,17 @@ import {createSlice} from '@reduxjs/toolkit';
 import {
   addUpdateAccount,
   setAccounts,
+  setCuriumAccount,
   setCurrentAccount,
   setCurrentAccountAuth,
   setSelectedAccountAuth
 } from 'store/Account/reducers/accounts';
 
 export const initialState: AccountsState = {
+  curiumAccount: undefined,
   currentAccount: undefined,
   accounts: [],
+
 };
 export const accountsSlice = createSlice({
   name: 'accountsState',
@@ -23,6 +26,7 @@ export const accountsSlice = createSlice({
     setSelectedAccountAuth,
     addUpdateAccount,
     setCurrentAccount,
+    setCuriumAccount,
     login,
     logout,
   }

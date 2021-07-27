@@ -1,18 +1,54 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import CommonBar from 'components/CommonBar';
 
 import useStyles from './styles';
 import {AppState, messagesAction} from 'store';
 import {useDispatch, useSelector} from 'react-redux';
-import {InboxMessage} from 'api';
+import {InboxMessage, OutboxMessage} from 'api';
 import clsx from 'clsx';
 import TouchRipple from '@material-ui/core/ButtonBase/TouchRipple';
 import {getLeaseString} from 'utils/helpers';
 import LoginRequired from 'guards/LoginRequired';
+import {getDecryptedMessageFromPrivateKey} from 'chains';
 
 const InboxPage: React.FC = () => {
   const classes = useStyles();
   const inbox = useSelector((appState: AppState) => appState.messagesState.inbox);
+  const [inboxDecrypted, setInboxDecrypted] = useState<InboxMessage[]>([]);
+  const currentAccount = useSelector((appState: AppState) => appState.accountsState.currentAccount);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const timerId = setTimeout(async () => {
+      dispatch(messagesAction.getInbox());
+    });
+    return () => clearTimeout(timerId);
+  }, []);
+  useEffect(() => {
+    const timerId = setTimeout(async () => {
+        const inboxDecryptedPromise = Promise.all(inbox.map(async (eachMessage) => {
+            try {
+              const eachMessageObject = await getDecryptedMessageFromPrivateKey(
+                currentAccount!.privateKey,
+                currentAccount!.chainName,
+                eachMessage.message,
+              );
+              return {
+                ...eachMessage,
+                message: eachMessageObject.decryptedMessage,
+              }
+            } catch (e) {
+              console.log(e);
+              return eachMessage
+            }
+          })
+        );
+        const inboxDecryptedMessages = await inboxDecryptedPromise;
+        setInboxDecrypted(inboxDecryptedMessages);
+      }
+    );
+    return () => clearTimeout(timerId);
+  }, [inbox])
 
   const getRowComponent = (eachInbox: InboxMessage) => {
     const RowComponent: React.FC = () => {
@@ -31,7 +67,7 @@ const InboxPage: React.FC = () => {
             {eachInbox.creatorChainName} {eachInbox.creatorPublicKey}
           </div>
           <div className={classes.column}>
-            {eachInbox.recipientEncryptedMessage}
+            {eachInbox.message}
           </div>
           <div className={classes.column}>
             {getLeaseString(eachInbox.lease)}
@@ -48,8 +84,8 @@ const InboxPage: React.FC = () => {
       <div className={classes.root}>
         <CommonBar>Inbox</CommonBar>
         {
-          inbox &&
-          inbox.length!=0 &&
+          inboxDecrypted &&
+          inboxDecrypted.length!=0 &&
           <div className={clsx(classes.grid, classes.gridHeader)}>
             <div className={clsx(classes.column, classes.columnHeader)}>
               From
@@ -63,7 +99,7 @@ const InboxPage: React.FC = () => {
           </div>
         }
         {
-          inbox.map((eachInbox: InboxMessage) => {
+          inboxDecrypted.map((eachInbox: InboxMessage) => {
             return getRowComponent(eachInbox);
           })
         }

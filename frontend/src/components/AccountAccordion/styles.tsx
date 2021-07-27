@@ -2,7 +2,6 @@ import {alpha, darken, makeStyles} from '@material-ui/core/styles';
 
 
 const useStyles = makeStyles((theme) => {
-  console.log(darken(theme.palette.primary.dark, 0.5));
   return {
     root: {
       wordBreak: 'break-all',

@@ -1,10 +1,12 @@
 import * as bip39 from 'bip39';
+import {v4 as uuid} from 'uuid';
 import {fromSeed} from 'bip32';
 import elliptic from 'elliptic';
 import {verifyBluzSignature} from './utils/verifyBluzSignature';
 import CryptoJS from 'crypto-js';
 import eccrypto from 'eccrypto';
 import {initSDK} from './db/bluzelleSdk';
+import {BluzelleSdk} from '@bluzelle/sdk-js';
 
 const bluzCredentials = {
   mnemonic: "title child oval endless ladder brand venue burden pill income merry motor large above slight own elbow catalog rubber artwork tiger way talk space",
@@ -40,7 +42,8 @@ const signBluzelleMessage = (msg: string, privKey: string): Uint8Array => {
 
 const generateWalletFromMnemonic = (
   mnemonic: string,
-  path: string = `m/44'/118'/0'/0/0`,
+  //path: string = `m/44'/118'/0'/0/0`,
+  path: string = `m/44'/483'/0'/0/0`,
   password: string = ""
 ): Uint8Array => {
   const seed = bip39.mnemonicToSeedSync(mnemonic, password);
@@ -55,6 +58,11 @@ const generateWalletFromMnemonic = (
   return privateKey;
 }
 
+const readAllSdkMessages = async (bluzelleSDK:BluzelleSdk) => {
+    const result = await bluzelleSDK.db.q.KeyValues({uuid:  ""});
+    console.log(result);
+};
+
 
 const playgroundBluz = async () => {
   const pvtKey = generateWalletFromMnemonic(bluzCredentials.mnemonic);
@@ -62,7 +70,7 @@ const playgroundBluz = async () => {
   const key = secp256k1.keyFromPrivate(pvtKey, 'hex');
   const publicKey = key.getPublic().encode('hex', true);
   const textToSign = "Hello World!";
-
+  console.log(publicKey);
   // curium way of signing
   const signature = signBluzelleMessage(textToSign, key.getPrivate().toString('hex'));
   const isValid = verifyBluzSignature(textToSign, publicKey, signature);
@@ -92,6 +100,8 @@ const playgroundBluz = async () => {
   // console.log(encrypted);
   // console.log(decrypted.toString());
   const bluzelleSDK = await initSDK();
+  //bluzelleSDK.db.q.GetLease()
+  await readAllSdkMessages(bluzelleSDK);
 
   // try {
   //   const transactions = await bluzelleSDK.db.withTransaction(() => {

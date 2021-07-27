@@ -17,7 +17,10 @@ export function* getOutboxSaga(action: PayloadAction) {
       yield put(messagesAction.setOutbox(result));
     } catch (e) {
       console.log(e);
+      yield put(messagesAction.setOutbox([]));
     }
   }
   yield put(loaderActions.hideLoader());
 }
+
+

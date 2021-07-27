@@ -7,6 +7,7 @@ import AccountsAccordion from 'components/AccountsAccordion';
 import {Close} from '@material-ui/icons';
 import {BrowserRouterProps, useHistory} from 'react-router-dom';
 import clsx from 'clsx';
+import Login from 'components/Login';
 
 export interface ButtonMyAccountsProps extends BrowserRouterProps {
   className?: string;
@@ -76,6 +77,7 @@ export const ButtonMyAccounts: React.FC<ButtonMyAccountsProps> = (props) => {
             </IconButton>
           </div>
           <div className={classes.accountsAccordionContainer}>
+            <Login className={classes.login}/>
             <AccountsAccordion/>
           </div>
         </Menu>

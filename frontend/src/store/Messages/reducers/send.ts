@@ -18,8 +18,6 @@ export const sendMessageSuccess = (state: MessagesState, action: PayloadAction) 
   state.sendMessageState = action.type
 }
 
-export const sendMessageCompleted = (state: MessagesState, action: PayloadAction) => {
-  state.sendMessageState = action.type
+export const sendMessageClear = (state: MessagesState, action: PayloadAction) => {
+  state.sendMessageState = "";
 }
-
-

@@ -157,21 +157,10 @@ export const getEncryptedMessageFromPublicKey = async (publicKey: string, chainN
   let encryptedMessage = "";
   switch (chainInfo.chain) {
     case "ETH":
-      try {
-        const encrypted = await EthCrypto.encryptWithPublicKey(
-          publicKey.substr(2),
-          JSON.stringify(message)
-        );
-        encryptedMessage = EthCrypto.cipher.stringify(encrypted);
-        isValid = true;
-        error = "";
-      } catch (e) {
-        isValid = false;
-        error = e.message || "Unknown error!";
-        encryptedMessage = "";
-      }
-      break;
     case "Bluzelle":
+      if (chainInfo.chain === "ETH") {
+        publicKey = publicKey.substr(2);
+      }
       try {
         const encrypted = await EthCrypto.encryptWithPublicKey(
           publicKey,

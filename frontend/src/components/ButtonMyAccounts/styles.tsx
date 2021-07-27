@@ -26,6 +26,9 @@ const useStyles = makeStyles((theme: Theme) => {
       },
       buttonIconClose: {
         color: theme.palette.common.white
+      },
+      login: {
+        marginBottom: 20,
       }
     };
   }

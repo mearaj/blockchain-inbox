@@ -11,8 +11,7 @@ import AccountsAccordion from 'components/AccountsAccordion';
 const AccountPage: React.FC = (props) => {
     const classes = useStyles();
     const accountsState = useSelector((state: AppState) => state.accountsState);
-    const {accounts, currentAccount} = accountsState;
-    const curiumState = useSelector((state: AppState) => state.curiumState);
+    const {accounts, currentAccount, curiumAccount} = accountsState;
     const dispatch = useDispatch();
     const [loginExpanded, setLoginExpanded] = useState(false);
 

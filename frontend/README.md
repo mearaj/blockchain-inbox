@@ -61,8 +61,9 @@ To learn React, check out the [React documentation](https://reactjs.org/).
   },
   {
     chainName:  "Bluzelle",
-    privateKey: "crunch digital library parent female spell rose comic rotate clock camera snap income outside notable feel scorpion obtain transfer aim water security scene prepare",
-    publicKey: "0208bca55febd601b17cf589b5ab3f030166da624c5af36f2ea1c6954469417807"
+    mnemonics: "crunch digital library parent female spell rose comic rotate clock camera snap income outside notable feel scorpion obtain transfer aim water security scene prepare",
+    privateKey:"f3c27c81c86a0a3b22953839a48834a8d8cd934698bbb9e43f9c118ef7e9f709"
+    publicKey: "038a0f08be416eaaaca68027a4196f2ba54d3fe1463118d45de767b4c1689d9e1b"
   }
 ]
 ```

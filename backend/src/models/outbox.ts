@@ -1,14 +1,6 @@
 import {model, Schema} from 'mongoose';
 import {Lease} from '@bluzelle/sdk-js/lib/codec/crud/lease';
 
-export interface MessageLease {
-  seconds: number;
-  minutes: number;
-  hours: number;
-  days: number;
-  years: number;
-}
-
 export interface OutboxMessage {
   creatorPublicKey: string,
   creatorChainName: string,
@@ -95,4 +87,3 @@ export const outboxMessageSchema = new Schema<OutboxMessage>(
 )
 export const OutboxMessageModel = model<OutboxMessage>('Message', outboxMessageSchema, 'outbox');
 
-new TextEncoder().encode()

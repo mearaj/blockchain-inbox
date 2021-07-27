@@ -1,8 +1,8 @@
-import React, {PropsWithChildren, ReactElement, useEffect, useState} from 'react';
+import React, {PropsWithChildren, useEffect, useState} from 'react';
 import useStyles from './styles';
 import CommonBar from 'components/CommonBar';
-import {useSelector} from 'react-redux';
-import {AppState} from 'store';
+import {useDispatch, useSelector} from 'react-redux';
+import {accountsActions, AppState} from 'store';
 import {BLUZELLE_CHAIN_ID} from 'config';
 import {Key} from '@keplr-wallet/types';
 import {Button} from '@material-ui/core';
@@ -11,86 +11,100 @@ import {Button} from '@material-ui/core';
 // This guard assumes the route is already protected with CuriumRequired and BluzelleAccountRequired
 const CuriumConnectionRequired: React.FC<PropsWithChildren<any>> = (props) => {
 
-  const currentAccount = useSelector((appState: AppState) => appState.accountsState.currentAccount);
+  const dispatch = useDispatch();
+  const accountsState = useSelector((appState: AppState) => appState.accountsState)
+  const {currentAccount, curiumAccount} = accountsState;
   const [isEnabled, setIsEnabled] = useState(true);
-  const [curiumAccount, setCuriumAccount] = useState<Key | undefined>(undefined);
-
 
   const checkAccount = async () => {
     try {
       const results: Key | undefined = await window.keplr?.getKey(BLUZELLE_CHAIN_ID);
       if (results) {
         const publicKey = Buffer.from(results.pubKey).toString('hex');
-        if (publicKey===currentAccount?.publicKey) {
-          setCuriumAccount(results);
-        } else {
-          setCuriumAccount(undefined);
-        }
+        const address = Buffer.from(results.address).toString('hex');
+        dispatch(accountsActions.setCuriumAccount({
+          address: address,
+          algo: results.algo,
+          bech32Address: results.bech32Address,
+          name: results.name,
+          pubKey: publicKey,
+        }));
       } else {
-        setCuriumAccount(undefined);
+        dispatch(accountsActions.setCuriumAccount(undefined));
       }
     } catch (e) {
-      setCuriumAccount(undefined);
+      dispatch(accountsActions.setCuriumAccount(undefined));
     }
   };
 
-  useEffect(() => {
-    const timerId = setTimeout(async () => {
-      try {
-        await window.keplr?.enable(BLUZELLE_CHAIN_ID);
-        setIsEnabled(true);
-        await checkAccount();
-      } catch (e) {
-        setIsEnabled(false);
-      }
-    },);
-    return () => clearTimeout(timerId);
-  }, []);
+  const requestEnablePermission = async () => {
+    try {
+      await window.keplr?.enable(BLUZELLE_CHAIN_ID);
+      setIsEnabled(true);
+    } catch (e) {
+      setIsEnabled(false);
+    }
+  }
 
   useEffect(() => {
-    const timerId = setInterval(async () => {
-      try {
-        await window.keplr?.enable(BLUZELLE_CHAIN_ID);
-        if (!isEnabled) {
-          setIsEnabled(true);
-        }
-        await checkAccount();
-      } catch (e) {
-        setIsEnabled(false);
-      }
-    },500);
-    return () => clearInterval(timerId);
-  }, []);
+    const timerId = setTimeout(async () => {
+      await requestEnablePermission();
+      await checkAccount();
+    },);
+    return () => clearTimeout(timerId);
+  }, [currentAccount]);
 
   const classes = useStyles();
 
-  let msg: string = "";
-  let msgHeader: string = "";
-  let currentView: ReactElement | undefined;
-  if (!isEnabled) {
-    msgHeader = "Curium Disabled!";
-    msg = "Kindly enable Curium Extension for this app...";
-    currentView = <div className={classes.root}>
-      <CommonBar>{msgHeader}</CommonBar>
-      <div className={classes.helperText}>{msg}</div>
-    </div>;
-  } else {
-    if (!curiumAccount) {
-      msgHeader = "Curium Disconnected!";
-      msg = "Kindly connect the Curium Extension with this app...";
-      currentView = <div className={classes.root}>
-        <CommonBar>{msgHeader}</CommonBar>
-        <div className={classes.helperText}>{msg}</div>
-        <Button onClick={checkAccount} color="primary" variant="contained">Click To Test Connection</Button>
-      </div>
-    } else {
-      currentView = props.children;
+  const getErrorMsgTitle = (): string => {
+    if (!isEnabled) {
+      return "Curium Disabled"
     }
+    if (!curiumAccount) {
+      return "Curium Disconnected!";
+    }
+    const publicKey = Buffer.from(curiumAccount.pubKey).toString('hex');
+    if (publicKey!==currentAccount!.publicKey) {
+      return "Account Mismatch!"
+    }
+    return "";
+  }
+
+  const getErrorMsg = (): string => {
+    if (!isEnabled) {
+      return "Curium is disabled, kindly click below to enable it.\n" +
+        "Please see that your active Bluzelle account matches Curium"
+    }
+    if (!curiumAccount) {
+      return "Please see that you are connected to Curium Extension!";
+    }
+    if (curiumAccount.pubKey !== currentAccount!.publicKey) {
+      return "Please see that your active Bluzelle account matches Curium";
+    }
+    return "";
+  }
+
+  const isValid = (): boolean => {
+    if (!curiumAccount || !isEnabled) {
+      return false;
+    }
+    return curiumAccount.pubKey === currentAccount!.publicKey;
   }
 
   return (
     <>
-      {currentView}
+      {
+        isValid() ? props.children:
+          <div className={classes.root}>
+            <CommonBar>{getErrorMsgTitle()}</CommonBar>
+            <div className={classes.helperText}>{getErrorMsg()}</div>
+            {
+              !isEnabled &&
+                <Button onClick={requestEnablePermission} color="primary" variant="contained">Enable Curium</Button>
+            }
+          </div>
+
+      }
     </>
   )
 }

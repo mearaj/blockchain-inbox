@@ -7,9 +7,9 @@ export const getLeaseString = (lease: Lease): string => {
   }
   if (lease.days) {
     if (lease.years) {
-      leaseString += ", " + lease.days + "d" + (lease.days > 1 ? "s":"");
+      leaseString += ", " + lease.days + "day" + (lease.days > 1 ? "s":"");
     } else {
-      leaseString += lease.days + "d" + (lease.days > 1 ? "s":"")
+      leaseString += lease.days + "day" + (lease.days > 1 ? "s":"")
     }
   }
   if (lease.hours) {

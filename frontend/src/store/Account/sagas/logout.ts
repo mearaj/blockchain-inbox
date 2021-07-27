@@ -6,6 +6,7 @@ import {AppState} from 'store/reducer';
 import {loaderActions} from 'store/Loader';
 import {accountsActions} from 'store/Account/reducers';
 
+
 export function* logoutSaga(action: PayloadAction<Account>) {
   yield put(loaderActions.showLoader());
   const account = action.payload;

@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import CommonBar from 'components/CommonBar';
-import {useHistory} from 'react-router-dom';
 import useStyles from './styles';
 import {
   Accordion,
@@ -33,6 +32,11 @@ import {HELPER_MSG_BLUZELLE_PUBLIC_KEY} from 'chains/bluzelle/helper';
 import {messagesAction} from 'store/Messages';
 import CuriumConnectionRequired from 'guards/CuriumConnectionRequired';
 import {loaderActions} from 'store/Loader';
+import {BLUZELLE_CHAIN_ID} from 'config';
+import {MsgSend} from '@cosmjs/launchpad';
+import {coin} from '@cosmjs/proto-signing';
+import {Key} from '@keplr-wallet/types';
+import {useHistory} from 'react-router-dom';
 
 enum KeyValues {
   ID_RECIPIENT_CHAIN_NAME = "ID_RECIPIENT_CHAIN_NAME",
@@ -72,9 +76,10 @@ const ComposePage: React.FC = () => {
   const [lease, setLease] = useState<MessageLeaseForm>({days: 0, hours: 0, minutes: 0, seconds: 0, years: 0});
   const [message, setMessage] = useState<string>("");
   const [messageErr, setMessageErr] = useState<string>("");
-  const sendMessageState = useSelector((state: AppState) => state.messagesState.sendMessageState);
-  const history = useHistory();
+  const messagesState = useSelector((state: AppState) => state.messagesState);
+  const {sendMessageState, claimMessageState, claimMessageUuid} = messagesState;
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleChange = (ID: KeyValues) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -82,6 +87,7 @@ const ComposePage: React.FC = () => {
     if (recipientPublicKeyHelperMsg) {
       setRecipientPublicKeyHelperMsg("");
     }
+
     if (messageErr) {
       setMessageErr("");
     }
@@ -139,6 +145,54 @@ const ComposePage: React.FC = () => {
     }
   }
 
+  const sendMessageWithCurium = async () => {
+    await window.keplr?.enable(BLUZELLE_CHAIN_ID);
+    const curiumAccount: Key | undefined = await window.keplr?.getKey(BLUZELLE_CHAIN_ID);
+    const offlineSigner = await window.keplr?.getOfflineSigner(BLUZELLE_CHAIN_ID);
+    const msg: MsgSend = {
+      type: "cosmos-sdk/MsgSend",
+      value: {
+        from_address: Buffer.from(curiumAccount!.bech32Address).toString('utf8'),
+        to_address: "bluzelle1gwchgddg96fy2pfgjvg22lqrseyrlpsyjh8xah",
+        amount: [coin(1000000, "ubnt")],
+      }
+    };
+    try {
+      const result = await offlineSigner!.signAmino(Buffer.from(curiumAccount!.bech32Address).toString('utf8'), {
+        account_number: currentAccount!.publicKey,
+        chain_id: BLUZELLE_CHAIN_ID,
+        fee: {
+          amount: [coin(1000000, "ubnt")], gas: '1'
+        },
+        memo: 'This is for result 1',
+        msgs: [msg],
+        sequence: ''
+      });
+      if (claimMessageUuid) {
+        dispatch(messagesAction.claimMessage({
+          signature: result.signature,
+          signed: result.signed
+        }));
+      }
+    } catch (e) {
+      if (e.message === 'Request rejected') {
+        // Todo : Should request to delete this message from the outbox
+        clearForm();
+        history.push('/outbox');
+      }
+    }
+    if (claimMessageState!==messagesAction.sendMessageFailure.type) {
+      clearForm();
+      history.push('/outbox');
+    }
+  }
+
+  const clearForm = () => {
+    setRecipientPublicKey("");
+    setLease({days: 0, hours: 0, minutes: 0, seconds: 0, years: 0});
+    setMessage('');
+  }
+
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -189,64 +243,8 @@ const ComposePage: React.FC = () => {
           recipientPublicKey,
         })
       );
+      await sendMessageWithCurium();
     }
-    console.log(currentAccount!.chainName,creatorValidator);
-    console.log(recipientChainName,recipientValidator);
-    // dispatch(loaderActions.showLoader());
-    // setTimeout(async () => {
-    //   await dispatch(sendMessage(message));
-    //   await dispatch(loaderActions.hideLoader());
-    //   const msg: MsgSend = {
-    //     type: "cosmos-sdk/MsgSend",
-    //     value: {
-    //       from_address: currentAccount?.publicKey || "",
-    //       to_address: "bluzelle1gwchgddg96fy2pfgjvg22lqrseyrlpsyjh8xah",
-    //       amount: [coin(1000000, "BLZ")],
-    //     }
-    //   };
-    //   const result = await window.keplr!.signAmino(CHAIN_ID, currentAccount?.publicKey || "", {
-    //     account_number: currentAccount?.publicKey || "",
-    //     chain_id: CHAIN_ID,
-    //     fee: {
-    //       amount: [coin(1000000, "BLZ")], gas: '1'
-    //     },
-    //     memo: 'This is for result 1',
-    //     msgs: [msg],
-    //     sequence: ''
-    //   });
-    //   console.log(result)
-
-
-    // let result2;
-    // const signedTx = makeStdTx(result.signed, result.signature);
-    // try {
-    //  result2 = await window.keplr!.sendTx(CHAIN_ID, signedTx, BroadcastMode.Sync);
-    // } catch (e) {
-    //   console.dir(e);
-    // }
-    // console.log(result2);
-
-    // let result3;
-    // const std:StdTx = {
-    //   fee: {
-    //     amount: [coin(1000000, "BLZ")], gas: '1'
-    //   },
-    //   memo: 'This is for result 1',
-    //   msg: [msg],
-    //   signatures: [result.signature]
-    // };
-    // try {
-    //   result3 = await window.keplr!.sendTx(CHAIN_ID, std, BroadcastMode.Async);
-    // } catch (e) {
-    //   console.dir(e);
-    // }
-    // console.log(result3);
-
-
-    // const result4 = await window.keplr!.suggestToken(CHAIN_ID, currentAccount);
-    // console.log(result4);
-
-    // }, 500);
   };
 
   useEffect(() => {
@@ -258,13 +256,32 @@ const ComposePage: React.FC = () => {
         dispatch(loaderActions.hideLoader());
         break;
       case messagesAction.sendMessageSuccess.type:
+        dispatch(messagesAction.sendMessageClear());
         dispatch(loaderActions.hideLoader());
-        dispatch(messagesAction.sendMessageCompleted());
-        history.push('/outbox');
+        break;
     }
-
-
   }, [sendMessageState]);
+
+  useEffect(() => {
+    switch (claimMessageState) {
+      case messagesAction.claimMessagePending.type:
+        dispatch(loaderActions.showLoader());
+        break;
+      case messagesAction.claimMessageFailure.type:
+        dispatch(messagesAction.sendMessageClear());
+        dispatch(messagesAction.claimMessageClear());
+        clearForm();
+        dispatch(loaderActions.hideLoader());
+        history.push('/outbox');
+        break;
+      case messagesAction.claimMessageSuccess.type:
+        dispatch(messagesAction.sendMessageClear());
+        dispatch(messagesAction.claimMessageClear());
+        clearForm();
+        dispatch(loaderActions.hideLoader());
+        history.push('/sent');
+    }
+  }, [claimMessageState]);
 
   return (
     <CuriumRequired>
@@ -292,7 +309,6 @@ const ComposePage: React.FC = () => {
                     </FormHelperText>
                   </div>
                   <div className={classes.formControlContainer}>
-
                     <FormControl fullWidth>
                       <InputLabel id="chainNameLabel">
                         Select Recipient's Chain&nbsp;*
@@ -400,7 +416,7 @@ const ComposePage: React.FC = () => {
                     </FormHelperText>
                   </div>
                   <div className={classes.footer}>
-                    <Button type="reset" variant="contained" color={'primary'}>Clear</Button>
+                    <Button onClick={clearForm} type="reset" variant="contained" color={'primary'}>Clear</Button>
                     <Button type="submit" style={{marginLeft: 24}} variant="contained" color={'primary'}>Send</Button>
                   </div>
                 </form>

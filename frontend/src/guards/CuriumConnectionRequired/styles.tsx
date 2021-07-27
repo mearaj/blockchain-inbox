@@ -19,18 +19,18 @@ const useStyles = makeStyles((theme: Theme) => {
         textAlign: "center",
         maxWidth: 400,
       },
-      button: {
-        color: theme.palette.common.white,
-        "@global .MuiButton-label": {
-          color: `${theme.palette.common.white} !important`,
-        }
-      },
-      // content: {
-      //   flexGrow: 1,
-      //   padding: theme.spacing(3),
-      //   overflow: 'auto',
-      //   backgroundColor: alpha(theme.palette.primary.light, 0.2),
+      // button: {
+      //   color: theme.palette.common.white,
+      //   "@global .MuiButton-label": {
+      //     color: `${theme.palette.common.white} !important`,
+      //   }
       // },
+      // // content: {
+      // //   flexGrow: 1,
+      // //   padding: theme.spacing(3),
+      // //   overflow: 'auto',
+      // //   backgroundColor: alpha(theme.palette.primary.light, 0.2),
+      // // },
     };
   }
 );

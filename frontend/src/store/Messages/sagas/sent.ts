@@ -3,23 +3,24 @@ import {call, put, select} from 'redux-saga/effects';
 import {loaderActions} from 'store/Loader';
 import {AppState} from 'store/reducer';
 import {AxiosResponse} from 'axios';
-import {api, InboxMessage} from 'api';
+import {api, SentMessage} from 'api';
 import {messagesAction} from 'store/Messages/reducers';
 
-export function* getInboxSaga(action: PayloadAction) {
+export function* getSentSaga(action: PayloadAction) {
   yield put(loaderActions.showLoader());
   const appState: AppState = yield select();
   const currentAccount = appState.accountsState.currentAccount;
   if (currentAccount) {
     try {
-      const response: AxiosResponse = yield call(api.getInbox, currentAccount!.auth);
-      const result: InboxMessage[] = response.data;
-      yield put(messagesAction.setInbox(result));
+      const response: AxiosResponse = yield call(api.getSent, currentAccount!.auth);
+      const result: SentMessage[] = response.data.sent;
+      yield put(messagesAction.setSent(result));
     } catch (e) {
+      yield put(messagesAction.setSent([]));
       console.log(e);
-      yield put(messagesAction.setInbox([]));
     }
   }
   yield put(loaderActions.hideLoader());
 }
+
 

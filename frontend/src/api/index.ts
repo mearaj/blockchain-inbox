@@ -1,5 +1,6 @@
 import axiosOrig, {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {Lease} from '@bluzelle/sdk-js/lib/codec/crud/lease';
+import {StdSignature, StdSignDoc} from '@cosmjs/launchpad';
 
 
 const BASE_URL = 'http://localhost:8081/api/v1';
@@ -8,23 +9,40 @@ export const LOGIN_ENDPOINT = `/login`;
 export const LOGOUT_ENDPOINT = `/logout`;
 export const INBOX_ENDPOINT = `/inbox`;
 export const OUTBOX_END_POINT = `/outbox`;
+export const CLAIM_END_POINT = `/claim`;
 export const SENT_END_POINT = `/sent`;
 
 
 export interface InboxMessage {
-  recipientEncryptedMessage: string,
-  creatorPublicKey: string;
-  creatorChainName: string;
-  lease: Lease;
-  message?:string;
-  timestamp?: string;
-  uuid?: string;
+  creatorPublicKey: string,
+  creatorChainName: string,
+  message: string,
+  lease: Lease,
+  timestamp: number,
+  uuid: string;
 }
 
-export interface OutboxMessage extends InboxMessage {
+export interface SentMessage {
+  recipientPublicKey: string,
+  recipientChainName: string,
+  message: string,
+  lease: Lease,
+  timestamp: number,
+  uuid: string;
+}
+
+
+export interface OutboxMessage {
+  creatorPublicKey: string;
+  creatorChainName: string;
+  creatorEncryptedMessage: string,
   recipientPublicKey: string;
   recipientChainName: string;
-  creatorEncryptedMessage: string,
+  recipientEncryptedMessage: string,
+  lease: Lease;
+  message?: string;
+  timestamp?: string;
+  uuid?: string;
 }
 
 export interface TokenRequestBody {
@@ -43,6 +61,12 @@ export interface LoginRequestBody extends TokenRequestBody {
 
 export interface LoginResponseBody {
   auth: string;
+}
+
+export interface ClaimMessage {
+  uuid: string;
+  signature: StdSignature | undefined,
+  signed: StdSignDoc | undefined,
 }
 
 const config: AxiosRequestConfig = {
@@ -84,13 +108,26 @@ const getLoginStatus = async (authToken: string): Promise<AxiosResponse> => {
 const sendMessage = async (authToken: string, message: OutboxMessage) => {
   const newConfig = setAuthHeader(authToken, config);
   const axios = axiosOrig.create(newConfig);
-  return await axios.post<OutboxMessage>(OUTBOX_END_POINT, message);
+  return await axios.post(OUTBOX_END_POINT, message);
 }
+
+const claimMessage = async (authToken: string, message: ClaimMessage) => {
+  const newConfig = setAuthHeader(authToken, config);
+  const axios = axiosOrig.create(newConfig);
+  return await axios.post(CLAIM_END_POINT, message);
+}
+
 
 const getOutbox = async (authToken: string) => {
   const newConfig = setAuthHeader(authToken, config);
   const axios = axiosOrig.create(newConfig);
   return await axios.get(OUTBOX_END_POINT);
+}
+
+const getSent = async (authToken: string) => {
+  const newConfig = setAuthHeader(authToken, config);
+  const axios = axiosOrig.create(newConfig);
+  return await axios.get(SENT_END_POINT);
 }
 
 const getInbox = async (authToken: string) => {
@@ -99,7 +136,17 @@ const getInbox = async (authToken: string) => {
   return await axios.get(INBOX_ENDPOINT);
 }
 
-export const api = {requestLoginToken, login, getLoginStatus, sendMessage, getOutbox, logout, getInbox};
+export const api = {
+  requestLoginToken,
+  login,
+  getLoginStatus,
+  sendMessage,
+  getOutbox,
+  logout,
+  getInbox,
+  claimMessage,
+  getSent
+};
 
 export default api;
 
