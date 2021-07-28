@@ -10,7 +10,7 @@ import {Typography} from '@material-ui/core';
 import BluzelleAccountRequired from 'guards/BluzelleAccountRequired';
 import {getDecryptedMessageFromPrivateKey} from 'chains';
 import {DataGrid} from '@material-ui/data-grid';
-import columns from 'pages/Sent/interfaces';
+import columns from './interfaces';
 
 const SentPage: React.FC = () => {
   const classes = useStyles();
@@ -55,12 +55,12 @@ const SentPage: React.FC = () => {
     <CuriumRequired>
       <BluzelleAccountRequired>
         <div className={classes.root}>
-          <CommonBar>Sent</CommonBar>
+          <CommonBar>Outbox</CommonBar>
           {
             outboxDecrypted.length===0 &&
             <div className={classes.emptyContainer}>
               <div className={classes.emptyTitle}>
-                <Typography variant="h6">Your Sent Messages Is Empty!</Typography>
+                <Typography variant="h6">Your Outbox Is Empty!</Typography>
               </div>
             </div>
           }
