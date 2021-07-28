@@ -4,6 +4,7 @@ import {ClaimMessage} from 'models/claim';
 import {initSDK} from 'db/bluzelleSdk';
 import {SentMessage} from 'models/sent';
 import {InboxMessage} from 'models/inbox';
+import {TextEncoder} from 'util';
 
 export const getClaimController: RequestHandler = async (req, res, next) => {
   try {

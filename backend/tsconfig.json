@@ -2,11 +2,9 @@
   "compilerOptions": {
     "target": "es5",
     "baseUrl": "./src",
-    "outDir": "build",
+    "outDir": "./build",
     "rootDir": "src",
     "lib": [
-      "dom",
-      "dom.iterable",
       "esnext",
       "es6"
     ],
@@ -27,6 +25,6 @@
     "strictNullChecks": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*.ts"
   ]
 }

@@ -13,23 +13,23 @@ const getChain = (chainName: string) => allChains.find((chain) => chain.name===c
 export function* loginSaga(action: PayloadAction<SagaTokenRequestBody>) {
   yield put(loaderActions.showLoader());
   const {chainName, publicKey, privateKey} = action.payload;
-  const tokenResponse: AxiosResponse<TokenResponseBody> = yield call(requestLoginToken, action.payload);
-  const {token} = tokenResponse.data;
-  const chainInfo = getChain(chainName);
-  if (chainInfo) {
-    let signature: string;
-    let auth: string;
-    let authResponse: LoginResponseBody;
-    try {
+  try {
+    const tokenResponse: AxiosResponse<TokenResponseBody> = yield call(requestLoginToken, action.payload);
+    const {token} = tokenResponse.data;
+    const chainInfo = getChain(chainName);
+    if (chainInfo) {
+      let signature: string;
+      let auth: string;
+      let authResponse: LoginResponseBody;
+
       signature = yield call(signToken, privateKey, chainName, token);
       authResponse = yield call(login, {chainName, publicKey, signature, token});
       auth = authResponse.auth;
       yield put(accountsActions.addUpdateAccount({publicKey, privateKey, chainName, auth}));
       yield put(accountsActions.setCurrentAccount({publicKey, privateKey, chainName, auth}));
-
-    } catch (e) {
-      console.log(e);
     }
+  } catch (e) {
+    console.log(e);
   }
   yield put(loaderActions.hideLoader());
 }

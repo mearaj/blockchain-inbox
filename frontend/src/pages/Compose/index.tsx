@@ -32,7 +32,7 @@ import {HELPER_MSG_BLUZELLE_PUBLIC_KEY} from 'chains/bluzelle/helper';
 import {messagesAction} from 'store/Messages';
 import CuriumConnectionRequired from 'guards/CuriumConnectionRequired';
 import {loaderActions} from 'store/Loader';
-import {BLUZELLE_CHAIN_ID} from 'config';
+import {BLUZELLE_BACKEND_PUBLIC_ADDRESS, BLUZELLE_CHAIN_ID} from 'config';
 import {MsgSend} from '@cosmjs/launchpad';
 import {coin} from '@cosmjs/proto-signing';
 import {Key} from '@keplr-wallet/types';
@@ -139,13 +139,14 @@ const ComposePage: React.FC = () => {
       type: "cosmos-sdk/MsgSend",
       value: {
         from_address: Buffer.from(curiumAccount!.bech32Address).toString('utf8'),
-        to_address: "bluzelle1gwchgddg96fy2pfgjvg22lqrseyrlpsyjh8xah",
+        to_address: BLUZELLE_BACKEND_PUBLIC_ADDRESS,
         amount: [coin(1000, "ubnt")],
       }
     };
+
     try {
       const result = await offlineSigner!.signAmino(Buffer.from(curiumAccount!.bech32Address).toString('utf8'), {
-        account_number: currentAccount!.publicKey,
+        account_number: currentAccount?.publicKey || "",
         chain_id: BLUZELLE_CHAIN_ID,
         fee: {
           amount: [coin(1000, "ubnt")], gas: '1'
@@ -209,7 +210,7 @@ const ComposePage: React.FC = () => {
 
 
     const creatorValidator = await getEncryptedMessageFromPublicKey(
-      currentAccount!.publicKey,
+      currentAccount?.publicKey || "",
       currentAccount!.chainName,
       message);
     const recipientValidator = await getEncryptedMessageFromPublicKey(
@@ -222,7 +223,7 @@ const ComposePage: React.FC = () => {
       const recipientEncryptedMessage = recipientValidator.encryptedMessage;
       dispatch(messagesAction.sendMessage({
           creatorChainName: currentAccount!.chainName,
-          creatorPublicKey: currentAccount!.publicKey,
+          creatorPublicKey: currentAccount?.publicKey || "",
           lease: {
             seconds: lease.seconds==="" ? 0:lease.seconds,
             minutes: lease.minutes==="" ? 0:lease.minutes,
@@ -328,7 +329,7 @@ const ComposePage: React.FC = () => {
                       label="My Public Key"
                       disabled
                       multiline={true}
-                      value={currentAccount!.publicKey}
+                      value={currentAccount?.publicKey || ""}
                       variant="outlined"
                     />
                   </div>

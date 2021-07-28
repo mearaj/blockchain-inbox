@@ -2,6 +2,7 @@ import {RequestHandler} from 'express';
 import {initSDK} from 'db/bluzelleSdk';
 import {Account} from 'models/account';
 import {SentMessage} from 'models/sent';
+import {TextDecoder} from 'util';
 
 export const getSentController: RequestHandler = async (req, res, next) => {
   try {

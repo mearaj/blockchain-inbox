@@ -3,6 +3,7 @@ import {OutboxMessageModel} from 'models/outbox';
 import {Account} from 'models/account';
 import {initSDK} from 'db/bluzelleSdk';
 import {InboxMessage} from 'models/inbox';
+import {TextDecoder} from 'util';
 
 
 export const getInboxController: RequestHandler = async (req, res, next) => {
