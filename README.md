@@ -21,5 +21,11 @@ Now if the user wants to send a message to another user, then the user requires 
 The app then asks the backend to save the encrypted message, followed by prompt from the Curium Extension. If User approves the message by paying the gas fee for the transaction, then the app provides the proof of transaction to the backend. The backend then saves those messages at the Bluzelle Blockchain.
 In case If the User disapprove the prompt from the Curium Extension, then the message remains in the outbox.
 
+###### Task I still need to complete
+1. Proper integration of Curium Extension with the frontend.
+2. The backend should be able to verify claim message i.e. if the user has really paid the gas fee.
+3. The frontend should be able to show Message Details for any message from inbox/outbox/sent
+4. The table UI should be improved and message lease should be shown. User should be allowed to change the lease of the message.
+
 ###### Note
 <strong>The Private Key is never sent to the backend or anywhere else. It only remains on the frontend side.</strong>

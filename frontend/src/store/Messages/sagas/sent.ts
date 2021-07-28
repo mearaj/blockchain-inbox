@@ -6,6 +6,7 @@ import {AxiosResponse} from 'axios';
 import {api, SentMessage} from 'api';
 import {messagesAction} from 'store/Messages/reducers';
 import {bluzelleChain} from 'chains';
+import {accountsActions} from 'store/Account/reducers';
 
 export function* getSentSaga(action: PayloadAction) {
   yield put(loaderActions.showLoader());
@@ -17,8 +18,11 @@ export function* getSentSaga(action: PayloadAction) {
       const result: SentMessage[] = response.data.sent;
       yield put(messagesAction.setSent(result));
     } catch (e) {
+      if (e.error?.message.toLowerCase().includes("not authorized") ||
+        e.message?.toLowerCase().includes("status code 401")) {
+        yield put(accountsActions.logout(currentAccount));
+      }
       yield put(messagesAction.setSent([]));
-      console.log(e);
     }
   }
   yield put(loaderActions.hideLoader());

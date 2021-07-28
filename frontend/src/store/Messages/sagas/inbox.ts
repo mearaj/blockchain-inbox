@@ -5,6 +5,7 @@ import {AppState} from 'store/reducer';
 import {AxiosResponse} from 'axios';
 import {api, InboxMessage} from 'api';
 import {messagesAction} from 'store/Messages/reducers';
+import {accountsActions} from 'store/Account/reducers';
 
 export function* getInboxSaga(action: PayloadAction) {
   yield put(loaderActions.showLoader());
@@ -16,7 +17,10 @@ export function* getInboxSaga(action: PayloadAction) {
       const result: InboxMessage[] = response.data.inbox;
       yield put(messagesAction.setInbox(result));
     } catch (e) {
-      console.log(e);
+      if (e.error?.message.toLowerCase().includes("not authorized") ||
+        e.message?.toLowerCase().includes("status code 401")) {
+        yield put(accountsActions.logout(currentAccount));
+      }
       yield put(messagesAction.setInbox([]));
     }
   }

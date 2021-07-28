@@ -6,6 +6,7 @@ import {AxiosResponse} from 'axios';
 import {api, OutboxMessage} from 'api';
 import {messagesAction} from 'store/Messages/reducers';
 import {bluzelleChain} from 'chains';
+import {accountsActions} from 'store/Account/reducers';
 
 export function* getOutboxSaga(action: PayloadAction) {
   yield put(loaderActions.showLoader());
@@ -18,6 +19,10 @@ export function* getOutboxSaga(action: PayloadAction) {
       yield put(messagesAction.setOutbox(result));
     } catch (e) {
       console.log(e);
+      if (e.error?.message.toLowerCase().includes("not authorized") ||
+        e.message?.toLowerCase().includes("status code 401")) {
+        yield put(accountsActions.logout(currentAccount));
+      }
       yield put(messagesAction.setOutbox([]));
     }
   }

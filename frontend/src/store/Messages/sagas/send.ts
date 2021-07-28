@@ -6,6 +6,7 @@ import {Account} from 'store/Account';
 import {messagesAction} from 'store/Messages/reducers';
 import {AxiosResponse} from 'axios';
 import {bluzelleChain} from 'chains';
+import {accountsActions} from 'store/Account/reducers';
 
 export function* sendMessageSaga(action: PayloadAction<OutboxMessage>) {
   const currentAccount: Account = yield select((state: AppState) => state.accountsState.currentAccount);
@@ -19,6 +20,10 @@ export function* sendMessageSaga(action: PayloadAction<OutboxMessage>) {
       yield put(messagesAction.sendMessageSuccess());
     } catch (e) {
       console.log(e);
+      if (e.error?.message.toLowerCase().includes("not authorized") ||
+        e.message?.toLowerCase().includes("status code 401")) {
+        yield put(accountsActions.logout(currentAccount));
+      }
       yield put(messagesAction.sendMessageFailure());
     }
   }

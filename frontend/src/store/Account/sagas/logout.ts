@@ -22,12 +22,12 @@ export function* logoutSaga(action: PayloadAction<Account>) {
     }
   } catch (e) {
     // if there's no connection, then user shouldn't be able to logout, because server cannot be informed
-    if (!e.message.toLowerCase().contains("network error")) {
+    if (!e.message.toLowerCase().includes("network error")) {
       try {
         yield call(api.getLoginStatus, account.auth);
       } catch (e) {
         // if there's no connection, then user shouldn't be able to logout, because server cannot be informed
-        if (!e.message.toLowerCase().contains("network error")) {
+        if (!e.message.toLowerCase().includes("network error")) {
           yield put(accountsActions.setAccounts(newAccounts));
           if (currentAccount?.auth===account.auth) {
             yield put(accountsActions.setCurrentAccount(newAccounts[0]));

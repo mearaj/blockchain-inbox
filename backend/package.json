@@ -4,7 +4,8 @@
   "description": "An anchored backend for receiving and sending messages to blockchain account holders",
   "main": "build/index.js",
   "scripts": {
-    "build": "tsc -w",
+    "build": "tsc",
+    "build:watch": "tsc -w",
     "dev:watch": "NODE_PATH=./src nodemon src/index.ts",
     "dev": "NODE_PATH=./src ts-node src/index.ts"
   },
