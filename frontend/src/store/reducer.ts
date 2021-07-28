@@ -20,7 +20,7 @@ export const persistConfig = {
   key: 'root',
   storage,
   //whitelist: []
-  blacklist: ['register', 'loaderState','curiumAccount']
+  blacklist: ['register', 'loaderState', 'curiumAccount']
 };
 
 

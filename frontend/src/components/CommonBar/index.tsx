@@ -7,13 +7,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import useStyles from './styles';
 import {useDispatch} from 'react-redux';
 import ButtonMyAccounts from 'components/ButtonMyAccounts';
-import {Button, Typography} from '@material-ui/core';
+import {Typography} from '@material-ui/core';
 import {sidebarActions} from 'store/Sidebar/reducers';
 
 export const CommonBar: React.FC = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-
   return (
     <>
       <AppBar position="fixed" className={classes.appBar}>

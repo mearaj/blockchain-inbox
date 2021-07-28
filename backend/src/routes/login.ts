@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import {LOGIN_ENDPOINT} from 'config';
 import {isLoggedInController, loginController} from 'controllers/login';
-import {authGuard} from 'middlewares/auth';
+import {authGuard} from 'controllers/guards/auth';
 
 export const router = Router();
 

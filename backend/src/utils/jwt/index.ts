@@ -7,6 +7,4 @@ export const isTokenExpired = (jwtToken: string): boolean => {
   }
   return true;
 };
-export const isLoggedIn = (jwtToken: string): boolean => {
-  return !isTokenExpired(jwtToken);
-};
+

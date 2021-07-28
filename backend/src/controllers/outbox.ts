@@ -33,6 +33,16 @@ export const getOutboxMessageByIdController: RequestHandler = async (req, res, n
 export const saveOutboxMessageController: RequestHandler = async (req, res, next) => {
   const message = new OutboxMessageModel(req.body);
   message.id = uuid();
+  message.timestamp = Date.now().valueOf();
+  const{seconds,minutes ,hours ,days, years} = message.lease;
+  if (!seconds &&  !minutes && !hours && !days && !years) {
+    return res.status(400).json({
+        error: {
+          message: "Lease Cannot Be 0 Or Empty!"
+        }
+      }
+    );
+  }
   try {
     const result = await message.save();
     return res.status(201).json({

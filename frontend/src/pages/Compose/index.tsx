@@ -37,32 +37,15 @@ import {MsgSend} from '@cosmjs/launchpad';
 import {coin} from '@cosmjs/proto-signing';
 import {Key} from '@keplr-wallet/types';
 import {useHistory} from 'react-router-dom';
-
-enum KeyValues {
-  ID_RECIPIENT_CHAIN_NAME = "ID_RECIPIENT_CHAIN_NAME",
-  ID_RECIPIENT_PUBLIC_KEY = "ID_RECIPIENT_PUBLIC_KEY",
-  ID_MESSAGE = "ID_MESSAGE",
-  ID_LEASE_SECONDS = "ID_LEASE_SECONDS",
-  ID_LEASE_MINUTES = "ID_LEASE_MINUTES",
-  ID_LEASE_HOURS = "ID_LEASE_HOURS",
-  ID_LEASE_DAYS = "ID_LEASE_DAYS",
-  ID_LEASE_YEARS = "ID_LEASE_YEARS",
-}
-
-export interface MessageLeaseForm {
-  seconds: number | '';
-  minutes: number | '';
-  hours: number | '';
-  days: number | '';
-  years: number | '';
-}
-
-
-const MAX_SECONDS = 59;
-const MAX_MINUTES = 59;
-const MAX_HOURS = 23;
-const MAX_DAYS = 365;
-const MAX_YEARS = 9;
+import {
+  KeyValues,
+  MAX_DAYS,
+  MAX_HOURS,
+  MAX_MINUTES,
+  MAX_SECONDS,
+  MAX_YEARS,
+  MessageLeaseForm
+} from './interfaces';
 
 
 const ComposePage: React.FC = () => {
@@ -74,6 +57,7 @@ const ComposePage: React.FC = () => {
   const [recipientPublicKey, setRecipientPublicKey] = useState<string>("");
   const [recipientPublicKeyHelperMsg, setRecipientPublicKeyHelperMsg] = useState<string>("");
   const [lease, setLease] = useState<MessageLeaseForm>({days: 0, hours: 0, minutes: 0, seconds: 0, years: 0});
+  const [leaseErr, setLeaseErr] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [messageErr, setMessageErr] = useState<string>("");
   const messagesState = useSelector((state: AppState) => state.messagesState);
@@ -87,9 +71,11 @@ const ComposePage: React.FC = () => {
     if (recipientPublicKeyHelperMsg) {
       setRecipientPublicKeyHelperMsg("");
     }
-
     if (messageErr) {
       setMessageErr("");
+    }
+    if (leaseErr) {
+      setLeaseErr("");
     }
     switch (ID) {
       case KeyValues.ID_RECIPIENT_PUBLIC_KEY:
@@ -154,7 +140,7 @@ const ComposePage: React.FC = () => {
       value: {
         from_address: Buffer.from(curiumAccount!.bech32Address).toString('utf8'),
         to_address: "bluzelle1gwchgddg96fy2pfgjvg22lqrseyrlpsyjh8xah",
-        amount: [coin(1000000, "ubnt")],
+        amount: [coin(1000, "ubnt")],
       }
     };
     try {
@@ -162,28 +148,31 @@ const ComposePage: React.FC = () => {
         account_number: currentAccount!.publicKey,
         chain_id: BLUZELLE_CHAIN_ID,
         fee: {
-          amount: [coin(1000000, "ubnt")], gas: '1'
+          amount: [coin(1000, "ubnt")], gas: '1'
         },
         memo: 'This is for result 1',
         msgs: [msg],
         sequence: ''
       });
       if (claimMessageId) {
-        dispatch(messagesAction.claimMessage({
+        await dispatch(messagesAction.claimMessage({
           signature: result.signature,
           signed: result.signed
         }));
       }
     } catch (e) {
-      if (e.message === 'Request rejected') {
+      if (e.message==='Request rejected') {
         // Todo : Should request to delete this message from the outbox
         clearForm();
         history.push('/outbox');
       }
     }
-    if (claimMessageState!==messagesAction.sendMessageFailure.type && !claimMessageId) {
+    // waiting for claimMessage to  complete
+    while (claimMessageState===messagesAction.claimMessagePending.type) {
+    }
+    if (claimMessageState===messagesAction.claimMessageSuccess.type) {
       clearForm();
-      history.push('/outbox');
+      history.push('/sent');
     }
   }
 
@@ -211,6 +200,10 @@ const ComposePage: React.FC = () => {
     }
     if (message.trim().replace(" ", "")==="") {
       setMessageErr("A message cannot be empty!");
+      return;
+    }
+    if (!lease.seconds &&  !lease.minutes && !lease.hours && !lease.days && !lease.years) {
+      setLeaseErr("Lease Cannot Be 0 Or Empty!");
       return;
     }
 
@@ -245,13 +238,14 @@ const ComposePage: React.FC = () => {
       );
 
       // make sure we collect message id from backend before sending message with curium
-      while (sendMessageState === messagesAction.sendMessagePending.type) {}
-      await sendMessageWithCurium();
+      while (sendMessageState===messagesAction.sendMessagePending.type) {
+      }
+      if (sendMessageState!==messagesAction.sendMessageFailure.type) {
+        await sendMessageWithCurium();
+      }
     }
   };
   useEffect(() => {
-    console.log(sendMessageState);
-    console.log(claimMessageId);
     switch (sendMessageState) {
       case messagesAction.sendMessagePending.type:
         dispatch(loaderActions.showLoader());
@@ -260,12 +254,11 @@ const ComposePage: React.FC = () => {
         dispatch(loaderActions.hideLoader());
         break;
       case messagesAction.sendMessageSuccess.type:
-        dispatch(messagesAction.sendMessageClear());
         dispatch(loaderActions.hideLoader());
         clearForm();
         break;
     }
-  }, [sendMessageState]);
+  }, [sendMessageState, claimMessageId, dispatch]);
 
   useEffect(() => {
     switch (claimMessageState) {
@@ -273,20 +266,15 @@ const ComposePage: React.FC = () => {
         dispatch(loaderActions.showLoader());
         break;
       case messagesAction.claimMessageFailure.type:
-        dispatch(messagesAction.sendMessageClear());
-        dispatch(messagesAction.claimMessageClear());
         clearForm();
         dispatch(loaderActions.hideLoader());
-        history.push('/outbox');
         break;
       case messagesAction.claimMessageSuccess.type:
-        dispatch(messagesAction.sendMessageClear());
-        dispatch(messagesAction.claimMessageClear());
         clearForm();
         dispatch(loaderActions.hideLoader());
-        history.push('/sent');
     }
-  }, [claimMessageState]);
+  }, [claimMessageState, dispatch]);
+
 
   return (
     <CuriumRequired>
@@ -340,10 +328,9 @@ const ComposePage: React.FC = () => {
                       label="My Public Key"
                       disabled
                       multiline={true}
-                      value={currentAccount?.publicKey}
+                      value={currentAccount!.publicKey}
                       variant="outlined"
                     />
-
                   </div>
                   <div className={classes.formControlContainer}>
                     <TextField
@@ -358,6 +345,7 @@ const ComposePage: React.FC = () => {
                   <div>
                     <FormLabel className={classes.leaseLabel}>
                       Select Message Lease
+                      <FormHelperText className={classes.leaseError} error={!!leaseErr}>{leaseErr}</FormHelperText>
                     </FormLabel>
                     <div className={classes.leaseFormGroup}>
                       <TextField
@@ -421,8 +409,22 @@ const ComposePage: React.FC = () => {
                     </FormHelperText>
                   </div>
                   <div className={classes.footer}>
-                    <Button onClick={clearForm} type="reset" variant="contained" color={'primary'}>Clear</Button>
-                    <Button type="submit" style={{marginLeft: 24}} variant="contained" color={'primary'}>Send</Button>
+                    <Button
+                      onClick={clearForm}
+                      type="reset"
+                      variant="contained"
+                      color="secondary"
+                    >
+                      Clear
+                    </Button>
+                    <Button
+                      type="submit"
+                      className={classes.submitButton}
+                      variant="contained"
+                      color="inherit"
+                    >
+                      Send
+                    </Button>
                   </div>
                 </form>
               </AccordionDetails>

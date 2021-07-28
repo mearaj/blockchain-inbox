@@ -13,7 +13,7 @@ export function* getInboxSaga(action: PayloadAction) {
   if (currentAccount) {
     try {
       const response: AxiosResponse = yield call(api.getInbox, currentAccount!.auth);
-      const result: InboxMessage[] = response.data;
+      const result: InboxMessage[] = response.data.inbox;
       yield put(messagesAction.setInbox(result));
     } catch (e) {
       console.log(e);

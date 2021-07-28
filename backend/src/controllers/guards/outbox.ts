@@ -3,7 +3,7 @@ import {Account} from 'models/account';
 
 
 // This guard assumes, account and authToken available from auth guard,
-// hence always call this method after calling auth guard or provide account and authToken as req fields
+// hence always call this method after calling auth guard or provide account and authToken to req field
 export const outboxGuard: RequestHandler = async (req, res, next) => {
 
   try {
@@ -16,6 +16,7 @@ export const outboxGuard: RequestHandler = async (req, res, next) => {
         }
       });
     }
+
   } catch (e) {
     return res.status(404).json({
       error: {

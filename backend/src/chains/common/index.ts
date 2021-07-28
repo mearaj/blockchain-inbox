@@ -1,5 +1,5 @@
-import {ChainInfo, ChainShortInfo} from './chain-info';
-import {evmChains} from './chains';
+import {ChainInfo, ChainShortInfo} from 'chains/common/chain-info';
+import {evmChains} from 'chains/common/chains';
 
 export enum AllowedChainEnum {
   ETH = "ETH",

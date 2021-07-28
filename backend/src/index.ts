@@ -34,4 +34,4 @@ app.listen(PORT, () => {
   console.log(`App running on ${PORT}`);
 });
 
-export {verifyPublicKeyFormat} from 'validators/verifyPublicKeyFormat';
+export {helpers} from 'chains/common/helpers';

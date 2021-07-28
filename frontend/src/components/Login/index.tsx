@@ -15,7 +15,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState} from 'store';
 import CommonAccordionHeader from 'components/CommonAccordionHeader';
-import {allChains, isChainSupported} from 'chains/common';
+import {allChains, getPrivateKeysFromMnemonic, isChainSupported} from 'chains/common';
 import clsx from 'clsx';
 import {genPublicKeyFromPrivateKey, isPrivateKeyFormatValid} from 'chains/common/helper';
 import {accountsActions} from 'store/Account/reducers';
@@ -45,32 +45,14 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
     }
   };
 
+  const clearError = () => {
+    setChainNameErr("");
+    setPrivateKeyErr("");
+  }
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const ID = event.target.id;
-    const value = event.target.value;
-    switch (ID) {
-      case ID_ACCOUNT_PRIVATE_KEY:
-        setPrivateKey(value);
-        const validatorResponse = isPrivateKeyFormatValid(value, chainName)
-        if (validatorResponse.isValid) {
-          // clear any previous error
-          if (privateKeyErr) {
-            setPrivateKeyErr("");
-          }
-          const {publicKey, isValid} = genPublicKeyFromPrivateKey(value, chainName);
-          if (isValid) {
-            setPublicKey(publicKey);
-          } else {
-            setPublicKey("");
-          }
-        } else {
-          setPublicKey("");
-        }
-        if (privateKeyErr && isPrivateKeyFormatValid(value, chainName)) {
-          setPrivateKeyErr("");
-        }
-        break;
-    }
+    setPrivateKey(event.target.value);
+    clearError();
   }
 
   const handleChainNameChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -79,11 +61,15 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
     if (chainNameErr) {
       setChainNameErr("");
     }
-    const {publicKey, isValid} = genPublicKeyFromPrivateKey(privateKey, chainName);
-    if (isValid) {
-      setPublicKey(publicKey);
-    } else {
-      setPublicKey("");
+    let isPrivateKey = privateKey.trim().split(" ").length === 1;
+
+    if (isPrivateKey) {
+      const {publicKey, isValid} = genPublicKeyFromPrivateKey(privateKey, chainName);
+      if (isValid) {
+        setPublicKey(publicKey);
+      } else {
+        setPublicKey("");
+      }
     }
   };
 
@@ -110,19 +96,49 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
     event.preventDefault();
     const chainInfo = getChain(chainName);
     if (chainInfo) {
-      const {isValid: isPrivateKeyValid} = isPrivateKeyFormatValid(privateKey, chainName);
-      if (isPrivateKeyValid) {
-        const {isValid, error, publicKey} = genPublicKeyFromPrivateKey(privateKey, chainName);
-        if (!isValid) {
-          setPrivateKeyErr(error);
+      let isPrivateKey = privateKey.trim().split(' ').length === 1;
+      if (isPrivateKey) {
+        const {isValid: isPrivateKeyValid} = isPrivateKeyFormatValid(privateKey, chainName);
+        if (isPrivateKeyValid) {
+          const {isValid, publicKey} = genPublicKeyFromPrivateKey(privateKey, chainName);
+          if (!isValid) {
+            setPrivateKeyErr("Invalid Private Key Or Mnemonic!");
+          } else {
+            setPrivateKeyErr("");
+            setPublicKey(publicKey);
+            await dispatch(accountsActions.login({chainName, publicKey, privateKey}));
+          }
         } else {
-          setPrivateKeyErr("");
-          setPublicKey(publicKey);
-          await dispatch(accountsActions.login({chainName, publicKey, privateKey}));
+          setPrivateKeyErr("Invalid Private Key Or Mnemonic!");
         }
       } else {
-        setPrivateKeyErr("Invalid Private Key!Please enter a valid private key!");
+        // Assuming it's mnemonic
+        try {
+          const {privateKeys} = getPrivateKeysFromMnemonic(privateKey, chainName);
+          console.log("private keys from mnemonic");
+          console.log(privateKeys);
+          const derivedPrivateKey:string = privateKeys[0];
+          const {isValid: isPrivateKeyValid} = isPrivateKeyFormatValid(derivedPrivateKey, chainName);
+          console.log(isPrivateKeyValid);
+          if (isPrivateKeyValid) {
+            const {isValid, publicKey} = genPublicKeyFromPrivateKey(derivedPrivateKey, chainName);
+            if (!isValid) {
+              setPrivateKeyErr("Invalid Private Key Or Mnemonic!");
+            } else {
+              setPrivateKeyErr("");
+              setPublicKey(publicKey);
+              await dispatch(accountsActions.login({chainName, publicKey, privateKey:derivedPrivateKey}));
+            }
+          }
+          else {
+            setPrivateKeyErr("Invalid Private Key Or Mnemonic!");
+          }
+        } catch (e) {
+          setPrivateKeyErr("Invalid Private Key Or Mnemonic!");
+        }
       }
+    } else {
+      setPrivateKeyErr("Invalid Private Key Or Mnemonic!");
     }
   };
 
@@ -141,13 +157,13 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
           <div>
             <div className={classes.formControlContainer}>
               <TextField
-                label="Enter Your Private Key*"
+                label="Enter Your Private Key or Mnemonic seed *"
                 multiline
                 fullWidth={true}
                 onChange={handleChange}
                 value={privateKey}
                 id={ID_ACCOUNT_PRIVATE_KEY}
-                placeholder="Example 3d9f32.... (64 hex chars)"
+                placeholder="Enter Your Private Key or Mnemonic seed"
                 error={!!privateKeyErr}
                 helperText={privateKeyErr}
               />

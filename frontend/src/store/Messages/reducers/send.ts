@@ -17,7 +17,3 @@ export const sendMessageFailure = (state: MessagesState, action: PayloadAction) 
 export const sendMessageSuccess = (state: MessagesState, action: PayloadAction) => {
   state.sendMessageState = action.type
 }
-
-export const sendMessageClear = (state: MessagesState, action: PayloadAction) => {
-  state.sendMessageState = "";
-}

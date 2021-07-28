@@ -1,6 +1,5 @@
 import {makeStyles, Theme} from '@material-ui/core/styles';
 import {drawerWidth} from 'styles/variables';
-import {purple} from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme: Theme) => {
     return {
@@ -18,12 +17,6 @@ const useStyles = makeStyles((theme: Theme) => {
       },
       // necessary for content to be below app bar
       toolbar: theme.mixins.toolbar,
-      logoContainer: {
-        backgroundColor: theme.palette.primary.main,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-      },
       content: {
         display: 'flex',
         flexGrow: 1,

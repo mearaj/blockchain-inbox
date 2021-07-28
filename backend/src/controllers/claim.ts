@@ -9,12 +9,10 @@ export const getClaimController: RequestHandler = async (req, res, next) => {
   try {
     const claimMessage = req.body as ClaimMessage;
     if (!claimMessage || !claimMessage.id || !claimMessage.signed || !claimMessage.signature) {
-      return res.status(404).send();
+      return res.status(404).send({error:{message:'Not Found!'}});
     }
     const message = await OutboxMessageModel.findOne({id: claimMessage.id});
     if (!message) {
-      console.log(claimMessage)
-      console.log("Not found!")
       return res.status(404).send();
     }
     const bluzelleSDK = await initSDK();
@@ -23,7 +21,7 @@ export const getClaimController: RequestHandler = async (req, res, next) => {
       recipientPublicKey: message.recipientPublicKey,
       recipientChainName: message.recipientChainName,
       message: message.creatorEncryptedMessage,
-      timestamp: message.timestamp,
+      timestamp: Date.now().valueOf(),
       id: message.id,
     };
     const inboxMessage: InboxMessage = {
@@ -31,11 +29,10 @@ export const getClaimController: RequestHandler = async (req, res, next) => {
       creatorPublicKey: message.creatorPublicKey,
       creatorChainName: message.creatorChainName,
       message: message.recipientEncryptedMessage,
-      timestamp: message.timestamp,
+      timestamp: Date.now().valueOf(),
       id: message.id,
     };
     await bluzelleSDK.db.withTransaction(async () => {
-
       // for sender
       await bluzelleSDK.db.tx.Create({
         creator: bluzelleSDK.db.address,

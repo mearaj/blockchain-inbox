@@ -1,20 +1,22 @@
-import {makeStyles} from '@material-ui/core/styles';
+import {alpha, makeStyles} from '@material-ui/core/styles';
 import {flexCenterStyle} from 'styles/variables';
 
 
 const useStyles = makeStyles((theme) => {
-  console.log(theme);
   return {
     root: {
       flexGrow: 1,
       display: 'flex',
       flexDirection: 'column'
     },
-    emptyContainer:{
+    dataGrid: {
+      backgroundColor: alpha(theme.palette.common.white, 0.5),
+    },
+    emptyContainer: {
       ...flexCenterStyle,
     },
     emptyTitle: {
-      color:theme.palette.primary.dark,
+      color: theme.palette.primary.dark,
     }
   }
 });

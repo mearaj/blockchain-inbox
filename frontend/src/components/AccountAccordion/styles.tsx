@@ -1,4 +1,4 @@
-import {alpha, darken, makeStyles} from '@material-ui/core/styles';
+import {alpha, makeStyles} from '@material-ui/core/styles';
 
 
 const useStyles = makeStyles((theme) => {
@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme) => {
     },
     // used by root
     current: {},
-    title: {},
     accordionSummary: {
       display: 'flex',
       alignItems: 'center',
@@ -30,11 +29,6 @@ const useStyles = makeStyles((theme) => {
       }
     },
     checked: {},
-    radioCurrent: {
-      flexShrink: 0,
-      color: theme.palette.common.white,
-      fill: theme.palette.common.white,
-    },
     label: {
       display: 'flex',
       alignItems: 'center',
@@ -56,9 +50,6 @@ const useStyles = makeStyles((theme) => {
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
       overflow: 'hidden',
-    },
-    labelCurrent: {
-      color: theme.palette.secondary.main,
     },
     expandedMoreIcon: {
       fontSize: 36,
@@ -86,15 +77,6 @@ const useStyles = makeStyles((theme) => {
       marginTop: 6,
       marginBottom: 6,
     },
-    buttonSecondary: {
-      width: 200,
-      flexShrink: 0,
-      color: theme.palette.common.white,
-      backgroundColor: theme.palette.secondary.light,
-      marginTop: 6,
-      marginBottom: 6,
-    },
-
     publicKey: {
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
@@ -104,7 +86,6 @@ const useStyles = makeStyles((theme) => {
       marginRight: 6,
       width: 200,
     },
-    active: {}
   }
 });
 

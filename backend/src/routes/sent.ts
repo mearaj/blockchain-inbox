@@ -1,7 +1,7 @@
 import {Router} from 'express';
-import {CLAIM_ENDPOINT, SENT_ENDPOINT} from 'config';
-import {authGuard} from 'middlewares/auth';
-import {outboxGuard} from 'middlewares/outbox';
+import {SENT_ENDPOINT} from 'config';
+import {authGuard} from 'controllers/guards/auth';
+import {outboxGuard} from 'controllers/guards/outbox';
 import {getSentController} from 'controllers/sent';
 
 const router = Router();

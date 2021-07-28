@@ -19,10 +19,6 @@ export const claimMessageSuccess = (state: MessagesState, action: PayloadAction)
   state.claimMessageState = action.type;
 }
 
-export const claimMessageClear = (state: MessagesState, action: PayloadAction) => {
-  state.claimMessageState = "";
-}
-
 export const setClaimMessageUuid = (state: MessagesState, action: PayloadAction<string>) => {
   state.claimMessageId = action.payload;
 }

@@ -1,8 +1,8 @@
 import {Router} from 'express';
 import {INBOX_ENDPOINT, OUTBOX_ENDPOINT} from 'config';
 import {getOutboxController, getOutboxMessageByIdController, saveOutboxMessageController} from 'controllers/outbox';
-import {authGuard} from 'middlewares/auth';
-import {outboxGuard} from 'middlewares/outbox';
+import {authGuard} from 'controllers/guards/auth';
+import {outboxGuard} from 'controllers/guards/outbox';
 import {getInboxController, getInboxMessageByIdController} from 'controllers/inbox';
 
 const router = Router();

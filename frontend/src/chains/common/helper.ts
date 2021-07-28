@@ -6,9 +6,11 @@ import {signTokenForEthChain} from 'chains/eth';
 import {bluzelleChain, signTokenForBlzChain} from 'chains/bluzelle';
 import {evmChains} from 'chains/data/chains';
 import {isEthPublicKeyFormatValid} from 'chains/eth/helper';
-import {isBluzellePublicKeyFormatValid} from 'chains/bluzelle/helper';
-import * as ethUtil from 'ethereumjs-util';
-import eccrypto from 'eccrypto';
+import {
+  getPrivateKeysFromBluzelleMnemonic,
+  isBluzellePublicKeyFormatValid,
+  validateBluzelleMnemonic
+} from 'chains/bluzelle/helper';
 
 
 export interface ValidatorResponse {
@@ -75,7 +77,6 @@ export const genPublicKeyFromPrivateKey = (privateKey: string, chainName: string
   return {error, isValid, publicKey};
 }
 
-
 export const isPrivateKeyFormatValid = (privateKey: string, chainName: string): { error: string, isValid: boolean } => {
   const chainInfo = getChainByName(chainName);
   if (!chainInfo) {
@@ -100,6 +101,76 @@ export const isPrivateKeyFormatValid = (privateKey: string, chainName: string): 
   }
   return {error, isValid};
 }
+
+export const isMnemonicFormatValid = (mnemonic: string, chainName: string): { error: string, isValid: boolean } => {
+  const chainInfo = getChainByName(chainName);
+  if (!chainInfo) {
+    return {error: "Chain Info is not provided", isValid: false};
+  }
+  let isValid: boolean = false;
+  let error: string = "Invalid Mnemonic";
+  switch (chainInfo.chain) {
+    case AllowedChainEnum.Bluzelle:
+      isValid = validateBluzelleMnemonic(mnemonic);
+      if (!isValid) {
+        error = "Invalid Mnemonic";
+        break;
+      }
+      isValid = true;
+      error = "";
+      break;
+    case AllowedChainEnum.ETH:
+      try {
+        Wallet.fromMnemonic(mnemonic);
+        isValid = true;
+        error = "";
+      } catch (e) {
+        console.log(e);
+        error = "Invalid Mnemonic";
+        isValid = false;
+      }
+      break;
+  }
+  return {error, isValid};
+}
+
+export const getPrivateKeysFromMnemonic = (mnemonic: string, chainName: string): { error: string, isValid: boolean, privateKeys: string[] } => {
+  const chainInfo = getChainByName(chainName);
+  if (!chainInfo) {
+    return {error: "Chain Info is not provided", isValid: false, privateKeys: []};
+  }
+
+  let isValid: boolean = false;
+  let error: string = "Invalid Mnemonic";
+  let privateKeys: string[] = [];
+  switch (chainInfo.chain) {
+    case AllowedChainEnum.Bluzelle:
+      isValid = isMnemonicFormatValid(mnemonic, chainName).isValid;
+      if (!isValid) {
+        error = "Invalid Mnemonic";
+        break;
+      }
+      privateKeys = getPrivateKeysFromBluzelleMnemonic(mnemonic);
+      isValid = true;
+      error = "";
+      break;
+    case AllowedChainEnum.ETH:
+      try {
+        const wallet = Wallet.fromMnemonic(mnemonic);
+        isValid = true;
+        error = "";
+        privateKeys = [wallet.privateKey.substr(2)];
+      } catch (e) {
+        console.log(e);
+        error = "Invalid Mnemonic";
+        isValid = false;
+      }
+      break;
+  }
+  return {error, isValid, privateKeys};
+}
+
+
 export const isPublicKeyFormatValid = (chainName: string, publicKey: string): { isValid: boolean, error: string } => {
   const chainDetail = getChainByName(chainName);
   let isValid: boolean = false;
@@ -153,7 +224,7 @@ export const getEncryptedMessageFromPublicKey = async (publicKey: string, chainN
   switch (chainInfo.chain) {
     case "ETH":
     case "Bluzelle":
-      if (chainInfo.chain === "ETH") {
+      if (chainInfo.chain==="ETH") {
         publicKey = publicKey.substr(2);
       }
       try {

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CommonBar from 'components/CommonBar';
 
 import useStyles from './styles';
@@ -6,14 +6,13 @@ import CuriumRequired from 'guards/CuriumRequired';
 import {AppState, messagesAction} from 'store';
 import {useDispatch, useSelector} from 'react-redux';
 import {OutboxMessage} from 'api';
-import clsx from 'clsx';
-import TouchRipple from '@material-ui/core/ButtonBase/TouchRipple';
-import {getLeaseString} from 'utils/helpers';
-import {Card, Typography} from '@material-ui/core';
+import {Typography} from '@material-ui/core';
 import BluzelleAccountRequired from 'guards/BluzelleAccountRequired';
 import {getDecryptedMessageFromPrivateKey} from 'chains';
+import {DataGrid} from '@material-ui/data-grid';
+import columns from 'pages/Sent/interfaces';
 
-const OutboxPage: React.FC = () => {
+const SentPage: React.FC = () => {
   const classes = useStyles();
   const outbox = useSelector((appState: AppState) => appState.messagesState.outbox);
   const [outboxDecrypted, setOutboxDecrypted] = useState<OutboxMessage[]>([]);
@@ -25,95 +24,54 @@ const OutboxPage: React.FC = () => {
       dispatch(messagesAction.getOutbox());
     });
     return () => clearTimeout(timerId);
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const timerId = setTimeout(async () => {
-        const outboxDecryptedPromise = Promise.all(outbox.map(async (eachOutbox) => {
+        const outboxDecryptedMessages = await Promise.all(outbox.map(async (eachOutboxMsg) => {
             try {
               const eachMessageObject = await getDecryptedMessageFromPrivateKey(
                 currentAccount!.privateKey,
                 currentAccount!.chainName,
-                eachOutbox.creatorEncryptedMessage
+                eachOutboxMsg.creatorEncryptedMessage
               );
               return {
-                ...eachOutbox,
+                ...eachOutboxMsg,
                 message: eachMessageObject.decryptedMessage,
               }
             } catch (e) {
               console.log(e);
-              return eachOutbox
+              return eachOutboxMsg
             }
           })
         );
-        const outboxDecryptedMessages = await outboxDecryptedPromise;
         setOutboxDecrypted(outboxDecryptedMessages);
       }
     );
     return () => clearTimeout(timerId);
-  }, [outbox])
-
-  const getRowComponent = (eachOutbox: OutboxMessage) => {
-    const RowComponent: React.FC = () => {
-      const touchRipple = useRef(null);
-      return (
-        <Card
-          onClick={() => {
-            (touchRipple?.current as any)?.start();
-            setTimeout(() => {
-              (touchRipple?.current as any)?.stop({});
-            },);
-          }}
-          className={classes.grid}
-        >
-          <div className={classes.column}>
-            {eachOutbox.recipientChainName} {eachOutbox.creatorPublicKey}
-          </div>
-          <div className={classes.column}>
-            {eachOutbox.message}
-          </div>
-          <div className={classes.column}>
-            {getLeaseString(eachOutbox.lease)}
-          </div>
-          <TouchRipple ref={touchRipple}/>
-        </Card>
-      )
-    }
-    return <RowComponent key={eachOutbox.id}/>;
-  }
-
+  }, [outbox, currentAccount])
 
   return (
     <CuriumRequired>
       <BluzelleAccountRequired>
         <div className={classes.root}>
-          <CommonBar>Outbox</CommonBar>
+          <CommonBar>Sent</CommonBar>
           {
-            outboxDecrypted.length !== 0 &&
-            <div className={clsx(classes.grid, classes.gridHeader)}>
-              <div className={clsx(classes.column, classes.columnHeader)}>
-                To
-              </div>
-              <div className={clsx(classes.column, classes.columnHeader)}>
-                Message
-              </div>
-              <div className={clsx(classes.column, classes.columnHeader)}>
-                Lease
-              </div>
-            </div>
-          }
-          {
-            outboxDecrypted.length === 0 &&
+            outboxDecrypted.length===0 &&
             <div className={classes.emptyContainer}>
               <div className={classes.emptyTitle}>
-                <Typography variant="h6">Your Outbox Is Empty!</Typography>
+                <Typography variant="h6">Your Sent Messages Is Empty!</Typography>
               </div>
             </div>
           }
           {
-            outboxDecrypted.map((eachOutbox: OutboxMessage) => {
-              return getRowComponent(eachOutbox);
-            })
+            outboxDecrypted.length!==0 &&
+            <DataGrid
+              className={classes.dataGrid}
+              rows={outboxDecrypted}
+              columns={columns}
+              disableSelectionOnClick
+            />
           }
         </div>
       </BluzelleAccountRequired>
@@ -121,4 +79,4 @@ const OutboxPage: React.FC = () => {
   );
 }
 
-export default OutboxPage;
+export default SentPage;

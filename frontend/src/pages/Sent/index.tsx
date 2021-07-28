@@ -24,11 +24,11 @@ const SentPage: React.FC = () => {
       dispatch(messagesAction.getSent());
     });
     return () => clearTimeout(timerId);
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const timerId = setTimeout(async () => {
-        const sentDecryptedPromise = await Promise.all(sent.map(async (eachSent) => {
+        const sentDecryptedMessages = await Promise.all(sent.map(async (eachSent) => {
             try {
               const eachMessageObject = await getDecryptedMessageFromPrivateKey(
                 currentAccount!.privateKey,
@@ -45,12 +45,11 @@ const SentPage: React.FC = () => {
             }
           })
         );
-        const sentDecryptedMessages = await sentDecryptedPromise;
         setSentDecrypted(sentDecryptedMessages);
       }
     );
     return () => clearTimeout(timerId);
-  }, [sent])
+  }, [sent,currentAccount])
 
   return (
     <CuriumRequired>
@@ -68,9 +67,9 @@ const SentPage: React.FC = () => {
           {
             sentDecrypted.length!==0 &&
             <DataGrid
+              className={classes.dataGrid}
               rows={sentDecrypted}
               columns={columns}
-              pageSize={sentDecrypted.length}
               disableSelectionOnClick
             />
           }

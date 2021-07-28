@@ -5,9 +5,9 @@ import * as sigUtil from 'eth-sig-util';
 import * as ethUtil from 'ethereumjs-util';
 import {Buffer} from 'buffer';
 import * as jwt from 'jsonwebtoken';
-import {verifyBluzSignature} from 'utils/verifyBluzSignature';
+import {verifyBluzSignature} from 'chains/bluzelle/helpers';
 import {LoginRequestBody} from 'models/token';
-import {allowedChains} from 'chains';
+import {allowedChains} from 'chains/common';
 
 // @Request: Post
 export const loginController: RequestHandler = async (req, res, next) => {

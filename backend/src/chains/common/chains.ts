@@ -1,4 +1,4 @@
-import {ChainInfo} from './chain-info';
+import {ChainInfo} from 'chains/common/chain-info';
 
 export const evmChains:ChainInfo[] = [
   {

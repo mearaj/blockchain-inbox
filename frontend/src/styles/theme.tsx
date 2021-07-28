@@ -1,5 +1,4 @@
 import {createTheme, ThemeOptions} from '@material-ui/core/styles';
-import {pink} from '@material-ui/core/colors';
 
 const options: ThemeOptions = {
   palette: {

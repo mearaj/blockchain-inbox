@@ -5,20 +5,12 @@ import {accountsActions, AppState} from 'store';
 
 import useStyles from './styles';
 import clsx from 'clsx';
-import {Account} from 'store/Account';
-import {BrowserRouterProps} from 'react-router-dom';
 import copy from 'copy-to-clipboard';
 import {ExpandMore} from '@material-ui/icons';
 import {isLoggedIn} from 'utils/jwt';
 import IconButton from '@material-ui/core/IconButton';
+import {AccountAccordionProps} from './interfaces';
 
-
-export interface AccountAccordionProps extends BrowserRouterProps {
-  account: Account,
-  className?: string,
-  expanded?: boolean;
-  onChange?: (event: React.ChangeEvent<{}>, expanded: boolean) => void;
-}
 
 export const AccountAccordion: React.FC<AccountAccordionProps> = (props) => {
     const {account, className, expanded, onChange} = props;
@@ -27,7 +19,6 @@ export const AccountAccordion: React.FC<AccountAccordionProps> = (props) => {
     const [locallyExpanded, setLocallyExpanded] = useState(expanded===undefined ? false:expanded);
     const {currentAccount} = accountsState;
     const dispatch = useDispatch();
-    //const touchRef = useRef(null);
 
     const isCurrentAccount = (): boolean => {
       return !!(currentAccount?.publicKey &&

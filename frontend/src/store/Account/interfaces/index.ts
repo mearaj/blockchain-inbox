@@ -1,5 +1,4 @@
 import {TokenRequestBody} from 'api';
-import {Key} from '@keplr-wallet/types';
 
 export interface Account {
   chainName: string,

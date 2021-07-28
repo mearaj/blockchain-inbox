@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, useEffect, useState} from 'react';
+import React, {PropsWithChildren, useCallback, useEffect, useState} from 'react';
 import useStyles from './styles';
 import CommonBar from 'components/CommonBar';
 import {useDispatch, useSelector} from 'react-redux';
@@ -16,7 +16,7 @@ const CuriumConnectionRequired: React.FC<PropsWithChildren<any>> = (props) => {
   const {currentAccount, curiumAccount} = accountsState;
   const [isEnabled, setIsEnabled] = useState(true);
 
-  const checkAccount = async () => {
+  const checkAccount = useCallback(async () => {
     try {
       const results: Key | undefined = await window.keplr?.getKey(BLUZELLE_CHAIN_ID);
       if (results) {
@@ -35,7 +35,7 @@ const CuriumConnectionRequired: React.FC<PropsWithChildren<any>> = (props) => {
     } catch (e) {
       dispatch(accountsActions.setCuriumAccount(undefined));
     }
-  };
+  }, [dispatch]);
 
   const requestEnablePermission = async () => {
     try {
@@ -46,13 +46,14 @@ const CuriumConnectionRequired: React.FC<PropsWithChildren<any>> = (props) => {
     }
   }
 
+
   useEffect(() => {
     const timerId = setTimeout(async () => {
       await requestEnablePermission();
       await checkAccount();
     },);
     return () => clearTimeout(timerId);
-  }, [currentAccount]);
+  }, [currentAccount, checkAccount]);
 
   const classes = useStyles();
 
@@ -78,7 +79,7 @@ const CuriumConnectionRequired: React.FC<PropsWithChildren<any>> = (props) => {
     if (!curiumAccount) {
       return "Please see that you are connected to Curium Extension!";
     }
-    if (curiumAccount.pubKey !== currentAccount!.publicKey) {
+    if (curiumAccount.pubKey!==currentAccount!.publicKey) {
       return "Please see that your active Bluzelle account matches Curium";
     }
     return "";
@@ -88,7 +89,7 @@ const CuriumConnectionRequired: React.FC<PropsWithChildren<any>> = (props) => {
     if (!curiumAccount || !isEnabled) {
       return false;
     }
-    return curiumAccount.pubKey === currentAccount!.publicKey;
+    return curiumAccount.pubKey===currentAccount!.publicKey;
   }
 
   return (
@@ -100,7 +101,7 @@ const CuriumConnectionRequired: React.FC<PropsWithChildren<any>> = (props) => {
             <div className={classes.helperText}>{getErrorMsg()}</div>
             {
               !isEnabled &&
-                <Button onClick={requestEnablePermission} color="primary" variant="contained">Enable Curium</Button>
+              <Button onClick={requestEnablePermission} color="primary" variant="contained">Enable Curium</Button>
             }
           </div>
 

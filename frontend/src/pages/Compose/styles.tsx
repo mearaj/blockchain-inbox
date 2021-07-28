@@ -21,7 +21,19 @@ const useStyles = makeStyles((theme) => {
     },
     leaseLabel: {
       display: 'flex',
+      alignItems: 'center',
       marginBottom: 10,
+    },
+    leaseError: {
+      marginLeft: 10,
+    },
+    submitButton: {
+      backgroundColor: theme.palette.success.main,
+      marginLeft: 24,
+      color: theme.palette.common.white,
+      '&:hover,&:focus,&:active': {
+        backgroundColor: theme.palette.success.dark,
+      }
     },
     footer: {
       display: 'flex',

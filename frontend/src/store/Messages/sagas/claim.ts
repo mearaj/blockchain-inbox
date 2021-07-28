@@ -1,12 +1,12 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import api, {ClaimMessage, OutboxMessage} from 'api';
+import api from 'api';
 import {call, put, select} from 'redux-saga/effects';
 import {AppState} from 'store/reducer';
 import {Account} from 'store/Account';
 import {messagesAction} from 'store/Messages/reducers';
 import {StdSignature, StdSignDoc} from '@cosmjs/launchpad';
 
-export function* claimMessageSaga(action: PayloadAction<{ signature:StdSignature, signed:StdSignDoc }>) {
+export function* claimMessageSaga(action: PayloadAction<{ signature: StdSignature, signed: StdSignDoc }>) {
   const currentAccount: Account = yield select((state: AppState) => state.accountsState.currentAccount);
   const id: string = yield select((state: AppState) => state.messagesState.claimMessageId);
   const message = {

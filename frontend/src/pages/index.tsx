@@ -26,11 +26,11 @@ const Pages: React.FC = (props) => {
 
 
   useEffect(() => {
-    const timerID = setTimeout(async ()=> {
+    const timerID = setTimeout(async () => {
       window.addEventListener("keplr_keystorechange", handleKeplrAccountChange);
       return () => window.removeEventListener("keplr_keystorechange", handleKeplrAccountChange);
     });
-    return ()=> clearTimeout(timerID);
+    return () => clearTimeout(timerID);
   });
 
   useEffect(() => {
