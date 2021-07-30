@@ -16,6 +16,7 @@ const InboxPage: React.FC = () => {
   const inbox = useSelector((appState: AppState) => appState.messagesState.inbox);
   const [inboxDecrypted, setInboxDecrypted] = useState<InboxMessage[]>([]);
   const currentAccount = useSelector((appState: AppState) => appState.accountsState.currentAccount);
+  const [warningMsg, setWarningMsg] = useState("");
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -24,6 +25,14 @@ const InboxPage: React.FC = () => {
     });
     return () => clearTimeout(timerId);
   }, [dispatch]);
+
+  // The intent is to show empty message for at least few moments for smooth ui interaction
+  useEffect(()=> {
+    const timerId = setTimeout(()=> {
+      setWarningMsg("Your Inbox Is Empty!")
+    }, 500);
+    return ()=> clearTimeout(timerId);
+  },[]);
 
 
 
@@ -60,7 +69,7 @@ const InboxPage: React.FC = () => {
           inboxDecrypted.length===0 &&
           <div className={classes.emptyContainer}>
             <div className={classes.emptyTitle}>
-              <Typography variant="h6">Your Inbox Messages Is Empty!</Typography>
+              <Typography variant="h6">{warningMsg}</Typography>
             </div>
           </div>
         }

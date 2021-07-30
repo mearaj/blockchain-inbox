@@ -60,7 +60,7 @@ To learn React, check out the [React documentation](https://reactjs.org/).
    chain: "ETH",
    chainName: "Ethereum Mainnet",
    privateKey: "f8210c704104e93990ad5b6c8067995a4a902a1d7f80e2243550ed58563dc346",
-   publicKey: "0x04c5c1252a6dfea04a615eeefeead48a27c86420c35c01695cf1dc4148b8d96c1c18cf469c63313afbf69d8f87ea011ab92da6c6f832698d33f5d83e914ff82f6e",
+   publicKey: "                                        ",
   },
   {
     chain:  "Bluzelle",

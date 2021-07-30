@@ -115,11 +115,8 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
         // Assuming it's mnemonic
         try {
           const {privateKeys} = getPrivateKeysFromMnemonic(privateKey, chainName);
-          console.log("private keys from mnemonic");
-          console.log(privateKeys);
           const derivedPrivateKey:string = privateKeys[0];
           const {isValid: isPrivateKeyValid} = isPrivateKeyFormatValid(derivedPrivateKey, chainName);
-          console.log(isPrivateKeyValid);
           if (isPrivateKeyValid) {
             const {isValid, publicKey} = genPublicKeyFromPrivateKey(derivedPrivateKey, chainName);
             if (!isValid) {

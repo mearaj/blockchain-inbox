@@ -11,7 +11,7 @@ import {setCurrentAccountSaga} from 'store/Account/sagas/accounts';
 export function* messagesWatcherSaga() {
   const {setCurrentAccount} = accountsActions;
   const {sendMessage, deleteOutboxMessage, getOutbox, getInbox, claimMessage, getSent} = messagesAction;
-  yield takeEvery(setCurrentAccount.type, setCurrentAccountSaga);
+  // yield takeEvery(setCurrentAccount.type, setCurrentAccountSaga);
   yield takeEvery(sendMessage.type, sendMessageSaga);
   yield takeEvery(deleteOutboxMessage.type, deleteOutboxMessageSaga);
   yield takeEvery(claimMessage.type, claimMessageSaga);

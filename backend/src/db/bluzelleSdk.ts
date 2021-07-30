@@ -32,7 +32,6 @@ export const initSDK = async () => {
   if (!bluzelleSdk) {
     throw ("Unable to initialize bluzelleSdk...");
   }
-
   return bluzelleSdk;
 };
 

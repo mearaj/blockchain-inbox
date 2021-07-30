@@ -17,6 +17,7 @@ const SentPage: React.FC = () => {
   const sent = useSelector((appState: AppState) => appState.messagesState.sent);
   const [sentDecrypted, setSentDecrypted] = useState<SentMessage[]>([]);
   const currentAccount = useSelector((appState: AppState) => appState.accountsState.currentAccount);
+  const [warningMsg, setWarningMsg] = useState("");
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -25,6 +26,15 @@ const SentPage: React.FC = () => {
     });
     return () => clearTimeout(timerId);
   }, [dispatch]);
+
+  // The intent is to show empty message for at least few moments for smooth ui interaction
+  useEffect(()=> {
+    const timerId = setTimeout(()=> {
+      setWarningMsg("Your Sent Is Empty!")
+    }, 500);
+    return ()=> clearTimeout(timerId);
+  },[]);
+
 
   useEffect(() => {
     const timerId = setTimeout(async () => {
@@ -60,7 +70,7 @@ const SentPage: React.FC = () => {
             sentDecrypted.length===0 &&
             <div className={classes.emptyContainer}>
               <div className={classes.emptyTitle}>
-                <Typography variant="h6">Your Sent Messages Is Empty!</Typography>
+                <Typography variant="h6">{warningMsg}</Typography>
               </div>
             </div>
           }

@@ -1,4 +1,4 @@
-import React, {PropsWithChildren} from 'react';
+import React, {PropsWithChildren, useEffect, useState} from 'react';
 import useStyles from './styles';
 import {Button} from '@material-ui/core';
 import CommonBar from 'components/CommonBar';
@@ -12,13 +12,21 @@ const LoginRequired: React.FC<PropsWithChildren<any>> = (props) => {
   const appState = useSelector((appState: AppState) => appState);
   const history = useHistory();
   const {currentAccount} = appState.accountsState;
-  const warningMsg = 'You must be logged in to use this feature!';
+  const [warningMsg,setWarningMsg] = useState("");
+
+  useEffect(()=> {
+    const timerId = setTimeout(()=> {
+      const warningMsg = 'You must be logged in to use this feature!';
+      setWarningMsg(warningMsg);
+    }, 1000);
+    return ()=> clearTimeout(timerId);
+  },[]);
 
 
+  // If current account exists and user is logged in, then return child component
   if (currentAccount && isLoggedIn(currentAccount.auth)) {
     return props.children;
   }
-
 
   return (
     <div className={classes.root}>

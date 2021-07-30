@@ -17,6 +17,7 @@ const SentPage: React.FC = () => {
   const outbox = useSelector((appState: AppState) => appState.messagesState.outbox);
   const [outboxDecrypted, setOutboxDecrypted] = useState<OutboxMessage[]>([]);
   const currentAccount = useSelector((appState: AppState) => appState.accountsState.currentAccount);
+  const [warningMsg, setWarningMsg] = useState("");
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -25,6 +26,14 @@ const SentPage: React.FC = () => {
     });
     return () => clearTimeout(timerId);
   }, [dispatch]);
+
+  // The intent is to show empty message for at least few moments for smooth ui interaction
+  useEffect(()=> {
+    const timerId = setTimeout(()=> {
+      setWarningMsg("Your Outbox Is Empty!")
+    }, 500);
+    return ()=> clearTimeout(timerId);
+  },[]);
 
   useEffect(() => {
     const timerId = setTimeout(async () => {
@@ -60,7 +69,7 @@ const SentPage: React.FC = () => {
             outboxDecrypted.length===0 &&
             <div className={classes.emptyContainer}>
               <div className={classes.emptyTitle}>
-                <Typography variant="h6">Your Outbox Is Empty!</Typography>
+                <Typography variant="h6">{warningMsg}</Typography>
               </div>
             </div>
           }
