@@ -53,12 +53,7 @@ export const getClaimController: RequestHandler = async (req, res, next) => {
         lease: message.lease,
       });
 
-      try {
-        const deleted = await OutboxMessageModel.deleteOne({id: message.id});
-        console.log(deleted);
-      } catch (e) {
-        console.log(e);
-      }
+      await OutboxMessageModel.deleteOne({id: message.id});
       return res.status(201).send();
     }, {memo: ''})
   } catch (e) {
@@ -66,3 +61,4 @@ export const getClaimController: RequestHandler = async (req, res, next) => {
     return res.status(500).send();
   }
 };
+

@@ -25,5 +25,4 @@ export const AccountsAccordion: React.FC = (props) => {
   )
 };
 
-
 export default AccountsAccordion;

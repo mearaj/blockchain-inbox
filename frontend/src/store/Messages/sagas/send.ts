@@ -8,6 +8,7 @@ import {AxiosResponse} from 'axios';
 import {bluzelleChain} from 'chains';
 import {accountsActions} from 'store/Account/reducers';
 
+
 export function* sendMessageSaga(action: PayloadAction<OutboxMessage>) {
   const currentAccount: Account = yield select((state: AppState) => state.accountsState.currentAccount);
   const message = action.payload;
@@ -16,7 +17,7 @@ export function* sendMessageSaga(action: PayloadAction<OutboxMessage>) {
       yield put(messagesAction.sendMessagePending());
       const response: AxiosResponse = yield call(api.sendMessage, currentAccount!.auth, message);
       const id: string = response.data.id;
-      yield put(messagesAction.setClaimMessageUuid(id));
+      yield put(messagesAction.setClaimMessageId(id));
       yield put(messagesAction.sendMessageSuccess());
     } catch (e) {
       console.log(e);

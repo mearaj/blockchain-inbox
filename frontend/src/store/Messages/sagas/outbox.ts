@@ -29,4 +29,24 @@ export function* getOutboxSaga(action: PayloadAction) {
   yield put(loaderActions.hideLoader());
 }
 
-
+export function* deleteOutboxMessageSaga(action: PayloadAction) {
+  yield put(loaderActions.showLoader());
+  const appState: AppState = yield select();
+  const id:string = appState.messagesState.claimMessageId;
+  const currentAccount = appState.accountsState.currentAccount;
+  if (currentAccount && currentAccount.chainName===bluzelleChain.name) {
+    try {
+      yield put(messagesAction.deleteOutboxMessagePending());
+      yield call(api.deleteOutboxMessageById, currentAccount.auth, id);
+      yield put(messagesAction.deleteOutboxMessageSuccess());
+      yield put(messagesAction.getOutbox());
+    } catch (e) {
+      console.log(e);
+      if (e.error?.message.toLowerCase().includes("not authorized") ||
+        e.message?.toLowerCase().includes("status code 401")) {
+        yield put(accountsActions.logout(currentAccount));
+      }
+    }
+  }
+  yield put(loaderActions.hideLoader());
+}

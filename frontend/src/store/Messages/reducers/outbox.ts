@@ -11,3 +11,17 @@ export const setOutbox = (state: MessagesState, action: PayloadAction<OutboxMess
   state.outbox = action.payload;
 }
 
+// Handled by deleteOutboxMessageSaga
+export const deleteOutboxMessage = (state: MessagesState) => {}
+
+export const deleteOutboxMessagePending = (state: MessagesState, action: PayloadAction) => {
+  state.deleteOutboxMessageState = action.type
+}
+
+export const deleteOutboxMessageFailure = (state: MessagesState, action: PayloadAction) => {
+  state.deleteOutboxMessageState = action.type
+}
+
+export const deleteOutboxMessageSuccess = (state: MessagesState, action: PayloadAction) => {
+  state.deleteOutboxMessageState = action.type
+}

@@ -31,21 +31,13 @@ import {HELPER_MSG_ETH_PUBLIC_KEY} from 'chains/eth/helper';
 import {HELPER_MSG_BLUZELLE_PUBLIC_KEY} from 'chains/bluzelle/helper';
 import {messagesAction} from 'store/Messages';
 import CuriumConnectionRequired from 'guards/CuriumConnectionRequired';
-import {loaderActions} from 'store/Loader';
 import {BLUZELLE_BACKEND_PUBLIC_ADDRESS, BLUZELLE_CHAIN_ID} from 'config';
 import {MsgSend} from '@cosmjs/launchpad';
 import {coin} from '@cosmjs/proto-signing';
 import {Key} from '@keplr-wallet/types';
 import {useHistory} from 'react-router-dom';
-import {
-  KeyValues,
-  MAX_DAYS,
-  MAX_HOURS,
-  MAX_MINUTES,
-  MAX_SECONDS,
-  MAX_YEARS,
-  MessageLeaseForm
-} from './interfaces';
+import {KeyValues, MAX_DAYS, MAX_HOURS, MAX_MINUTES, MAX_SECONDS, MAX_YEARS, MessageLeaseForm} from './interfaces';
+import {loaderActions} from 'store/Loader';
 
 
 const ComposePage: React.FC = () => {
@@ -60,8 +52,9 @@ const ComposePage: React.FC = () => {
   const [leaseErr, setLeaseErr] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [messageErr, setMessageErr] = useState<string>("");
-  const messagesState = useSelector((state: AppState) => state.messagesState);
-  const {sendMessageState, claimMessageState, claimMessageId} = messagesState;
+  const sendMessageState = useSelector((state: AppState) => state.messagesState.sendMessageState);
+  const claimMessageState = useSelector((state: AppState) => state.messagesState.claimMessageState);
+  const claimMessageId = useSelector((state: AppState) => state.messagesState.claimMessageId);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -162,15 +155,14 @@ const ComposePage: React.FC = () => {
         }));
       }
     } catch (e) {
-      if (e.message==='Request rejected') {
-        // Todo : Should request to delete this message from the outbox
-        clearForm();
-        history.push('/outbox');
+      if (e.message.includes('Request rejected')) {
+        dispatch(messagesAction.deleteOutboxMessage());
       }
       return
     }
     // waiting for claimMessage to  complete
-    while (claimMessageState===messagesAction.claimMessagePending.type) {}
+    while (claimMessageState===messagesAction.claimMessagePending.type) {
+    }
     if (claimMessageState===messagesAction.claimMessageSuccess.type) {
       clearForm();
       history.push('/sent');
@@ -203,7 +195,7 @@ const ComposePage: React.FC = () => {
       setMessageErr("A message cannot be empty!");
       return;
     }
-    if (!lease.seconds &&  !lease.minutes && !lease.hours && !lease.days && !lease.years) {
+    if (!lease.seconds && !lease.minutes && !lease.hours && !lease.days && !lease.years) {
       setLeaseErr("Lease Cannot Be 0 Or Empty!");
       return;
     }
@@ -246,35 +238,47 @@ const ComposePage: React.FC = () => {
       }
     }
   };
+
+  useEffect(() => {
+    console.log("current claimMessageId", claimMessageId);
+  }, [claimMessageId])
   useEffect(() => {
     switch (sendMessageState) {
       case messagesAction.sendMessagePending.type:
+      case messagesAction.claimMessagePending.type:
+      case messagesAction.deleteOutboxMessagePending.type:
         dispatch(loaderActions.showLoader());
         break;
       case messagesAction.sendMessageFailure.type:
+      case messagesAction.claimMessageFailure.type:
+      case messagesAction.deleteOutboxMessageFailure.type:
         dispatch(loaderActions.hideLoader());
         break;
       case messagesAction.sendMessageSuccess.type:
-        dispatch(loaderActions.hideLoader());
-        clearForm();
-        break;
-    }
-  }, [sendMessageState, claimMessageId, dispatch]);
-
-  useEffect(() => {
-    switch (claimMessageState) {
-      case messagesAction.claimMessagePending.type:
-        dispatch(loaderActions.showLoader());
-        break;
-      case messagesAction.claimMessageFailure.type:
-        clearForm();
-        dispatch(loaderActions.hideLoader());
-        break;
       case messagesAction.claimMessageSuccess.type:
-        clearForm();
+      case messagesAction.deleteOutboxMessageSuccess.type:
         dispatch(loaderActions.hideLoader());
+        clearForm();
+        break;
     }
-  }, [claimMessageState, dispatch]);
+
+    return ()=> {dispatch(loaderActions.hideLoader())}
+  }, [dispatch, claimMessageId, claimMessageState, sendMessageState]);
+  //
+  // useEffect(() => {
+  //   switch (claimMessageState) {
+  //     case messagesAction.claimMessagePending.type:
+  //       dispatch(loaderActions.showLoader());
+  //       break;
+  //     case messagesAction.claimMessageFailure.type:
+  //       clearForm();
+  //       dispatch(loaderActions.hideLoader());
+  //       break;
+  //     case messagesAction.claimMessageSuccess.type:
+  //       clearForm();
+  //       dispatch(loaderActions.hideLoader());
+  //   }
+  // }, [messagesState,claimMessageState, dispatch]);
 
 
   return (

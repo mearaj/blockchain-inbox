@@ -1,6 +1,11 @@
 import {Router} from 'express';
 import {OUTBOX_ENDPOINT} from 'config';
-import {getOutboxController, getOutboxMessageByIdController, saveOutboxMessageController} from 'controllers/outbox';
+import {
+  deleteOutboxMessageById,
+  getOutboxController,
+  getOutboxMessageByIdController,
+  saveOutboxMessageController
+} from 'controllers/outbox';
 import {authGuard} from 'controllers/guards/auth';
 import {outboxGuard} from 'controllers/guards/outbox';
 
@@ -12,5 +17,6 @@ const router = Router();
 router.get(OUTBOX_ENDPOINT, authGuard, getOutboxController);
 router.get(`${OUTBOX_ENDPOINT}/:id`, authGuard, getOutboxMessageByIdController);
 router.post(OUTBOX_ENDPOINT, authGuard, outboxGuard, saveOutboxMessageController);
+router.delete(OUTBOX_ENDPOINT, authGuard, outboxGuard, deleteOutboxMessageById);
 
 export default router;

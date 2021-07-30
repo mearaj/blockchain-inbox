@@ -7,7 +7,6 @@ import {sidebarReducer} from 'store/Sidebar/reducers';
 import {accountsReducer} from 'store/Account/reducers';
 import {messagesReducer} from 'store/Messages';
 
-
 const appReducer = combineReducers({
   accountsState: accountsReducer,
   messagesState: messagesReducer,
@@ -22,7 +21,6 @@ export const persistConfig = {
   //whitelist: []
   blacklist: ['register', 'loaderState', 'curiumAccount']
 };
-
 
 export type AppState = ReturnType<typeof appReducer>
 export const persistedReducer = persistReducer(persistConfig, appReducer);

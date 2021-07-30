@@ -29,7 +29,7 @@ export const accountsSlice = createSlice({
     setCuriumAccount,
     login,
     logout,
-  }
+  },
 });
 
 

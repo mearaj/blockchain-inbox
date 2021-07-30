@@ -19,7 +19,7 @@ export const claimMessageSuccess = (state: MessagesState, action: PayloadAction)
   state.claimMessageState = action.type;
 }
 
-export const setClaimMessageUuid = (state: MessagesState, action: PayloadAction<string>) => {
+export const setClaimMessageId = (state: MessagesState, action: PayloadAction<string>) => {
   state.claimMessageId = action.payload;
 }
 

@@ -1,5 +1,5 @@
 import {call, put} from 'redux-saga/effects';
-import {login, LoginResponseBody, requestLoginToken, TokenResponseBody} from 'api';
+import {login, requestLoginToken, TokenResponseBody} from 'api';
 import {PayloadAction} from '@reduxjs/toolkit';
 import {SagaTokenRequestBody} from 'store/Account/interfaces';
 import {allChains, signToken} from 'chains/common';
@@ -20,11 +20,10 @@ export function* loginSaga(action: PayloadAction<SagaTokenRequestBody>) {
     if (chainInfo) {
       let signature: string;
       let auth: string;
-      let authResponse: LoginResponseBody;
-
+      let authResponse: AxiosResponse;
       signature = yield call(signToken, privateKey, chainName, token);
       authResponse = yield call(login, {chainName, publicKey, signature, token});
-      auth = authResponse.auth;
+      auth = authResponse.data.auth;
       yield put(accountsActions.addUpdateAccount({publicKey, privateKey, chainName, auth}));
       yield put(accountsActions.setCurrentAccount({publicKey, privateKey, chainName, auth}));
     }

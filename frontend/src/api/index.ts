@@ -136,6 +136,12 @@ const getInbox = async (authToken: string) => {
   return await axios.get(INBOX_ENDPOINT);
 }
 
+const deleteOutboxMessageById = async (authToken: string, id: string) => {
+  const newConfig = setAuthHeader(authToken, config);
+  const axios = axiosOrig.create(newConfig);
+  return await axios.delete(OUTBOX_END_POINT, {data: {id}});
+}
+
 export const api = {
   requestLoginToken,
   login,
@@ -145,7 +151,8 @@ export const api = {
   logout,
   getInbox,
   claimMessage,
-  getSent
+  getSent,
+  deleteOutboxMessageById,
 };
 
 export default api;

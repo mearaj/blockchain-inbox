@@ -17,6 +17,23 @@ export const getOutboxController: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Note: This controller assumes authGuard is called before it.
+export const deleteOutboxMessageById: RequestHandler = async (req, res, next) => {
+  try {
+    const id = req.body.id;
+    console.log(id);
+    if (!id) {
+      return res.status(400).send();
+    }
+    await OutboxMessageModel.deleteOne({id});
+    return res.status(200).send();
+  } catch (e) {
+    console.log(e);
+    return res.status(500).send();
+  }
+};
+
+
 export const getOutboxMessageByIdController: RequestHandler = async (req, res, next) => {
   try {
     const id = req.params['id'];
@@ -35,8 +52,8 @@ export const saveOutboxMessageController: RequestHandler = async (req, res, next
   const message = new OutboxMessageModel(req.body);
   message.id = uuid();
   message.timestamp = Date.now().valueOf();
-  const{seconds,minutes ,hours ,days, years} = message.lease;
-  if (!seconds &&  !minutes && !hours && !days && !years) {
+  const {seconds, minutes, hours, days, years} = message.lease;
+  if (!seconds && !minutes && !hours && !days && !years) {
     return res.status(400).json({
         error: {
           message: "Lease Cannot Be 0 Or Empty!"
@@ -44,6 +61,7 @@ export const saveOutboxMessageController: RequestHandler = async (req, res, next
       }
     );
   }
+
   try {
     const result = await message.save();
     return res.status(201).json({
