@@ -5,7 +5,6 @@ export const verifyBluzSignature = (msg: string, publicKey: string, signature: s
   const hash = Buffer.from(CryptoJS.SHA256(
     CryptoJS.lib.WordArray.create(msg as any)
   ).toString(), 'hex');
-  let isValid = false;
   const secp256k1 = new elliptic.ec("secp256k1");
   const key = secp256k1.keyFromPublic(publicKey, 'hex');
   let r;
@@ -20,6 +19,5 @@ export const verifyBluzSignature = (msg: string, publicKey: string, signature: s
     r = signature.slice(0,32);
     s = signature.slice(32, 64);
   }
-  isValid = key.verify(hash, {r,s});
-  return isValid;
+  return  key.verify(hash, {r,s});
 }

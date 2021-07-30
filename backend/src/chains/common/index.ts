@@ -21,3 +21,5 @@ export const bluzelleChain = {
 };
 
 export const allowedChains:ChainShortInfo[] = [...ethChains, bluzelleChain];
+
+export {verifyPublicKeyFormat} from './helpers';

@@ -22,7 +22,7 @@ export interface PublicKeyValidatorResponse extends ValidatorResponse {
   publicKey: string;
 }
 
-export const isChainSupported = (chain: string) => Object.values(AllowedChainEnum).includes(chain as AllowedChainEnum);
+export const isChainSupported = (chain: string) => Object.values(AllowedChainEnum as any).includes(chain as AllowedChainEnum);
 
 export const allChains: ChainInfo[] = [...evmChains, bluzelleChain].sort((a, b) => {
   if (!isChainSupported(b.chain)) {

@@ -1,7 +1,7 @@
 import {allowedChains} from 'chains/common/index';
 import {ChainShortInfo} from 'chains/common/chain-info';
 
-export const helpers = async (chainName: string, publicKey: string): Promise<{ isValid: boolean, error: string }> => {
+export const verifyPublicKeyFormat = async (chainName: string, publicKey: string): Promise<{ isValid: boolean, error: string }> => {
   const chainDetail = await allowedChains.find((eachChain:ChainShortInfo) => eachChain.name===chainName);
   let isValid: boolean = false;
   let error = "Chain not supported!";

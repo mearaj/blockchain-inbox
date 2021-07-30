@@ -30,6 +30,7 @@ export const getOutboxMessageByIdController: RequestHandler = async (req, res, n
   }
 };
 
+
 export const saveOutboxMessageController: RequestHandler = async (req, res, next) => {
   const message = new OutboxMessageModel(req.body);
   message.id = uuid();

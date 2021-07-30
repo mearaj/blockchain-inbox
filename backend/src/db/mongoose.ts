@@ -1,9 +1,9 @@
-import {connect, model, Schema} from 'mongoose';
-import {MONGO_URI} from './../config';
+import {connect, Mongoose} from 'mongoose';
+import {MONGO_URI} from 'config';
 
 
-let mongooseConnection: typeof import('mongoose');
-export const initMongodb = async ()=> {
+let mongooseConnection: Mongoose;
+export const initMongodb = async () => {
   if (mongooseConnection) {
     return mongooseConnection;
   }
@@ -15,4 +15,4 @@ export const initMongodb = async ()=> {
   return mongooseConnection
 }
 
-initMongodb().then(()=> console.log("mongodbInitialised"));
+initMongodb().then(() => console.log("mongodbInitialised"));

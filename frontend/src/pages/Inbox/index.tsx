@@ -26,6 +26,7 @@ const InboxPage: React.FC = () => {
   }, [dispatch]);
 
 
+
   useEffect(() => {
     const timerId = setTimeout(async () => {
         const inboxDecryptedMessages = await Promise.all(inbox.map(async (eachInboxMsg) => {

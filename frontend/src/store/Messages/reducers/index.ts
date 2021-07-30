@@ -2,7 +2,12 @@ import {createSlice} from '@reduxjs/toolkit';
 import {MessagesState} from 'store/Messages/interfaces';
 
 import {getOutbox, setOutbox} from 'store/Messages/reducers/outbox';
-import {sendMessage, sendMessageFailure, sendMessagePending, sendMessageSuccess} from 'store/Messages/reducers/send';
+import {
+  sendMessage,
+  sendMessageFailure,
+  sendMessagePending,
+  sendMessageSuccess
+} from 'store/Messages/reducers/send';
 import {getInbox, setInbox} from 'store/Messages/reducers/inbox';
 import {
   claimMessage,

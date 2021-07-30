@@ -167,10 +167,10 @@ const ComposePage: React.FC = () => {
         clearForm();
         history.push('/outbox');
       }
+      return
     }
     // waiting for claimMessage to  complete
-    while (claimMessageState===messagesAction.claimMessagePending.type) {
-    }
+    while (claimMessageState===messagesAction.claimMessagePending.type) {}
     if (claimMessageState===messagesAction.claimMessageSuccess.type) {
       clearForm();
       history.push('/sent');
@@ -208,7 +208,6 @@ const ComposePage: React.FC = () => {
       return;
     }
 
-
     const creatorValidator = await getEncryptedMessageFromPublicKey(
       currentAccount?.publicKey || "",
       currentAccount!.chainName,
@@ -240,6 +239,7 @@ const ComposePage: React.FC = () => {
 
       // make sure we collect message id from backend before sending message with curium
       while (sendMessageState===messagesAction.sendMessagePending.type) {
+        console.log("state should be pending....");
       }
       if (sendMessageState!==messagesAction.sendMessageFailure.type) {
         await sendMessageWithCurium();

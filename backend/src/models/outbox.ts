@@ -1,4 +1,4 @@
-import {model, Schema} from 'mongoose';
+import {Model, model, Schema} from 'mongoose';
 import {Lease} from '@bluzelle/sdk-js/lib/codec/crud/lease';
 
 export interface OutboxMessage {
@@ -85,5 +85,5 @@ export const outboxMessageSchema = new Schema<OutboxMessage>(
     },
   }
 )
-export const OutboxMessageModel = model<OutboxMessage>('Message', outboxMessageSchema, 'outbox');
+export const OutboxMessageModel: Model<OutboxMessage> = model<OutboxMessage>('OutboxMessage', outboxMessageSchema, 'outbox');
 

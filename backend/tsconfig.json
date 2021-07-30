@@ -3,7 +3,10 @@
     "target": "es5",
     "baseUrl": "src",
     "outDir": "build",
-    "rootDir": "src",
+    "rootDirs": [
+      "src",
+      "test"
+    ],
     "lib": [
       "esnext",
       "es6"
