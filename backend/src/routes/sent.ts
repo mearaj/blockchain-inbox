@@ -8,4 +8,3 @@ const router = Router();
 
 router.get(SENT_ENDPOINT, authGuard, outboxGuard, getSentController);
 export default router;
-

@@ -15,6 +15,15 @@ const columns: GridColDef[] = [
     headerName: 'Message',
     minWidth: 300,
   },
+  {
+    field: 'dateCreated',
+    headerName: 'Date Created',
+    minWidth: 300,
+    valueGetter: (params: GridValueGetterParams) => {
+      const timestamp:number = params.getValue(params.id, 'timestamp') as number;
+      return `${new Date(timestamp).toLocaleString()}`
+    },
+  }
 ]
 
 export default columns;

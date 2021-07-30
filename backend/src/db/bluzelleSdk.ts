@@ -1,16 +1,12 @@
 import {SDKOptions} from '@bluzelle/sdk-js/lib/client-lib/rpc';
 import {bluzelle, BluzelleSdk} from '@bluzelle/sdk-js';
-
-const mintResult = {
-  address: "bluzelle1gwchgddg96fy2pfgjvg22lqrseyrlpsyjh8xah",
-  mnemonic: "donate artwork mandate vacuum wreck crash junk zebra total toss say student loan satisfy moon profit duck fire wreck bacon unit retire strong rely"
-};
+import {SDK_CONNECTION_URL, SDK_GAS_PRICE, SDK_MAX_GAS, SDK_MNEMONIC} from 'config';
 
 const bluzelleConfig: SDKOptions = {
-  mnemonic: mintResult.mnemonic,
-  url: "wss://client.sentry.testnet.private.bluzelle.com:26657",
-  maxGas: 100000000,
-  gasPrice: 0.002,
+  mnemonic: SDK_MNEMONIC,
+  url: SDK_CONNECTION_URL,
+  maxGas: SDK_MAX_GAS,
+  gasPrice: SDK_GAS_PRICE,
 };
 
 let bluzelleSdk: BluzelleSdk;

@@ -21,7 +21,6 @@ export const getOutboxController: RequestHandler = async (req, res, next) => {
 export const deleteOutboxMessageById: RequestHandler = async (req, res, next) => {
   try {
     const id = req.body.id;
-    console.log(id);
     if (!id) {
       return res.status(400).send();
     }

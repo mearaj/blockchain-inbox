@@ -226,6 +226,7 @@ const ComposePage: React.FC = () => {
           recipientEncryptedMessage,
           recipientChainName,
           recipientPublicKey,
+          timestamp: Date.now().valueOf(),
         })
       );
 
@@ -262,7 +263,9 @@ const ComposePage: React.FC = () => {
         break;
     }
 
-    return ()=> {dispatch(loaderActions.hideLoader())}
+    return () => {
+      dispatch(loaderActions.hideLoader())
+    }
   }, [dispatch, claimMessageId, claimMessageState, sendMessageState]);
   //
   // useEffect(() => {

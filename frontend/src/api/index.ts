@@ -41,7 +41,7 @@ export interface OutboxMessage {
   recipientEncryptedMessage: string,
   lease: Lease;
   message?: string;
-  timestamp?: string;
+  timestamp?: number;
   id?: string;
 }
 

@@ -8,7 +8,7 @@
     "build:watch": "tsc -w",
     "dev:watch": "nodemon -r tsconfig-paths/register src/index.ts",
     "dev": "ts-node -r tsconfig-paths/register src/index.ts",
-    "test": "mocha --check-leaks -r tsconfig-paths/register -r ts-node/register test/**/*.test.ts",
+    "test": "PORT=8082 mocha --check-leaks -r tsconfig-paths/register -r ts-node/register test/**/*.test.ts",
     "test:watch": "nodemon --watch 'test/**/*' -e ts --exec 'npm run test'"
   },
   "author": "",
@@ -51,6 +51,8 @@
     "@types/supertest": "^2.0.11",
     "@types/uuid": "^8.3.1",
     "@types/validator": "^13.6.3",
+    "dotenv": "^8.6.0",
+    "env-cmd": "^10.1.0",
     "nodemon": "^2.0.9",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "^3.10.1",
