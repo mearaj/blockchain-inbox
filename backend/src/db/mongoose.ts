@@ -1,6 +1,7 @@
 import {connect, Mongoose} from 'mongoose';
 import {MONGO_URI} from 'config';
 
+console.log(MONGO_URI);
 
 let mongooseConnection: Mongoose;
 export const initMongodb = async () => {
@@ -16,3 +17,4 @@ export const initMongodb = async () => {
 }
 
 initMongodb().then(() => console.log("mongodbInitialised"));
+

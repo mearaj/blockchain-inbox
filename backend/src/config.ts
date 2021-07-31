@@ -9,7 +9,7 @@ export const LOGOUT_ENDPOINT = `${ENDPOINT}/logout`;
 export const PORT = process.env.PORT || 8081;
 export const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://blockchaininbox:blockchaininbox@cluster0.woxyc.mongodb.net/blockchain-inbox?retryWrites=true&w=majority";
 
-
+//export const MONGO_URI = process.env.MONGO_URI || "mongodb://blockchain-inbox:blockchain-inbox@localhost:27017/blockchain-inbox?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 
 // validity of login token in milliseconds
 export const LOGIN_TOKEN_THRESHOLD = process.env.LOGIN_TOKEN_THRESHOLD || 1000 * 60 * 1000 // 10 minutes
