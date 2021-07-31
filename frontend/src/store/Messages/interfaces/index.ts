@@ -1,11 +1,13 @@
 import {InboxMessage, OutboxMessage, SentMessage} from 'api';
-import {StdSignature, StdSignDoc} from '@cosmjs/launchpad';
+import {AminoSignResponse, StdSignature, StdSignDoc} from '@cosmjs/launchpad';
 
 
 export interface MessagesState {
   sendMessageState: string,
   claimMessageState: string,
   deleteOutboxMessageState: string,
+  curiumPaymentState: string,
+  curiumPaymentResponse: AminoSignResponse | undefined,
   claimMessageId: string,
   claimMessageSigned: StdSignDoc | undefined,
   claimMessageSignature: StdSignature | undefined,

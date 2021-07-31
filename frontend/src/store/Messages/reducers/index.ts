@@ -9,22 +9,30 @@ import {
   getOutbox,
   setOutbox
 } from 'store/Messages/reducers/outbox';
-import {sendMessage, sendMessageFailure, sendMessagePending, sendMessageSuccess} from 'store/Messages/reducers/send';
+import {sendMessage} from 'store/Messages/reducers/send';
 import {getInbox, setInbox} from 'store/Messages/reducers/inbox';
 import {
   claimMessage,
   claimMessageFailure,
   claimMessagePending,
   claimMessageSuccess,
+  setClaimMessageId,
   setClaimMessageSignature,
-  setClaimMessageSigned,
-  setClaimMessageId
+  setClaimMessageSigned
 } from 'store/Messages/reducers/claim';
 import {getSent, setSent} from 'store/Messages/reducers/sent';
+import {
+  clearCuriumPaymentState,
+  curiumPaymentFailure,
+  curiumPaymentPending,
+  curiumPaymentSuccess
+} from 'store/Messages/reducers/curium';
 
 export const initialState: MessagesState = {
   sendMessageState: "",
   claimMessageState: "",
+  curiumPaymentState: "",
+  curiumPaymentResponse: undefined,
   deleteOutboxMessageState: "",
   claimMessageSignature: undefined,
   claimMessageSigned: undefined,
@@ -38,13 +46,14 @@ export const messagesSlice = createSlice({
   initialState,
   reducers: {
     sendMessage,
-    sendMessagePending,
-    sendMessageSuccess,
-    sendMessageFailure,
     deleteOutboxMessage,
     deleteOutboxMessagePending,
     deleteOutboxMessageSuccess,
     deleteOutboxMessageFailure,
+    curiumPaymentPending,
+    curiumPaymentSuccess,
+    curiumPaymentFailure,
+    clearCuriumPaymentState,
     claimMessage,
     claimMessagePending,
     claimMessageSuccess,

@@ -39,5 +39,5 @@ accountSchema.index({publicKey: 1, chainName: 1}, {unique: true});
 
 
 // 3. Create a Model.
-export const AccountModel = model<Account>('Account', accountSchema);
+export const AccountModel = model<Account>('Account', accountSchema,'accounts');
 

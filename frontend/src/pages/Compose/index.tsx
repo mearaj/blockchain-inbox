@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import CommonBar from 'components/CommonBar';
 import useStyles from './styles';
 import {
@@ -32,12 +32,12 @@ import {HELPER_MSG_BLUZELLE_PUBLIC_KEY} from 'chains/bluzelle/helper';
 import {messagesAction} from 'store/Messages';
 import CuriumConnectionRequired from 'guards/CuriumConnectionRequired';
 import {BLUZELLE_BACKEND_PUBLIC_ADDRESS, BLUZELLE_CHAIN_ID} from 'config';
-import {MsgSend} from '@cosmjs/launchpad';
+import {AminoSignResponse, MsgSend} from '@cosmjs/launchpad';
 import {coin} from '@cosmjs/proto-signing';
 import {Key} from '@keplr-wallet/types';
-import {useHistory} from 'react-router-dom';
 import {KeyValues, MAX_DAYS, MAX_HOURS, MAX_MINUTES, MAX_SECONDS, MAX_YEARS, MessageLeaseForm} from './interfaces';
 import {loaderActions} from 'store/Loader';
+import {useHistory} from 'react-router-dom';
 
 
 const ComposePage: React.FC = () => {
@@ -52,9 +52,7 @@ const ComposePage: React.FC = () => {
   const [leaseErr, setLeaseErr] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [messageErr, setMessageErr] = useState<string>("");
-  const sendMessageState = useSelector((state: AppState) => state.messagesState.sendMessageState);
-  const claimMessageState = useSelector((state: AppState) => state.messagesState.claimMessageState);
-  const claimMessageId = useSelector((state: AppState) => state.messagesState.claimMessageId);
+  const curiumPaymentState = useSelector((state: AppState) => state.messagesState.curiumPaymentState);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -124,7 +122,7 @@ const ComposePage: React.FC = () => {
     }
   }
 
-  const sendMessageWithCurium = async () => {
+  const handleCuriumPaymentApproval = useCallback(async () => {
     await window.keplr?.enable(BLUZELLE_CHAIN_ID);
     const curiumAccount: Key | undefined = await window.keplr?.getKey(BLUZELLE_CHAIN_ID);
     const offlineSigner = await window.keplr?.getOfflineSigner(BLUZELLE_CHAIN_ID);
@@ -138,7 +136,7 @@ const ComposePage: React.FC = () => {
     };
 
     try {
-      const result = await offlineSigner!.signAmino(Buffer.from(curiumAccount!.bech32Address).toString('utf8'), {
+      const response: AminoSignResponse = await offlineSigner!.signAmino(Buffer.from(curiumAccount!.bech32Address).toString('utf8'), {
         account_number: currentAccount?.publicKey || "",
         chain_id: BLUZELLE_CHAIN_ID,
         fee: {
@@ -148,26 +146,15 @@ const ComposePage: React.FC = () => {
         msgs: [msg],
         sequence: ''
       });
-      if (claimMessageId) {
-        await dispatch(messagesAction.claimMessage({
-          signature: result.signature,
-          signed: result.signed
-        }));
+      if (response) {
+        dispatch(messagesAction.curiumPaymentSuccess(response));
+      } else {
+        dispatch(messagesAction.curiumPaymentFailure());
       }
     } catch (e) {
-      if (e.message.includes('Request rejected')) {
-        dispatch(messagesAction.deleteOutboxMessage());
-      }
-      return
+      dispatch(messagesAction.curiumPaymentFailure());
     }
-    // waiting for claimMessage to  complete
-    while (claimMessageState===messagesAction.claimMessagePending.type) {
-    }
-    if (claimMessageState===messagesAction.claimMessageSuccess.type) {
-      clearForm();
-      history.push('/sent');
-    }
-  }
+  }, [currentAccount?.publicKey, dispatch]);
 
   const clearForm = () => {
     setRecipientPublicKey("");
@@ -196,7 +183,7 @@ const ComposePage: React.FC = () => {
       return;
     }
     if (!lease.seconds && !lease.minutes && !lease.hours && !lease.days && !lease.years) {
-      setLeaseErr("Lease Cannot Be 0 Or Empty!");
+      setLeaseErr("Lease Cannot Be Zero Or Empty!");
       return;
     }
 
@@ -229,59 +216,30 @@ const ComposePage: React.FC = () => {
           timestamp: Date.now().valueOf(),
         })
       );
-
-      // make sure we collect message id from backend before sending message with curium
-      while (sendMessageState===messagesAction.sendMessagePending.type) {
-        console.log("state should be pending....");
-      }
-      if (sendMessageState!==messagesAction.sendMessageFailure.type) {
-        await sendMessageWithCurium();
-      }
     }
   };
 
   useEffect(() => {
-    console.log("current claimMessageId", claimMessageId);
-  }, [claimMessageId])
-  useEffect(() => {
-    switch (sendMessageState) {
-      case messagesAction.sendMessagePending.type:
-      case messagesAction.claimMessagePending.type:
-      case messagesAction.deleteOutboxMessagePending.type:
-        dispatch(loaderActions.showLoader());
-        break;
-      case messagesAction.sendMessageFailure.type:
-      case messagesAction.claimMessageFailure.type:
-      case messagesAction.deleteOutboxMessageFailure.type:
-        dispatch(loaderActions.hideLoader());
-        break;
-      case messagesAction.sendMessageSuccess.type:
-      case messagesAction.claimMessageSuccess.type:
-      case messagesAction.deleteOutboxMessageSuccess.type:
-        dispatch(loaderActions.hideLoader());
-        clearForm();
-        break;
-    }
-
-    return () => {
-      dispatch(loaderActions.hideLoader())
-    }
-  }, [dispatch, claimMessageId, claimMessageState, sendMessageState]);
-  //
-  // useEffect(() => {
-  //   switch (claimMessageState) {
-  //     case messagesAction.claimMessagePending.type:
-  //       dispatch(loaderActions.showLoader());
-  //       break;
-  //     case messagesAction.claimMessageFailure.type:
-  //       clearForm();
-  //       dispatch(loaderActions.hideLoader());
-  //       break;
-  //     case messagesAction.claimMessageSuccess.type:
-  //       clearForm();
-  //       dispatch(loaderActions.hideLoader());
-  //   }
-  // }, [messagesState,claimMessageState, dispatch]);
+    const timerId = setTimeout(async () => {
+      switch (curiumPaymentState) {
+        case messagesAction.curiumPaymentPending.type:
+          dispatch(loaderActions.showLoader());
+          await handleCuriumPaymentApproval();
+          break;
+        case messagesAction.curiumPaymentFailure.type:
+          clearForm();
+          dispatch(loaderActions.hideLoader());
+          dispatch(messagesAction.clearCuriumPaymentState());
+          break;
+        case messagesAction.curiumPaymentSuccess.type:
+          clearForm();
+          dispatch(loaderActions.hideLoader());
+          dispatch(messagesAction.clearCuriumPaymentState());
+          history.push('/sent');
+      }
+    })
+    return () => clearTimeout(timerId);
+  }, [curiumPaymentState, dispatch, handleCuriumPaymentApproval, history]);
 
 
   return (
