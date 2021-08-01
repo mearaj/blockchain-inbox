@@ -30,14 +30,14 @@ const InboxPage: React.FC = () => {
   useEffect(()=> {
     const timerId = setTimeout(()=> {
       setWarningMsg("Your Inbox Is Empty!")
-    }, 250);
+    }, 2000);
     return ()=> clearTimeout(timerId);
   },[]);
 
 
 
   useEffect(() => {
-    const timerId = setTimeout(async () => {
+    const timerId = setInterval(async () => {
         const inboxDecryptedMessages = await Promise.all(inbox.map(async (eachInboxMsg) => {
             try {
               const eachMessageObject = await getDecryptedMessageFromPrivateKey(
@@ -56,9 +56,10 @@ const InboxPage: React.FC = () => {
           })
         );
         setInboxDecrypted(inboxDecryptedMessages);
-      }
+      },
+      1000
     );
-    return () => clearTimeout(timerId);
+    return () => clearInterval(timerId);
   }, [inbox, currentAccount])
 
   return (

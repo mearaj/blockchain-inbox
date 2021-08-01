@@ -23,7 +23,7 @@ const SentPage: React.FC = () => {
   useEffect(() => {
     const timerId = setTimeout(async () => {
       dispatch(messagesAction.getSent());
-    });
+    },250);
     return () => clearTimeout(timerId);
   }, [dispatch]);
 
@@ -31,7 +31,7 @@ const SentPage: React.FC = () => {
   useEffect(()=> {
     const timerId = setTimeout(()=> {
       setWarningMsg("Your Sent Is Empty!")
-    }, 500);
+    }, 250);
     return ()=> clearTimeout(timerId);
   },[]);
 
