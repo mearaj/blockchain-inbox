@@ -21,3 +21,5 @@ export const SDK_PUBLIC_ADDRESS = process.env.SDK_PUBLIC_ADDRESS || "bluzelle1gw
 export const SDK_CONNECTION_URL = process.env.SDK_CONNECTION_URL || "wss://client.sentry.testnet.private.bluzelle.com:26657"
 export const SDK_MAX_GAS = parseInt(process.env.SDK_MAX_GAS || '0') || 100000000
 export const SDK_GAS_PRICE = parseInt(process.env.SDK_GAS_PRICE || '0') || 0.002
+
+

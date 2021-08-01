@@ -7,18 +7,6 @@ export const claimMessage = (state: MessagesState, action: PayloadAction<{ signa
 
 }
 
-export const claimMessagePending = (state: MessagesState, action: PayloadAction) => {
-  state.claimMessageState = action.type
-}
-
-export const claimMessageFailure = (state: MessagesState, action: PayloadAction) => {
-  state.claimMessageState = action.type
-}
-
-export const claimMessageSuccess = (state: MessagesState, action: PayloadAction) => {
-  state.claimMessageState = action.type;
-}
-
 export const setClaimMessageId = (state: MessagesState, action: PayloadAction<string>) => {
   state.claimMessageId = action.payload;
 }

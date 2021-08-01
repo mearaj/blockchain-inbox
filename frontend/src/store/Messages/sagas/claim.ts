@@ -14,16 +14,13 @@ export function* claimMessageSaga(action: PayloadAction<{ signature: StdSignatur
     signed: action.payload.signed,
     signature: action.payload.signature,
   };
+  yield put(messagesAction.setClaimMessageId(id));
+  yield put(messagesAction.setClaimMessageSigned(message.signed));
+  yield put(messagesAction.setClaimMessageSignature(message.signature));
   try {
-    yield put(messagesAction.claimMessagePending());
-    yield put(messagesAction.setClaimMessageId(id));
-    yield put(messagesAction.setClaimMessageSigned(message.signed));
-    yield put(messagesAction.setClaimMessageSignature(message.signature));
     yield call(api.claimMessage, currentAccount!.auth, message);
-    yield put(messagesAction.claimMessageSuccess());
   } catch (e) {
     console.log(e);
-    yield put(messagesAction.claimMessageFailure());
   }
 }
 

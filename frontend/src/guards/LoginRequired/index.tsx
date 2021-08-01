@@ -12,15 +12,15 @@ const LoginRequired: React.FC<PropsWithChildren<any>> = (props) => {
   const appState = useSelector((appState: AppState) => appState);
   const history = useHistory();
   const {currentAccount} = appState.accountsState;
-  const [warningMsg,setWarningMsg] = useState("");
+  const [warningMsg, setWarningMsg] = useState("");
 
-  useEffect(()=> {
-    const timerId = setTimeout(()=> {
+  useEffect(() => {
+    const timerId = setTimeout(() => {
       const warningMsg = 'You must be logged in to use this feature!';
       setWarningMsg(warningMsg);
-    }, 1000);
-    return ()=> clearTimeout(timerId);
-  },[]);
+    }, 250);
+    return () => clearTimeout(timerId);
+  }, []);
 
 
   // If current account exists and user is logged in, then return child component
@@ -31,16 +31,21 @@ const LoginRequired: React.FC<PropsWithChildren<any>> = (props) => {
   return (
     <div className={classes.root}>
       <CommonBar>Login Required!</CommonBar>
-      <div className={classes.helperText}>{warningMsg}</div>
-      <Button
-        type="button"
-        className={classes.button}
-        color="primary"
-        variant="contained"
-        onClick={(event) => history.push('/account')}
-      >
-        My Account
-      </Button>
+      {
+        warningMsg &&
+        <>
+          <div className={classes.helperText}>{warningMsg}</div>
+          <Button
+            type="button"
+            className={classes.button}
+            color="primary"
+            variant="contained"
+            onClick={(event) => history.push('/account')}
+          >
+            My Account
+          </Button>
+        </>
+      }
     </div>
   );
 }

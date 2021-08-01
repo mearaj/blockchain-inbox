@@ -13,9 +13,6 @@ import {sendMessage} from 'store/Messages/reducers/send';
 import {getInbox, setInbox} from 'store/Messages/reducers/inbox';
 import {
   claimMessage,
-  claimMessageFailure,
-  claimMessagePending,
-  claimMessageSuccess,
   setClaimMessageId,
   setClaimMessageSignature,
   setClaimMessageSigned
@@ -29,8 +26,6 @@ import {
 } from 'store/Messages/reducers/curium';
 
 export const initialState: MessagesState = {
-  sendMessageState: "",
-  claimMessageState: "",
   curiumPaymentState: "",
   curiumPaymentResponse: undefined,
   deleteOutboxMessageState: "",
@@ -55,9 +50,6 @@ export const messagesSlice = createSlice({
     curiumPaymentFailure,
     clearCuriumPaymentState,
     claimMessage,
-    claimMessagePending,
-    claimMessageSuccess,
-    claimMessageFailure,
     setClaimMessageId,
     setClaimMessageSignature,
     setClaimMessageSigned,

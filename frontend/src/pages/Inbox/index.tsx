@@ -30,7 +30,7 @@ const InboxPage: React.FC = () => {
   useEffect(()=> {
     const timerId = setTimeout(()=> {
       setWarningMsg("Your Inbox Is Empty!")
-    }, 500);
+    }, 250);
     return ()=> clearTimeout(timerId);
   },[]);
 
@@ -79,7 +79,6 @@ const InboxPage: React.FC = () => {
             className={classes.dataGrid}
             rows={inboxDecrypted}
             columns={columns}
-            disableSelectionOnClick
           />
         }
 
