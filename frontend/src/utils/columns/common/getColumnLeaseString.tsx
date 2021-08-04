@@ -6,3 +6,5 @@ export const getColumnLeaseString = (params: GridValueGetterParams) => {
   const lease = params.getValue(params.id, "lease") as Lease;
   return getLeaseString(lease);
 };
+
+export default getColumnLeaseString;

@@ -1,114 +1,38 @@
-import React, * as React$1 from 'react';
-import {useCallback, useEffect, useState} from 'react';
+import React, {MouseEvent} from 'react';
 import CommonBar from 'components/CommonBar';
 
 import useStyles from './styles';
 import CuriumRequired from 'guards/CuriumRequired';
-import {AppState, messagesAction} from 'store';
-import {useDispatch, useSelector} from 'react-redux';
+import {messagesAction} from 'store';
+import {useDispatch} from 'react-redux';
 import {SentMessage} from 'api';
 import {Button, CircularProgress, Typography} from '@material-ui/core';
 import BluzelleAccountRequired from 'guards/BluzelleAccountRequired';
-import {getDecryptedMessageFromPrivateKey} from 'chains';
-import {DataGrid, GridCellParams, GridRowParams, GridValueGetterParams} from '@material-ui/data-grid';
-import dataColumns from 'pages/Sent/columns';
+import {DataGrid, GridCellParams, GridRowParams} from '@material-ui/data-grid';
 import {useHistory} from 'react-router-dom';
-import {Lease} from '@bluzelle/sdk-js/lib/codec/crud/lease';
-import {getExpiryFromTimestampLease} from 'utils/helpers/getExpiryFromTimestampLease';
 import {Schedule} from '@material-ui/icons';
-import {getColumnToValue} from 'utils/columns/outbox';
+import useSentState from 'pages/Sent/useSentState';
 
-const SENT_ERROR_BACKEND = "Sorry, something went wrong. Please try again later"
-const SENT_EMPTY = "Your Sent Is Empty!"
+const getRenewColumnComponent = (_params: GridCellParams) => {
+  return <Button color="secondary" variant="contained">
+    <Schedule/>
+    <Typography style={{marginLeft: 6}}>Renew</Typography>
+  </Button>
+};
 
 const SentPage: React.FC = () => {
   const classes = useStyles();
-  const [columns, setColumns] = useState(dataColumns);
-  const sent = useSelector((appState: AppState) => appState.messagesState.sent);
-  const getSentState = useSelector((appState: AppState) => appState.messagesState.getSentState);
-  const [sentDecrypted, setSentDecrypted] = useState<SentMessage[]>([]);
-  const currentAccount = useSelector((appState: AppState) => appState.accountsState.currentAccount);
-  const [warningMsg, setWarningMsg] = useState("");
+  const [columns, getSentState, sentDecrypted, warningMsg] = useSentState(getRenewColumnComponent);
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const getColumnDateCreatedValue = useCallback((params: GridValueGetterParams) => {
-    const timestamp: number = params.getValue(params.id, 'timestamp') as number;
-    return `${new Date(timestamp).toDateString()}`
-  }, []);
-
-  const getColumnExpiresAfterValue = useCallback((params) => {
-    const lease: Lease = params.getValue(params.id, 'lease') as Lease;
-    const timestamp = params.getValue(params.id, 'timestamp') as number;
-    const expiryInString = getExpiryFromTimestampLease(timestamp, lease);
-    if (expiryInString[0]==="-") {
-      return "Expired!"
-    }
-    return expiryInString;
-  }, []);
-
-  const getRenewColumnComponent = useCallback((params: GridCellParams) => {
-    return <Button color="secondary" variant="contained">
-      <Schedule/>
-      <Typography style={{marginLeft: 6}}>Renew</Typography>
-    </Button>
-  }, []);
-
-  useEffect(() => {
-    dispatch(messagesAction.getSent());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (getSentState===messagesAction.getSentFailure.type && warningMsg!==SENT_ERROR_BACKEND) {
-      setWarningMsg(SENT_ERROR_BACKEND);
-    } else if (sent.length===0 &&
-      getSentState===messagesAction.getSentSuccess.type &&
-      warningMsg!==SENT_EMPTY) {
-      setWarningMsg(SENT_EMPTY);
-    } else if (sent.length!==0 && warningMsg!=="") {
-      setWarningMsg("");
-    }
-  }, [sent, warningMsg, currentAccount, getSentState]);
-
-
-  useEffect(() => {
-    const intervalId = setInterval(async () => {
-        const sentDecryptedMessages = await Promise.all(sent.map(async (eachSent) => {
-            try {
-              const eachMessageObject = await getDecryptedMessageFromPrivateKey(
-                currentAccount!.privateKey,
-                currentAccount!.chainName,
-                eachSent.message
-              );
-              return {
-                ...eachSent,
-                message: eachMessageObject.decryptedMessage,
-              }
-            } catch (e) {
-              console.log(e);
-              return eachSent
-            }
-          })
-        );
-        setSentDecrypted(sentDecryptedMessages);
-      },
-      1000
-    );
-    if (sent.length===0) {
-      setSentDecrypted([]);
-      clearInterval(intervalId);
-      return
-    }
-    return () => clearInterval(intervalId);
-  }, [sent, currentAccount]);
-
-  const onRowClickHandler = (param: GridRowParams, event: React$1.MouseEvent) => {
+  const onRowClickHandler = (param: GridRowParams, event: MouseEvent) => {
     const sentDetail = param.row as SentMessage;
     dispatch(messagesAction.setSentMsgDetail(sentDetail));
     history.push('/sent/detail');
   }
 
-  const onCellClick = (params: GridCellParams, event: React$1.MouseEvent) => {
+  const onCellClick = (params: GridCellParams, event: MouseEvent) => {
     if (params.field==="renewLease") {
       event.stopPropagation();
       event.preventDefault();
@@ -121,31 +45,6 @@ const SentPage: React.FC = () => {
     }
     return ""
   };
-
-  useEffect(() => {
-    const newColumns = dataColumns.map((eachColumn) => {
-        if (eachColumn.field==="expiresAfter") {
-          eachColumn.valueGetter = getColumnExpiresAfterValue;
-        }
-        if (eachColumn.field==="to") {
-          eachColumn.valueGetter = getColumnToValue;
-        }
-        if (eachColumn.field==="dateCreated") {
-          eachColumn.valueGetter = getColumnDateCreatedValue;
-        }
-        if (eachColumn.field==="renewLease") {
-          eachColumn.renderCell = getRenewColumnComponent;
-        }
-        return eachColumn;
-      }
-    );
-    setColumns(newColumns)
-  }, [currentAccount,
-    getColumnDateCreatedValue,
-    getColumnExpiresAfterValue,
-    getRenewColumnComponent
-  ]);
-
 
   return (
     <CuriumRequired>
