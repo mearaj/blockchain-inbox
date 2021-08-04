@@ -61,7 +61,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
     if (chainNameErr) {
       setChainNameErr("");
     }
-    let isPrivateKey = privateKey.trim().split(" ").length === 1;
+    let isPrivateKey = privateKey.trim().split(" ").length===1;
 
     if (isPrivateKey) {
       const {publicKey, isValid} = genPublicKeyFromPrivateKey(privateKey, chainName);
@@ -96,7 +96,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
     event.preventDefault();
     const chainInfo = getChain(chainName);
     if (chainInfo) {
-      let isPrivateKey = privateKey.trim().split(' ').length === 1;
+      let isPrivateKey = privateKey.trim().split(' ').length===1;
       if (isPrivateKey) {
         const {isValid: isPrivateKeyValid} = isPrivateKeyFormatValid(privateKey, chainName);
         if (isPrivateKeyValid) {
@@ -115,7 +115,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
         // Assuming it's mnemonic
         try {
           const {privateKeys} = getPrivateKeysFromMnemonic(privateKey, chainName);
-          const derivedPrivateKey:string = privateKeys[0];
+          const derivedPrivateKey: string = privateKeys[0];
           const {isValid: isPrivateKeyValid} = isPrivateKeyFormatValid(derivedPrivateKey, chainName);
           if (isPrivateKeyValid) {
             const {isValid, publicKey} = genPublicKeyFromPrivateKey(derivedPrivateKey, chainName);
@@ -124,10 +124,9 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
             } else {
               setPrivateKeyErr("");
               setPublicKey(publicKey);
-              await dispatch(accountsActions.login({chainName, publicKey, privateKey:derivedPrivateKey}));
+              await dispatch(accountsActions.login({chainName, publicKey, privateKey: derivedPrivateKey}));
             }
-          }
-          else {
+          } else {
             setPrivateKeyErr("Invalid Private Key Or Mnemonic!");
           }
         } catch (e) {

@@ -9,7 +9,7 @@ import {InboxMessage} from 'api';
 import {CircularProgress, Typography} from '@material-ui/core';
 import {bluzelleChain, getDecryptedMessageFromPrivateKey} from 'chains';
 import {DataGrid, GridCellParams, GridRowParams} from '@material-ui/data-grid';
-import dataColumns from 'pages/Inbox/data';
+import dataColumns from 'pages/Inbox/columns';
 import LoginRequired from 'guards/LoginRequired';
 import {useHistory} from 'react-router-dom';
 import {Lease} from '@bluzelle/sdk-js/lib/codec/crud/lease';
@@ -123,7 +123,7 @@ const InboxPage: React.FC = () => {
         } else {
           shouldInclude = true;
         }
-        if (eachColumn.field === "expiresAfter") {
+        if (eachColumn.field==="expiresAfter") {
           eachColumn.valueGetter = getValueFromTimestampLease;
         }
         return shouldInclude;

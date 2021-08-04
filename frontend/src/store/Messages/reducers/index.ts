@@ -6,7 +6,10 @@ import {
   deleteOutboxMessageFailure,
   deleteOutboxMessagePending,
   deleteOutboxMessageSuccess,
-  getOutbox, getOutboxFailure, getOutboxPending, getOutboxSuccess,
+  getOutbox,
+  getOutboxFailure,
+  getOutboxPending,
+  getOutboxSuccess,
   setOutbox,
   setOutboxMsgDetail
 } from 'store/Messages/reducers/outbox';

@@ -19,7 +19,6 @@ export const getOutboxFailure = (state: MessagesState, action: PayloadAction) =>
 }
 
 
-
 export const setOutbox = (state: MessagesState, action: PayloadAction<OutboxMessage[]>) => {
   state.outbox = action.payload;
 }

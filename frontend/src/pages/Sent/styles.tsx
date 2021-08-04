@@ -44,10 +44,10 @@ const useStyles = makeStyles((theme) => {
     },
     renewLease: {
       width: '100%',
-      textAlign:'center',
+      textAlign: 'center',
       '@global': {
         ' .MuiButton-root': {
-          margin:'auto',
+          margin: 'auto',
         }
       }
     },

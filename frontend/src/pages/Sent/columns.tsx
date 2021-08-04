@@ -1,8 +1,6 @@
-import {GridCellParams, GridCellValue, GridColDef, GridSortCellParams} from '@material-ui/data-grid';
+import {GridCellValue, GridColDef, GridSortCellParams} from '@material-ui/data-grid';
 import {Lease} from '@bluzelle/sdk-js/lib/codec/crud/lease';
 import {getSecondsFromLease} from 'utils/helpers';
-import {Button, Typography} from '@material-ui/core';
-import {Schedule} from '@material-ui/icons';
 
 const columns: GridColDef[] = [
   {
@@ -46,12 +44,6 @@ const columns: GridColDef[] = [
     sortable: false,
     filterable: false,
     width: 150,
-    renderCell: (params: GridCellParams) => {
-      return <Button color="secondary" variant="contained">
-        <Schedule/>
-        <Typography style={{marginLeft: 6}}>Renew</Typography>
-      </Button>
-    },
   },
 ]
 

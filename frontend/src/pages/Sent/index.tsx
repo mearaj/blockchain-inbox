@@ -7,14 +7,16 @@ import CuriumRequired from 'guards/CuriumRequired';
 import {AppState, messagesAction} from 'store';
 import {useDispatch, useSelector} from 'react-redux';
 import {SentMessage} from 'api';
-import {CircularProgress, Typography} from '@material-ui/core';
+import {Button, CircularProgress, Typography} from '@material-ui/core';
 import BluzelleAccountRequired from 'guards/BluzelleAccountRequired';
 import {getDecryptedMessageFromPrivateKey} from 'chains';
 import {DataGrid, GridCellParams, GridRowParams, GridValueGetterParams} from '@material-ui/data-grid';
-import dataColumns from './interfaces';
+import dataColumns from 'pages/Sent/columns';
 import {useHistory} from 'react-router-dom';
 import {Lease} from '@bluzelle/sdk-js/lib/codec/crud/lease';
 import {getExpiryFromTimestampLease} from 'utils/helpers/getExpiryFromTimestampLease';
+import {Schedule} from '@material-ui/icons';
+import {getColumnToValue} from 'utils/columns/outbox';
 
 const SENT_ERROR_BACKEND = "Sorry, something went wrong. Please try again later"
 const SENT_EMPTY = "Your Sent Is Empty!"
@@ -30,12 +32,6 @@ const SentPage: React.FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-
-  const getColumnToValue = useCallback((params: GridValueGetterParams) => {
-    return `${params.getValue(params.id, 'recipientChainName')}  ` +
-      `${params.getValue(params.id, 'recipientPublicKey')}`
-  }, []);
-
   const getColumnDateCreatedValue = useCallback((params: GridValueGetterParams) => {
     const timestamp: number = params.getValue(params.id, 'timestamp') as number;
     return `${new Date(timestamp).toDateString()}`
@@ -45,13 +41,18 @@ const SentPage: React.FC = () => {
     const lease: Lease = params.getValue(params.id, 'lease') as Lease;
     const timestamp = params.getValue(params.id, 'timestamp') as number;
     const expiryInString = getExpiryFromTimestampLease(timestamp, lease);
-    console.log("This should be reached")
     if (expiryInString[0]==="-") {
       return "Expired!"
     }
-
     return expiryInString;
-  }, [])
+  }, []);
+
+  const getRenewColumnComponent = useCallback((params: GridCellParams) => {
+    return <Button color="secondary" variant="contained">
+      <Schedule/>
+      <Typography style={{marginLeft: 6}}>Renew</Typography>
+    </Button>
+  }, []);
 
   useEffect(() => {
     dispatch(messagesAction.getSent());
@@ -132,6 +133,9 @@ const SentPage: React.FC = () => {
         if (eachColumn.field==="dateCreated") {
           eachColumn.valueGetter = getColumnDateCreatedValue;
         }
+        if (eachColumn.field==="renewLease") {
+          eachColumn.renderCell = getRenewColumnComponent;
+        }
         return eachColumn;
       }
     );
@@ -139,7 +143,7 @@ const SentPage: React.FC = () => {
   }, [currentAccount,
     getColumnDateCreatedValue,
     getColumnExpiresAfterValue,
-    getColumnToValue,
+    getRenewColumnComponent
   ]);
 
 

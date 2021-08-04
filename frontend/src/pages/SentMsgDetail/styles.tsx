@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => {
       padding: 12
     },
     back: {
-      marginLeft:6
+      marginLeft: 6
     },
     formControl: {
       width: '100%',
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => {
     label: {
       display: 'flex',
       width: 200,
-      flexShrink:0,
+      flexShrink: 0,
       alignItems: 'center',
       color: alpha(theme.palette.primary.main, 0.7),
       fontWeight: 400,

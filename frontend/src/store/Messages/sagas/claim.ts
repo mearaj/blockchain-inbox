@@ -19,6 +19,7 @@ export function* claimMessageSaga(action: PayloadAction<{ signature: StdSignatur
   yield put(messagesAction.setClaimMessageSignature(message.signature));
   try {
     yield call(api.claimMessage, currentAccount!.auth, message);
+    yield put(messagesAction.getSent());
   } catch (e) {
     console.log(e);
   }
