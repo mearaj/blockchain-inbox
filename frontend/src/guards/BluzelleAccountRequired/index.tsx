@@ -4,7 +4,8 @@ import CommonBar from 'components/CommonBar';
 import {useSelector} from 'react-redux';
 import {AppState} from 'store';
 import {bluzelleChain} from 'chains';
-import ButtonMyAccounts from 'components/ButtonMyAccounts';
+import {Button} from '@material-ui/core';
+import {useHistory} from 'react-router-dom';
 
 const LOG_IN_WARNING = "Kindly log in with  Bluzelle Account, for this feature!";
 const SWITCH_TO_WARNING = "'Kindly switch to Bluzelle Account, for this feature!'";
@@ -13,6 +14,7 @@ const BluzelleAccountRequired: React.FC<PropsWithChildren<any>> = (props) => {
   const classes = useStyles();
   const appState = useSelector((appState: AppState) => appState);
   const {currentAccount, accounts} = appState.accountsState;
+  const history = useHistory();
 
   let title: string = "";
   let isLoggedIn = currentAccount &&
@@ -29,7 +31,15 @@ const BluzelleAccountRequired: React.FC<PropsWithChildren<any>> = (props) => {
       <div className={classes.root}>
         <CommonBar>Bluzelle Login Required!</CommonBar>
         <div className={classes.helperText}>{title}</div>
-        <ButtonMyAccounts/>
+        <Button
+          type="button"
+          className={classes.button}
+          color="primary"
+          variant="contained"
+          onClick={(event) => history.push('/account')}
+        >
+          My Account
+        </Button>
       </div>
   );
 }

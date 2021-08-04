@@ -7,7 +7,22 @@ import {SentMessage} from 'api';
 export const getSent = (state: MessagesState, action: PayloadAction) => {
 }
 
+export const getSentPending = (state: MessagesState, action: PayloadAction) => {
+  state.getSentState = action.type;
+}
+
+export const getSentSuccess = (state: MessagesState, action: PayloadAction) => {
+  state.getSentState = action.type;
+}
+
+export const getSentFailure = (state: MessagesState, action: PayloadAction) => {
+  state.getSentState = action.type;
+}
+
 export const setSent = (state: MessagesState, action: PayloadAction<SentMessage[]>) => {
   state.sent = action.payload;
 }
 
+export const setSentMsgDetail = (state: MessagesState, action: PayloadAction<SentMessage>) => {
+  state.sentMsgDetail = action.payload;
+}

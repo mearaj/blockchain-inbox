@@ -8,10 +8,10 @@ import ComposePage from 'pages/Compose';
 import SentPage from 'pages/Sent';
 import AccountPage from 'pages/Account';
 import OutboxPage from 'pages/Outbox';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppState} from 'store';
-import {Backdrop, CircularProgress} from '@material-ui/core';
-import {loaderActions} from 'store/Loader';
+import GlobalLoader from 'components/GlobalLoader';
+import SentMsgDetail from 'pages/SentMsgDetail';
+import InboxMsgDetail from 'pages/InboxMsgDetail';
+import OutboxMsgDetail from 'pages/OutboxMsgDetail';
 
 const Pages: React.FC = (props) => {
   const classes = useStyles();
@@ -19,11 +19,6 @@ const Pages: React.FC = (props) => {
   const handleKeplrAccountChange = () => {
     console.log("handleKeplrAccountChange, Key store in Keplr is changed. You may need to refetch the account info.");
   }
-
-
-  const loaderState = useSelector((state: AppState) => state.loaderState);
-  const dispatch = useDispatch();
-
 
   useEffect(() => {
     const timerID = setTimeout(async () => {
@@ -53,23 +48,26 @@ const Pages: React.FC = (props) => {
   }, []);
 
   return (
-    <div className={classes.root}>
-      <Sidebar/>
-      <main className={classes.content}>
-        <Switch>
-          <Route exact path={"/"}><Redirect to="/inbox"/></Route>
-          <Route exact path={"/account"} component={AccountPage}/>
-          <Route exact path={"/compose"} component={ComposePage}/>
-          <Route exact path={"/sent"} component={SentPage}/>
-          <Route exact path={"/inbox"} component={InboxPage}/>
-          <Route exact path={"/outbox"} component={OutboxPage}/>
-          <Route path={"*"}><Redirect to={"/account"}/></Route>
-        </Switch>
-      </main>
-      <Backdrop onClick={() => dispatch(loaderActions.hideLoader())} open={loaderState.show} style={{zIndex: 10000}}>
-        <CircularProgress/>
-      </Backdrop>
-    </div>
+    <>
+      <GlobalLoader/>
+      <div className={classes.root}>
+        <Sidebar/>
+        <main className={classes.content}>
+          <Switch>
+            <Route exact path={"/"}><Redirect to="/inbox"/></Route>
+            <Route exact path={"/account"} component={AccountPage}/>
+            <Route exact path={"/compose"} component={ComposePage}/>
+            <Route exact path={"/sent"} component={SentPage}/>
+            <Route exact path={"/sent/detail"} component={SentMsgDetail}/>
+            <Route exact path={"/inbox"} component={InboxPage}/>
+            <Route exact path={"/inbox/detail"} component={InboxMsgDetail}/>
+            <Route exact path={"/outbox"} component={OutboxPage}/>
+            <Route exact path={"/outbox/detail"} component={OutboxMsgDetail}/>
+            <Route path={"*"}><Redirect to={"/account"}/></Route>
+          </Switch>
+        </main>
+      </div>
+    </>
   );
 }
 

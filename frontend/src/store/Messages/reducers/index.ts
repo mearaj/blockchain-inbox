@@ -6,18 +6,33 @@ import {
   deleteOutboxMessageFailure,
   deleteOutboxMessagePending,
   deleteOutboxMessageSuccess,
-  getOutbox,
-  setOutbox
+  getOutbox, getOutboxFailure, getOutboxPending, getOutboxSuccess,
+  setOutbox,
+  setOutboxMsgDetail
 } from 'store/Messages/reducers/outbox';
 import {sendMessage} from 'store/Messages/reducers/send';
-import {getInbox, setInbox} from 'store/Messages/reducers/inbox';
+import {
+  getInbox,
+  getInboxFailure,
+  getInboxPending,
+  getInboxSuccess,
+  setInbox,
+  setInboxMsgDetail
+} from 'store/Messages/reducers/inbox';
 import {
   claimMessage,
   setClaimMessageId,
   setClaimMessageSignature,
   setClaimMessageSigned
 } from 'store/Messages/reducers/claim';
-import {getSent, setSent} from 'store/Messages/reducers/sent';
+import {
+  getSent,
+  getSentFailure,
+  getSentPending,
+  getSentSuccess,
+  setSent,
+  setSentMsgDetail
+} from 'store/Messages/reducers/sent';
 import {
   clearCuriumPaymentState,
   curiumPaymentFailure,
@@ -33,8 +48,14 @@ export const initialState: MessagesState = {
   claimMessageSigned: undefined,
   claimMessageId: '',
   inbox: [],
-  sent: [],
+  getInboxState: '',
+  inboxMsgDetail: undefined,
   outbox: [],
+  getOutboxState: '',
+  outboxMsgDetail: undefined,
+  sent: [],
+  getSentState: '',
+  sentMsgDetail: undefined,
 };
 export const messagesSlice = createSlice({
   name: 'messagesState',
@@ -54,11 +75,23 @@ export const messagesSlice = createSlice({
     setClaimMessageSignature,
     setClaimMessageSigned,
     getOutbox,
+    getOutboxPending,
+    getOutboxFailure,
+    getOutboxSuccess,
     setOutbox,
+    setOutboxMsgDetail,
     getInbox,
+    getInboxPending,
+    getInboxFailure,
+    getInboxSuccess,
     setInbox,
+    setInboxMsgDetail,
     setSent,
     getSent,
+    getSentPending,
+    getSentFailure,
+    getSentSuccess,
+    setSentMsgDetail,
   }
 });
 

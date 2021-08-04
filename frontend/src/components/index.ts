@@ -1,5 +1,4 @@
 export * from './AccountAccordion';
-export * from './AccountsAccordion';
 export * from './ButtonMyAccounts';
 export * from './CommonAccordionHeader';
 export * from './CommonBar';

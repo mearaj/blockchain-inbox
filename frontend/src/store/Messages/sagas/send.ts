@@ -7,11 +7,9 @@ import {messagesAction} from 'store/Messages/reducers';
 import {AxiosResponse} from 'axios';
 import {bluzelleChain} from 'chains';
 import {accountsActions} from 'store/Account/reducers';
-import {loaderActions} from 'store/Loader';
 
 
 export function* sendMessageSaga(action: PayloadAction<OutboxMessage>) {
-  yield put(loaderActions.showLoader());
   const currentAccount: Account = yield select((state: AppState) => state.accountsState.currentAccount);
   const message = action.payload;
   if (currentAccount && currentAccount.chainName===bluzelleChain.name) {
@@ -28,5 +26,4 @@ export function* sendMessageSaga(action: PayloadAction<OutboxMessage>) {
       }
     }
   }
-  yield put(loaderActions.hideLoader());
 }
