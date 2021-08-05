@@ -1,12 +1,7 @@
-export enum KeyValues {
-  ID_RECIPIENT_CHAIN_NAME = "ID_RECIPIENT_CHAIN_NAME",
-  ID_RECIPIENT_PUBLIC_KEY = "ID_RECIPIENT_PUBLIC_KEY",
-  ID_MESSAGE = "ID_MESSAGE",
-  ID_LEASE_SECONDS = "ID_LEASE_SECONDS",
-  ID_LEASE_MINUTES = "ID_LEASE_MINUTES",
-  ID_LEASE_HOURS = "ID_LEASE_HOURS",
-  ID_LEASE_DAYS = "ID_LEASE_DAYS",
-  ID_LEASE_YEARS = "ID_LEASE_YEARS",
+export interface ComposeForm {
+  publicKey: string;
+  chainName: string;
+  message: string;
 }
 
 export interface MessageLeaseForm {

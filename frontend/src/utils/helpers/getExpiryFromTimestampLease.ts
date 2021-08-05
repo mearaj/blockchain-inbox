@@ -27,5 +27,5 @@ export const getExpiryFromTimestampLease = (timestamp: number, lease: Lease): st
   if (endDate >= startDate + timezoneOffset) {
     return formattedDuration + " " + hours + ":" + minutes + ":" + seconds;
   }
-  return "-" + formattedDuration + " " + hours + ":" + minutes + ":" + seconds;
+  return "Expired!";
 }

@@ -42,8 +42,8 @@ const useStyles = makeStyles((theme) => {
       width: 200,
       flexShrink: 0,
       alignItems: 'center',
-      color: alpha(theme.palette.primary.main, 0.7),
-      fontWeight: 400,
+      color: alpha(theme.palette.primary.dark, 0.6),
+      fontWeight: 600,
     },
     textField: {
       color: theme.palette.primary.dark,

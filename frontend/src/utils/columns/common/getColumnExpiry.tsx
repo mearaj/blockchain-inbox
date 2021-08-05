@@ -5,11 +5,7 @@ import {getExpiryFromTimestampLease} from 'utils/helpers/getExpiryFromTimestampL
 export const getColumnExpiry = (params:GridValueGetterParams) => {
   const lease: Lease = params.getValue(params.id, 'lease') as Lease;
   const timestamp = params.getValue(params.id, 'timestamp') as number;
-  const expiryInString = getExpiryFromTimestampLease(timestamp, lease);
-  if (expiryInString[0]==="-") {
-    return "Expired!"
-  }
-  return expiryInString;
+  return  getExpiryFromTimestampLease(timestamp, lease);
 }
 
 export default getColumnExpiry;
