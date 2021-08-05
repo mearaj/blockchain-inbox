@@ -1,20 +1,45 @@
 import React, {useState} from 'react';
 import {MAX_DAYS, MAX_HOURS, MAX_MINUTES, MAX_SECONDS, MAX_YEARS, MessageLeaseForm} from 'pages/Compose/interfaces';
 
+
 export type LeaseFormChangeHandler = (leaseType: 'seconds' | 'minutes' | 'hours' | 'days' | 'years') =>
   (event: React.ChangeEvent<HTMLInputElement>) => void;
 
-export const useLeaseForm = (leaseFormInitial: MessageLeaseForm):
-  [leaseForm: MessageLeaseForm, handleChange: LeaseFormChangeHandler, clearForm: () => void] => {
+export type LeaseFormState = {
+  leaseForm: MessageLeaseForm,
+  handleChange: LeaseFormChangeHandler,
+  clearForm: () => void,
+  leaseFormError: string,
+  validate: () => void
+}
+
+export const useLeaseForm = (leaseFormInitial: MessageLeaseForm): LeaseFormState => {
   const [leaseForm, setLeaseForm] = useState(leaseFormInitial);
+  const [leaseFormError, setLeaseFormError] = useState("");
+
+  const validate = () => {
+    if (!leaseForm.seconds && !leaseForm.minutes && !leaseForm.hours && !leaseForm.days && !leaseForm.years) {
+      setLeaseFormError("Lease Cannot Be Zero Or Empty!");
+      return;
+    } else {
+      setLeaseFormError("");
+    }
+  }
 
   const clearForm = () => {
     setLeaseForm({days: 0, hours: 0, minutes: 0, seconds: 0, years: 0})
   }
 
+  const clearError = () => {
+    if (leaseFormError) {
+      setLeaseFormError("");
+    }
+  }
+
   const handleChange = (leaseType: 'seconds' | 'minutes' | 'hours' | 'days' | 'years') =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
+      clearError();
       let numericValue: number;
       switch (leaseType) {
         case 'seconds':
@@ -60,5 +85,5 @@ export const useLeaseForm = (leaseFormInitial: MessageLeaseForm):
 
       }
     }
-  return [leaseForm, handleChange, clearForm];
+  return {leaseForm, handleChange, clearForm, leaseFormError, validate}
 }

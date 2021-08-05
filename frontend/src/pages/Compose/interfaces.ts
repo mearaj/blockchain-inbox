@@ -1,4 +1,4 @@
-export interface ComposeForm {
+export interface ComposeSliceForm {
   publicKey: string;
   chainName: string;
   message: string;

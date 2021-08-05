@@ -14,19 +14,6 @@ const useStyles = makeStyles((theme) => {
     accordionDetails: {
       display: 'flex'
     },
-    leaseFormGroup: {
-      display: 'grid',
-      gridAutoFlow: 'column',
-      gridColumnGap: 30,
-    },
-    leaseLabel: {
-      display: 'flex',
-      alignItems: 'center',
-      marginBottom: 10,
-    },
-    leaseError: {
-      marginLeft: 10,
-    },
     submitButton: {
       backgroundColor: theme.palette.success.main,
       marginLeft: 24,
