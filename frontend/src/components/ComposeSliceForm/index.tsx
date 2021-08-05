@@ -2,15 +2,13 @@ import React from 'react';
 import useStyles from './styles';
 import {FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField} from '@material-ui/core';
 import {allChains, isChainSupported} from 'chains';
-import {ComposeSliceFormProps} from 'components/ComposeSliceForm/interfaces';
-import {useComposeSliceForm} from 'hooks/useComposeSliceForm';
+import {ComposeSliceFormState} from 'hooks/useComposeSliceForm';
 import {useSelector} from 'react-redux';
 import {AppState} from 'store';
 
-export const ComposeSliceForm: React.FC<ComposeSliceFormProps> = (props) => {
+export const ComposeSliceForm: React.FC<ComposeSliceFormState> = (props) => {
   const classes = useStyles();
-  const composeSliceFormState = useComposeSliceForm(props.composeSliceForm);
-  const {publicKeyError, composeSliceForm, handleChange} = composeSliceFormState;
+  const {publicKeyError, composeSliceForm, handleChange} = props;
   const accountsState = useSelector((state: AppState) => state.accountsState);
   const {currentAccount} = accountsState;
 

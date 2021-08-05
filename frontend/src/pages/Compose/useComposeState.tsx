@@ -9,10 +9,9 @@ import {Key} from '@keplr-wallet/types';
 import {AminoSignResponse, MsgSend} from '@cosmjs/launchpad';
 import {coin} from '@cosmjs/proto-signing';
 import {loaderActions} from 'store/Loader';
-import {LeaseFormChangeHandler, LeaseFormState, useLeaseForm} from 'hooks/useLeaseForm';
-import {ComposeSliceFormChangeHandler, ComposeSliceFormState, useComposeSliceForm} from 'hooks/useComposeSliceForm';
+import {LeaseFormState, useLeaseForm} from 'hooks/useLeaseForm';
+import {ComposeSliceFormState, useComposeSliceForm} from 'hooks/useComposeSliceForm';
 
-export type ComposeStateChangeHandler = LeaseFormChangeHandler & ComposeSliceFormChangeHandler;
 
 export interface ComposeState {
   leaseFormState: LeaseFormState,
