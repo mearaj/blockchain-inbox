@@ -6,12 +6,23 @@ import CuriumRequired from 'guards/CuriumRequired';
 import {messagesAction} from 'store';
 import {useDispatch} from 'react-redux';
 import {SentMessage} from 'api';
-import {Button, CircularProgress, Typography} from '@material-ui/core';
+import {
+  Button,
+  CircularProgress,
+  Dialog, DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle, TextField,
+  Typography
+} from '@material-ui/core';
 import BluzelleAccountRequired from 'guards/BluzelleAccountRequired';
 import {DataGrid, GridCellParams, GridRowParams} from '@material-ui/data-grid';
 import {useHistory} from 'react-router-dom';
 import {Schedule} from '@material-ui/icons';
 import useSentState from 'pages/Sent/useSentState';
+import LeaseForm from 'components/LeaseForm';
+import {useLeaseForm} from 'hooks/useLeaseForm';
+import RenewLeaseDialog from 'dialogs/RenewLease';
 
 const getRenewColumnComponent = (_params: GridCellParams) => {
   return <Button color="secondary" variant="contained">
@@ -23,8 +34,11 @@ const getRenewColumnComponent = (_params: GridCellParams) => {
 const SentPage: React.FC = () => {
   const classes = useStyles();
   const [columns, getSentState, sentDecrypted, warningMsg] = useSentState(getRenewColumnComponent);
+  const lease = useLeaseForm({days:0,years:0,minutes:0,hours:0,seconds:0})
+  const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
+
 
   const onRowClickHandler = (param: GridRowParams, event: MouseEvent) => {
     const sentDetail = param.row as SentMessage;
@@ -36,6 +50,7 @@ const SentPage: React.FC = () => {
     if (params.field==="renewLease") {
       event.stopPropagation();
       event.preventDefault();
+      setOpen(true);
     }
   }
 
@@ -46,9 +61,14 @@ const SentPage: React.FC = () => {
     return ""
   };
 
+  const handleClose = (event:object, reason?:string)=> {
+    setOpen(false);
+  }
+
   return (
     <CuriumRequired>
       <BluzelleAccountRequired>
+        <RenewLeaseDialog handleClose={handleClose} open={open}/>
         <div className={classes.root}>
           <CommonBar>Sent</CommonBar>
           {

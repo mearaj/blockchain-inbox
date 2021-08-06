@@ -10,7 +10,8 @@ export type LeaseFormState = {
   handleChange: LeaseFormChangeHandler,
   clearForm: () => void,
   leaseFormError: string,
-  validate: () => void
+  validate: () => void,
+  clearError: ()=> void
 }
 
 export const useLeaseForm = (leaseFormInitial: MessageLeaseForm): LeaseFormState => {
@@ -85,5 +86,5 @@ export const useLeaseForm = (leaseFormInitial: MessageLeaseForm): LeaseFormState
 
       }
     }
-  return {leaseForm, handleChange, clearForm, leaseFormError, validate}
+  return {leaseForm, handleChange, clearForm, leaseFormError, validate, clearError}
 }

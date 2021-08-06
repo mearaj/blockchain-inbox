@@ -8,6 +8,7 @@ import {Redirect, useHistory} from 'react-router-dom';
 import {getExpiryFromTimestampLease} from 'utils/helpers/getExpiryFromTimestampLease';
 import {OutboxMessage} from 'api';
 import {ArrowBack} from '@material-ui/icons';
+import {getLeaseString} from 'utils/helpers';
 
 
 const OutboxMsgDetail: React.FC = () => {
@@ -62,11 +63,11 @@ const OutboxMsgDetail: React.FC = () => {
                 />
               </div>
               <div className={classes.formControl}>
-                <FormLabel className={classes.label}>Expires After</FormLabel>
+                <FormLabel className={classes.label}>Lease Period</FormLabel>
                 <TextField
                   className={classes.textField}
                   variant="outlined" fullWidth
-                  value={`${getExpiryFromTimestampLease(msgDetail.timestamp || 0, msgDetail.lease)}`} disabled
+                  value={`${getLeaseString(msgDetail.lease)}`} disabled
                 />
               </div>
               <div className={classes.formControl}>
