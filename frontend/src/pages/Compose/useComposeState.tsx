@@ -1,17 +1,13 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState, messagesAction} from 'store';
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 import {getEncryptedMessageFromPublicKey} from 'chains';
 import {ComposeSliceForm, MessageLeaseForm} from 'pages/Compose/interfaces';
-import {useHistory} from 'react-router-dom';
-import {BLUZELLE_BACKEND_PUBLIC_ADDRESS, BLUZELLE_CHAIN_ID} from 'config';
-import {Key} from '@keplr-wallet/types';
-import {AminoSignResponse, MsgSend} from '@cosmjs/launchpad';
-import {coin} from '@cosmjs/proto-signing';
-import {loaderActions} from 'store/Loader';
 import {LeaseFormState, useLeaseForm} from 'hooks/useLeaseForm';
 import {ComposeSliceFormState, useComposeSliceForm} from 'hooks/useComposeSliceForm';
 import {useCuriumPayment} from 'hooks/useCuriumPayment';
+import {loaderActions} from 'store/Loader';
+import {useHistory} from 'react-router-dom';
 
 
 export interface ComposeState {
@@ -25,48 +21,59 @@ export interface ComposeState {
 export const useComposeState = (leaseFormInitial: MessageLeaseForm, composeFormInitial: ComposeSliceForm): ComposeState => {
   const accountsState = useSelector((state: AppState) => state.accountsState);
   const {currentAccount} = accountsState;
-  const composeSliceFormState = useComposeSliceForm(composeFormInitial);
   const [paymentHandler] = useCuriumPayment();
-
+  const dispatch = useDispatch();
+  const history = useHistory();
   const {
     composeSliceForm,
+    handleChange: composeSliceFormChangeHandler,
     validate: validateComposeSliceFormState,
     clearForm: clearComposeForm,
+    clearError: clearComposeFormError,
     publicKeyError,
     messageError
-  } = composeSliceFormState;
-  const leaseFormState = useLeaseForm(leaseFormInitial);
+  } = useComposeSliceForm(composeFormInitial);
   const {
     leaseForm,
     clearForm: clearLeaseForm,
+    handleChange: leaseFormChangeHandler,
     leaseFormError,
-    validate,
-  } = leaseFormState;
+    validate: validateLeaseFormState,
+    clearError: clearLeaseFromError,
+  } = useLeaseForm(leaseFormInitial);
 
-  const curiumPaymentState = useSelector((state: AppState) => state.messagesState.curiumPaymentState);
-  const dispatch = useDispatch();
-  const history = useHistory();
 
+  const validateForms = useCallback( () => {
+    validateLeaseFormState();
+    validateComposeSliceFormState();
+  },[validateComposeSliceFormState, validateLeaseFormState])
 
   const handleCuriumPaymentApproval = useCallback(async () => {
-    const response = await paymentHandler();
-    if (response) {
-      dispatch(messagesAction.curiumPaymentSuccess(response));
-    } else {
-      dispatch(messagesAction.curiumPaymentFailure());
+    if (!leaseFormError) {
+      dispatch(loaderActions.showLoader());
+      const response = await paymentHandler();
+      if (response) {
+        dispatch(messagesAction.claimMessage({
+          signature: response.signature,
+          signed: response.signed
+        }));
+      }
+      dispatch(loaderActions.hideLoader());
+      if (response) {
+        history.push('/sent');
+      }
     }
-  }, [dispatch, paymentHandler]);
+
+  }, [dispatch, history, leaseFormError, paymentHandler, validateForms]);
 
   const clearForm = useCallback(() => {
     clearComposeForm();
     clearLeaseForm();
   }, [clearComposeForm, clearLeaseForm]);
 
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    validateComposeSliceFormState();
-    validate();
+    await validateForms();
     if (!leaseFormError && !publicKeyError && !messageError) {
       const creatorValidator = await getEncryptedMessageFromPublicKey(
         currentAccount?.publicKey || "",
@@ -97,36 +104,30 @@ export const useComposeState = (leaseFormInitial: MessageLeaseForm, composeFormI
             timestamp: Date.now().valueOf(),
           })
         );
+        await handleCuriumPaymentApproval();
       }
     }
   };
-
-  useEffect(() => {
-    const timerId = setTimeout(async () => {
-      switch (curiumPaymentState) {
-        case messagesAction.curiumPaymentPending.type:
-          dispatch(loaderActions.showLoader());
-          await handleCuriumPaymentApproval();
-          break;
-        case messagesAction.curiumPaymentFailure.type:
-          clearForm();
-          dispatch(loaderActions.hideLoader());
-          dispatch(messagesAction.clearCuriumPaymentState());
-          break;
-        case messagesAction.curiumPaymentSuccess.type:
-          clearForm();
-          dispatch(loaderActions.hideLoader());
-          dispatch(messagesAction.clearCuriumPaymentState());
-          history.push('/sent');
-      }
-    })
-    return () => clearTimeout(timerId);
-  }, [clearForm, curiumPaymentState, dispatch, handleCuriumPaymentApproval, history]);
   return {
-    leaseFormState,
-    composeSliceFormState,
+    composeSliceFormState: {
+      validate: validateComposeSliceFormState,
+      clearForm: clearComposeForm,
+      composeSliceForm,
+      handleChange: composeSliceFormChangeHandler,
+      publicKeyError,
+      messageError,
+      clearError: clearComposeFormError,
+    },
+    leaseFormState: {
+      validate: validateLeaseFormState,
+      clearForm: clearLeaseForm,
+      leaseForm,
+      handleChange: leaseFormChangeHandler,
+      leaseFormError,
+      clearError: clearLeaseFromError,
+    },
     handleSubmit,
-    clearForm,
+    clearForm
   }
 }
 

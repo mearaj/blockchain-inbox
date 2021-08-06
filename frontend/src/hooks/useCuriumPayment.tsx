@@ -2,13 +2,12 @@ import {BLUZELLE_BACKEND_PUBLIC_ADDRESS, BLUZELLE_CHAIN_ID} from 'config';
 import {Key} from '@keplr-wallet/types';
 import {AminoSignResponse, MsgSend} from '@cosmjs/launchpad';
 import {coin} from '@cosmjs/proto-signing';
-import {AppState, messagesAction} from 'store';
-import {useDispatch, useSelector} from 'react-redux';
+import {AppState} from 'store';
+import {useSelector} from 'react-redux';
 
 export const useCuriumPayment = () => {
   const accountsState = useSelector((state: AppState) => state.accountsState);
   const {currentAccount} = accountsState;
-  const dispatch = useDispatch();
 
   const handleCuriumPaymentApproval = async () => {
     let response: AminoSignResponse | undefined;
@@ -37,11 +36,6 @@ export const useCuriumPayment = () => {
       });
     } catch (e) {
       console.log(e);
-    }
-    if (response) {
-      dispatch(messagesAction.curiumPaymentSuccess(response));
-    } else {
-      dispatch(messagesAction.curiumPaymentFailure());
     }
     return response;
   };

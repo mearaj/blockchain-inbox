@@ -17,7 +17,6 @@ export function* sendMessageSaga(action: PayloadAction<OutboxMessage>) {
       const response: AxiosResponse = yield call(api.sendMessage, currentAccount!.auth, message);
       const id: string = response.data.id;
       yield put(messagesAction.setClaimMessageId(id));
-      yield put(messagesAction.curiumPaymentPending());
     } catch (e) {
       console.log(e);
       if (e.error?.message.toLowerCase().includes("not authorized") ||

@@ -11,6 +11,7 @@ export type ComposeSliceFormState = {
   composeSliceForm: ComposeSliceForm,
   handleChange: ComposeSliceFormChangeHandler,
   clearForm: () => void
+  clearError:()=> void,
   validate: () => void,
   publicKeyError: string,
   messageError: string,
@@ -76,5 +77,6 @@ export const useComposeSliceForm = (composeFormInitial: ComposeSliceForm): Compo
     messageError,
     publicKeyError,
     validate,
+    clearError,
   }
 }

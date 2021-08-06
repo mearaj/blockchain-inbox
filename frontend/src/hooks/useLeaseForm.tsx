@@ -23,8 +23,6 @@ export const useLeaseForm = (leaseFormInitial: MessageLeaseForm): LeaseFormState
     if (isLeaseFormEmpty(leaseForm)) {
       setLeaseFormError("Lease Cannot Be Zero Or Empty!");
       return;
-    } else {
-      setLeaseFormError("");
     }
   }
 

@@ -13,8 +13,6 @@ import {useHistory} from 'react-router-dom';
 import {Schedule} from '@material-ui/icons';
 import useSentState from 'pages/Sent/useSentState';
 import RenewLeaseDialog from 'dialogs/RenewLease';
-import {MessageLeaseForm} from 'pages/Compose/interfaces';
-import {isLeaseFormEmpty} from 'utils/helpers';
 
 const getRenewColumnComponent = (_params: GridCellParams) => {
   return <Button color="secondary" variant="contained">
