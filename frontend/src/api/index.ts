@@ -69,6 +69,13 @@ export interface ClaimMessage {
   signed: StdSignDoc | undefined,
 }
 
+export interface RenewLeaseReqBody {
+  id: string;
+  lease:Lease;
+  signature: StdSignature;
+  signed: StdSignDoc;
+}
+
 const config: AxiosRequestConfig = {
   baseURL: BASE_URL,
   headers: {

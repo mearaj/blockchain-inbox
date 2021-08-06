@@ -4,7 +4,7 @@ import {Account} from 'models/account';
 
 // This guard assumes, account and authToken available from auth guard,
 // hence always call this method after calling auth guard or provide account and authToken to req field
-export const outboxGuard: RequestHandler = async (req, res, next) => {
+export const onlyBluzelleAccount: RequestHandler = async (req, res, next) => {
 
   try {
     const account = (req as any).account as Account;

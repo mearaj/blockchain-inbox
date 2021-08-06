@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {MAX_DAYS, MAX_HOURS, MAX_MINUTES, MAX_SECONDS, MAX_YEARS, MessageLeaseForm} from 'pages/Compose/interfaces';
+import {isLeaseFormEmpty} from 'utils/helpers';
 
 
 export type LeaseFormChangeHandler = (leaseType: 'seconds' | 'minutes' | 'hours' | 'days' | 'years') =>
@@ -19,7 +20,7 @@ export const useLeaseForm = (leaseFormInitial: MessageLeaseForm): LeaseFormState
   const [leaseFormError, setLeaseFormError] = useState("");
 
   const validate = () => {
-    if (!leaseForm.seconds && !leaseForm.minutes && !leaseForm.hours && !leaseForm.days && !leaseForm.years) {
+    if (isLeaseFormEmpty(leaseForm)) {
       setLeaseFormError("Lease Cannot Be Zero Or Empty!");
       return;
     } else {

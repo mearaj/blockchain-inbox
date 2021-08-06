@@ -11,6 +11,7 @@ import {coin} from '@cosmjs/proto-signing';
 import {loaderActions} from 'store/Loader';
 import {LeaseFormState, useLeaseForm} from 'hooks/useLeaseForm';
 import {ComposeSliceFormState, useComposeSliceForm} from 'hooks/useComposeSliceForm';
+import {useCuriumPayment} from 'hooks/useCuriumPayment';
 
 
 export interface ComposeState {
@@ -25,6 +26,8 @@ export const useComposeState = (leaseFormInitial: MessageLeaseForm, composeFormI
   const accountsState = useSelector((state: AppState) => state.accountsState);
   const {currentAccount} = accountsState;
   const composeSliceFormState = useComposeSliceForm(composeFormInitial);
+  const [paymentHandler] = useCuriumPayment();
+
   const {
     composeSliceForm,
     validate: validateComposeSliceFormState,
@@ -44,39 +47,15 @@ export const useComposeState = (leaseFormInitial: MessageLeaseForm, composeFormI
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const handleCuriumPaymentApproval = useCallback(async () => {
-    await window.keplr?.enable(BLUZELLE_CHAIN_ID);
-    const curiumAccount: Key | undefined = await window.keplr?.getKey(BLUZELLE_CHAIN_ID);
-    const offlineSigner = await window.keplr?.getOfflineSigner(BLUZELLE_CHAIN_ID);
-    const msg: MsgSend = {
-      type: "cosmos-sdk/MsgSend",
-      value: {
-        from_address: Buffer.from(curiumAccount!.bech32Address).toString('utf8'),
-        to_address: BLUZELLE_BACKEND_PUBLIC_ADDRESS,
-        amount: [coin(1000, "ubnt")],
-      }
-    };
 
-    try {
-      const response: AminoSignResponse = await offlineSigner!.signAmino(Buffer.from(curiumAccount!.bech32Address).toString('utf8'), {
-        account_number: currentAccount?.publicKey || "",
-        chain_id: BLUZELLE_CHAIN_ID,
-        fee: {
-          amount: [coin(1000, "ubnt")], gas: '1'
-        },
-        memo: 'This is for result 1',
-        msgs: [msg],
-        sequence: ''
-      });
-      if (response) {
-        dispatch(messagesAction.curiumPaymentSuccess(response));
-      } else {
-        dispatch(messagesAction.curiumPaymentFailure());
-      }
-    } catch (e) {
+  const handleCuriumPaymentApproval = useCallback(async () => {
+    const response = await paymentHandler();
+    if (response) {
+      dispatch(messagesAction.curiumPaymentSuccess(response));
+    } else {
       dispatch(messagesAction.curiumPaymentFailure());
     }
-  }, [currentAccount?.publicKey, dispatch]);
+  }, [dispatch, paymentHandler]);
 
   const clearForm = useCallback(() => {
     clearComposeForm();
