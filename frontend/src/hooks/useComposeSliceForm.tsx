@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 import {ComposeSliceForm} from 'pages/Compose/interfaces';
-import {AllowedChainEnum, ethChains, getChainByName, isPublicKeyFormatValid} from 'chains';
-import {HELPER_MSG_ETH_PUBLIC_KEY} from 'chains/eth/helper';
-import {HELPER_MSG_BLUZELLE_PUBLIC_KEY} from 'chains/bluzelle/helper';
+import {ethChains, isPublicKeyFormatValid} from 'chains';
 
 export type ComposeSliceFormChangeHandler = (valueType: 'publicKey' | 'chainName' | 'message') =>
   (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -11,7 +9,7 @@ export type ComposeSliceFormState = {
   composeSliceForm: ComposeSliceForm,
   handleChange: ComposeSliceFormChangeHandler,
   clearForm: () => void
-  clearError:()=> void,
+  clearError: () => void,
   validate: () => void,
   publicKeyError: string,
   messageError: string,
@@ -35,18 +33,10 @@ export const useComposeSliceForm = (composeFormInitial: ComposeSliceForm): Compo
     }
   }
 
-  const validate = async () => {
-    const {isValid} = isPublicKeyFormatValid(composeSliceForm.chainName, composeSliceForm.publicKey);
+  const validate = () => {
+    const {isValid, error} = isPublicKeyFormatValid(composeSliceForm.chainName, composeSliceForm.publicKey);
     if (!isValid) {
-      const chainInfo = getChainByName(composeSliceForm.chainName);
-      switch (chainInfo?.chain) {
-        case AllowedChainEnum.ETH:
-          setPublicKeyError(HELPER_MSG_ETH_PUBLIC_KEY);
-          break;
-        case AllowedChainEnum.Bluzelle:
-          setPublicKeyError(HELPER_MSG_BLUZELLE_PUBLIC_KEY);
-          break;
-      }
+      setPublicKeyError(error)
       return;
     }
     if (composeSliceForm.message.trim().replace(" ", "")==="") {

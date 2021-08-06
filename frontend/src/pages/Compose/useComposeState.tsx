@@ -1,13 +1,14 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState, messagesAction} from 'store';
 import React, {useCallback} from 'react';
-import {getEncryptedMessageFromPublicKey} from 'chains';
+import {getEncryptedMessageFromPublicKey, isPublicKeyFormatValid} from 'chains';
 import {ComposeSliceForm, MessageLeaseForm} from 'pages/Compose/interfaces';
 import {LeaseFormState, useLeaseForm} from 'hooks/useLeaseForm';
 import {ComposeSliceFormState, useComposeSliceForm} from 'hooks/useComposeSliceForm';
 import {useCuriumPayment} from 'hooks/useCuriumPayment';
 import {loaderActions} from 'store/Loader';
 import {useHistory} from 'react-router-dom';
+import {isLeaseFormValid, isMessageValid} from 'utils/helpers';
 
 
 export interface ComposeState {
@@ -43,13 +44,20 @@ export const useComposeState = (leaseFormInitial: MessageLeaseForm, composeFormI
   } = useLeaseForm(leaseFormInitial);
 
 
-  const validateForms = useCallback( () => {
+  const validateForms = useCallback(() => {
     validateLeaseFormState();
     validateComposeSliceFormState();
-  },[validateComposeSliceFormState, validateLeaseFormState])
+  }, [validateComposeSliceFormState, validateLeaseFormState])
+
+  const areFormsValid = () => {
+    const isPublicKeyValid = isPublicKeyFormatValid(composeSliceForm.chainName, composeSliceForm.publicKey);
+    const isMessageValidFormat = isMessageValid(composeSliceForm.message);
+    const isLeaseValid = isLeaseFormValid(leaseForm);
+    return isPublicKeyValid.isValid && isMessageValidFormat.isValid && isLeaseValid.isValid;
+  }
 
   const handleCuriumPaymentApproval = useCallback(async () => {
-    if (!leaseFormError) {
+    if (!leaseFormError && !publicKeyError && !messageError) {
       dispatch(loaderActions.showLoader());
       const response = await paymentHandler();
       if (response) {
@@ -64,7 +72,7 @@ export const useComposeState = (leaseFormInitial: MessageLeaseForm, composeFormI
       }
     }
 
-  }, [dispatch, history, leaseFormError, paymentHandler, validateForms]);
+  }, [dispatch, history, leaseFormError, messageError, paymentHandler, publicKeyError]);
 
   const clearForm = useCallback(() => {
     clearComposeForm();
@@ -73,8 +81,8 @@ export const useComposeState = (leaseFormInitial: MessageLeaseForm, composeFormI
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    await validateForms();
-    if (!leaseFormError && !publicKeyError && !messageError) {
+    validateForms();
+    if (areFormsValid() && !leaseFormError && !publicKeyError && !messageError) {
       const creatorValidator = await getEncryptedMessageFromPublicKey(
         currentAccount?.publicKey || "",
         currentAccount!.chainName,
