@@ -1,4 +1,4 @@
-import React, {MouseEvent} from 'react';
+import React, {MouseEvent, useState} from 'react';
 import CommonBar from 'components/CommonBar';
 
 import useStyles from './styles';
@@ -25,6 +25,7 @@ const SentPage: React.FC = () => {
   const classes = useStyles();
   const [columns, getSentState, sentDecrypted, warningMsg] = useSentState(getRenewColumnComponent);
   const [open, setOpen] = React.useState(false);
+  const [messageId, setMessageId] = useState("");
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -39,6 +40,7 @@ const SentPage: React.FC = () => {
     if (params.field==="renewLease") {
       event.stopPropagation();
       event.preventDefault();
+      setMessageId(params.id as string);
       setOpen(true);
     }
   }
@@ -51,13 +53,14 @@ const SentPage: React.FC = () => {
   };
 
   const handleClose = () => {
+    setMessageId("");
     setOpen(false);
   }
 
   return (
     <CuriumRequired>
       <BluzelleAccountRequired>
-        <RenewLeaseDialog type="sent" handleClose={handleClose} open={open}/>
+        <RenewLeaseDialog messageId={messageId} type="sent" handleClose={handleClose} open={open && !!messageId}/>
         <div className={classes.root}>
           <CommonBar>Sent</CommonBar>
           {
@@ -74,6 +77,7 @@ const SentPage: React.FC = () => {
               </div>
             </div>
           }
+
           {
             getSentState!==messagesAction.getSentPending.type &&
             sentDecrypted &&

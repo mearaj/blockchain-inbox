@@ -6,18 +6,23 @@ import LeaseForm from 'components/LeaseForm';
 import {useLeaseForm} from 'hooks/useLeaseForm';
 import {useCuriumPayment} from 'hooks/useCuriumPayment';
 import {isLeaseFormValid} from 'utils/helpers';
+import {useDispatch} from 'react-redux';
+import {messagesAction} from 'store';
+import {getLeaseFromLeaseForm} from 'utils/helpers/getLeaseFromLeaseForm';
 
 
 export interface RenewLeaseDialogProps {
   open: boolean;
   handleClose: () => void;
-  type: 'inbox' | 'sent' | 'outbox'
+  type: 'inbox' | 'sent' | 'outbox',
+  messageId: string;
 }
 
 const RenewLeaseDialog: React.FC<RenewLeaseDialogProps> = (props) => {
   const classes = useStyles();
   const lease = useLeaseForm({days: 0, years: 0, minutes: 0, hours: 0, seconds: 0})
   const [paymentHandler] = useCuriumPayment();
+  const dispatch = useDispatch();
 
 
   const handleClose = () => {
@@ -28,8 +33,14 @@ const RenewLeaseDialog: React.FC<RenewLeaseDialogProps> = (props) => {
 
   const handleCuriumPaymentApproval = useCallback(async () => {
     const response = await paymentHandler();
-    console.log(response);
-  }, [paymentHandler]);
+    if (response) {
+      switch (props.type) {
+        case 'sent':
+          dispatch(messagesAction.renewSentMsgLease(
+            {id: props.messageId, lease: getLeaseFromLeaseForm(lease.leaseForm), ...response}));
+      }
+    }
+  }, [dispatch, lease.leaseForm, paymentHandler, props.messageId, props.type]);
 
   const handleSubmit = async () => {
     lease.validate();

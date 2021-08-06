@@ -9,6 +9,7 @@ import {useCuriumPayment} from 'hooks/useCuriumPayment';
 import {loaderActions} from 'store/Loader';
 import {useHistory} from 'react-router-dom';
 import {isLeaseFormValid, isMessageValid} from 'utils/helpers';
+import {getLeaseFromLeaseForm} from 'utils/helpers/getLeaseFromLeaseForm';
 
 
 export interface ComposeState {
@@ -98,13 +99,7 @@ export const useComposeState = (leaseFormInitial: MessageLeaseForm, composeFormI
         dispatch(messagesAction.sendMessage({
             creatorChainName: currentAccount!.chainName,
             creatorPublicKey: currentAccount?.publicKey || "",
-            lease: {
-              seconds: leaseForm.seconds==="" ? 0:leaseForm.seconds,
-              minutes: leaseForm.minutes==="" ? 0:leaseForm.minutes,
-              hours: leaseForm.hours==="" ? 0:leaseForm.hours,
-              days: leaseForm.days==="" ? 0:leaseForm.days,
-              years: leaseForm.years==="" ? 0:leaseForm.years,
-            },
+            lease: getLeaseFromLeaseForm(leaseForm),
             creatorEncryptedMessage,
             recipientEncryptedMessage,
             recipientChainName: composeSliceForm.chainName,

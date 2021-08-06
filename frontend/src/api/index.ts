@@ -11,7 +11,7 @@ export const INBOX_ENDPOINT = `/inbox`;
 export const OUTBOX_END_POINT = `/outbox`;
 export const CLAIM_END_POINT = `/claim`;
 export const SENT_END_POINT = `/sent`;
-
+export const SENT_RENEW_LEASE_ENDPOINT = `${SENT_END_POINT}/renew`;
 
 export interface InboxMessage {
   creatorPublicKey: string,
@@ -30,7 +30,6 @@ export interface SentMessage {
   timestamp: number,
   id: string;
 }
-
 
 export interface OutboxMessage {
   creatorPublicKey: string;
@@ -149,6 +148,12 @@ const deleteOutboxMessageById = async (authToken: string, id: string) => {
   return await axios.delete(OUTBOX_END_POINT, {data: {id}});
 }
 
+const renewSentMessageLease = async (authToken: string, message: RenewLeaseReqBody) => {
+  const newConfig = setAuthHeader(authToken, config);
+  const axios = axiosOrig.create(newConfig);
+  return await axios.put(SENT_RENEW_LEASE_ENDPOINT, message);
+}
+
 export const api = {
   requestLoginToken,
   login,
@@ -160,6 +165,7 @@ export const api = {
   claimMessage,
   getSent,
   deleteOutboxMessageById,
+  renewSentMessageLease,
 };
 
 export default api;

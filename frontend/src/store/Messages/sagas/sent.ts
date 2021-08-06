@@ -1,10 +1,13 @@
 import {call, put, select} from 'redux-saga/effects';
 import {AppState} from 'store/reducer';
 import {AxiosResponse} from 'axios';
-import {api, SentMessage} from 'api';
+import {api, RenewLeaseReqBody, SentMessage} from 'api';
 import {messagesAction} from 'store/Messages/reducers';
 import {bluzelleChain} from 'chains';
 import {accountsActions} from 'store/Account/reducers';
+import {PayloadAction} from '@reduxjs/toolkit';
+import {Account} from 'store/Account';
+import {loaderActions} from 'store/Loader';
 
 export function* getSentSaga() {
   const appState: AppState = yield select();
@@ -28,3 +31,14 @@ export function* getSentSaga() {
 }
 
 
+export function* renewSentMessageLeaseSaga(action: PayloadAction<RenewLeaseReqBody>) {
+  yield put(loaderActions.showLoader());
+  const currentAccount: Account = yield select((state: AppState) => state.accountsState.currentAccount);
+  try {
+    yield call(api.renewSentMessageLease, currentAccount!.auth, action.payload);
+    yield put(messagesAction.getSent());
+  } catch (e) {
+    console.log(e);
+  }
+  yield put(loaderActions.hideLoader());
+}

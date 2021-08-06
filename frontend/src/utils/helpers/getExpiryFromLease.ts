@@ -2,10 +2,10 @@ import {Lease} from '@bluzelle/sdk-js/lib/codec/crud/lease';
 import {getSecondsFromLease} from 'utils/helpers/getSecondsFromLease';
 import {formatDuration, getHours, getMinutes, getSeconds, intervalToDuration} from 'date-fns';
 
-export const getExpiryFromTimestampLease = (timestamp: number, lease: Lease): string => {
+export const getExpiryFromLease = (lease: Lease): string => {
   const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
   const startDate = Date.now();
-  const endDate = timestamp + getSecondsFromLease(lease) * 1000 + timezoneOffset;
+  const endDate = startDate + getSecondsFromLease(lease) * 1000 + timezoneOffset;
   const interval = {
     start: startDate,
     end: endDate,

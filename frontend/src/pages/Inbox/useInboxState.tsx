@@ -1,10 +1,10 @@
-import {ReactNode, useEffect, useState} from 'react';
+import React, {ReactNode, useEffect, useState} from 'react';
 import dataColumns, {inboxColumnFieldsMappings} from './columns';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState, messagesAction} from 'store';
 import {InboxMessage} from 'api';
 import {GridCellParams, GridColDef} from '@material-ui/data-grid';
-import {bluzelleChain, getDecryptedMessageFromPrivateKey} from 'chains';
+import {bluzelleChain} from 'chains';
 import {
   getColumnDateCreatedValue,
   getColumnExpiry,
@@ -12,6 +12,9 @@ import {
   sortColumnByLease,
   sortDateCreated
 } from 'utils/columns/common';
+import {Button, Typography} from '@material-ui/core';
+import {Schedule} from '@material-ui/icons';
+import {getInboxDecryptedMessages} from 'utils/columns/inbox';
 
 
 export type RenderRenewCell = (params: GridCellParams) => ReactNode
@@ -19,7 +22,15 @@ export type RenderRenewCell = (params: GridCellParams) => ReactNode
 const INBOX_ERROR_BACKEND = "Sorry, something went wrong. Please try again later"
 const INBOX_EMPTY = "Your Inbox Is Empty!"
 
-export const useInboxState = (renderRenewCell: RenderRenewCell): [columns: GridColDef[], getInboxState: string, inboxDecrypted: InboxMessage[] | undefined, warningMdg: string] => {
+const getRenewColumnComponent = (_params: GridCellParams) => {
+  return <Button color="secondary" variant="contained">
+    <Schedule/>
+    <Typography style={{marginLeft: 6}}>Renew</Typography>
+  </Button>
+};
+
+export const useInboxState = (): [columns: GridColDef[], getInboxState: string, inboxDecrypted: InboxMessage[] | undefined, warningMdg: string,
+] => {
   const [columns, setColumns] = useState(dataColumns);
   const inbox = useSelector((appState: AppState) => appState.messagesState.inbox);
   const getInboxState = useSelector((appState: AppState) => appState.messagesState.getInboxState);
@@ -45,38 +56,29 @@ export const useInboxState = (renderRenewCell: RenderRenewCell): [columns: GridC
     }
   }, [inbox, warningMsg, currentAccount, getInboxState]);
 
+  useEffect(() => {
+    if (currentAccount) {
+      console.log("called?");
+      getInboxDecryptedMessages(inbox, currentAccount)
+        .then((results)=> setInboxDecrypted(results));
+    }
+
+  }, [currentAccount, dispatch, inbox])
+
 
   useEffect(() => {
     const timerId = setInterval(async () => {
-        if (inbox.length > 0) {
-          const inboxDecryptedMessages = await Promise.all(inbox.map(async (eachInboxMsg) => {
-            try {
-              const eachMessageObject = await getDecryptedMessageFromPrivateKey(
-                currentAccount!.privateKey,
-                currentAccount!.chainName,
-                eachInboxMsg.message
-              );
-              return {
-                ...eachInboxMsg,
-                message: eachMessageObject.decryptedMessage,
-              }
-            } catch (e) {
-              console.log(e);
-              return eachInboxMsg
-            }
-          }));
-          setInboxDecrypted(inboxDecryptedMessages);
-        }
-      },
-      1000
+        dispatch(messagesAction.setInbox([...inbox]));
+      }, 1000
     );
+
     if (inbox.length===0) {
       setInboxDecrypted([]);
       clearInterval(timerId);
       return
     }
     return () => clearInterval(timerId);
-  }, [inbox, currentAccount])
+  }, [currentAccount, dispatch, inbox])
 
   useEffect(() => {
     const newColumns = dataColumns.filter((eachColumn) => {
@@ -93,7 +95,7 @@ export const useInboxState = (renderRenewCell: RenderRenewCell): [columns: GridC
                 currentAccount.chainName===bluzelleChain.name &&
                 window.keplr);
               if (shouldInclude) {
-                eachColumn.renderCell = renderRenewCell;
+                eachColumn.renderCell = getRenewColumnComponent;
               }
             }
             break;
@@ -113,8 +115,9 @@ export const useInboxState = (renderRenewCell: RenderRenewCell): [columns: GridC
       }
     );
     setColumns(newColumns)
-  }, [curiumAccount, currentAccount, renderRenewCell]);
+  }, [curiumAccount, currentAccount]);
   return [columns, getInboxState, inboxDecrypted, warningMsg];
 }
+
 
 export default useInboxState;

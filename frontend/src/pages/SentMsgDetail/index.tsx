@@ -5,7 +5,7 @@ import {Button, Card, FormLabel, TextField, Typography} from '@material-ui/core'
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState, messagesAction} from 'store';
 import {Redirect, useHistory} from 'react-router-dom';
-import {getExpiryFromTimestampLease} from 'utils/helpers/getExpiryFromTimestampLease';
+import {getExpiryFromLease} from 'utils/helpers/getExpiryFromLease';
 import {SentMessage} from 'api';
 import {ArrowBack} from '@material-ui/icons';
 
@@ -66,7 +66,7 @@ const SentMsgDetail: React.FC = () => {
                 <TextField
                   className={classes.textField}
                   variant="outlined" fullWidth
-                  value={`${getExpiryFromTimestampLease(msgDetail.timestamp, msgDetail.lease)}`} disabled
+                  value={`${getExpiryFromLease(msgDetail.lease)}`} disabled
                 />
               </div>
               <div className={classes.formControl}>

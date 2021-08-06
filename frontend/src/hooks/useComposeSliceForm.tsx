@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {ComposeSliceForm} from 'pages/Compose/interfaces';
 import {ethChains, isPublicKeyFormatValid} from 'chains';
+import {isMessageValid} from 'utils/helpers';
 
 export type ComposeSliceFormChangeHandler = (valueType: 'publicKey' | 'chainName' | 'message') =>
   (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -34,14 +35,14 @@ export const useComposeSliceForm = (composeFormInitial: ComposeSliceForm): Compo
   }
 
   const validate = () => {
-    const {isValid, error} = isPublicKeyFormatValid(composeSliceForm.chainName, composeSliceForm.publicKey);
-    if (!isValid) {
-      setPublicKeyError(error)
+    let isValid = isPublicKeyFormatValid(composeSliceForm.chainName, composeSliceForm.publicKey);
+    if (!isValid.isValid) {
+      setPublicKeyError(isValid.error)
       return;
     }
-    if (composeSliceForm.message.trim().replace(" ", "")==="") {
-      setMessageError("A message cannot be empty!");
-      return;
+    isValid = isMessageValid(composeSliceForm.message)
+    if (!isValid.isValid) {
+      setMessageError(isValid.error);
     }
   };
 

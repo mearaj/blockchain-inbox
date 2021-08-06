@@ -22,4 +22,3 @@ export const getOutboxDecryptedMessages = async (outbox: OutboxMessage[], curren
   );
 }
 
-export default getOutboxDecryptedMessages;

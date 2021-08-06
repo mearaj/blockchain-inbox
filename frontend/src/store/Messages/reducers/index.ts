@@ -28,11 +28,13 @@ import {
   setClaimMessageSignature,
   setClaimMessageSigned
 } from 'store/Messages/reducers/claim';
+
 import {
   getSent,
   getSentFailure,
   getSentPending,
   getSentSuccess,
+  renewSentMsgLease,
   setSent,
   setSentMsgDetail
 } from 'store/Messages/reducers/sent';
@@ -85,6 +87,7 @@ export const messagesSlice = createSlice({
     getSentFailure,
     getSentSuccess,
     setSentMsgDetail,
+    renewSentMsgLease,
   }
 });
 

@@ -4,7 +4,7 @@ import {deleteOutboxMessageSaga, getOutboxSaga} from 'store/Messages/sagas/outbo
 import {sendMessageSaga} from 'store/Messages/sagas/send';
 import {getInboxSaga} from 'store/Messages/sagas/inbox';
 import {claimMessageSaga} from 'store/Messages/sagas/claim';
-import {getSentSaga} from 'store/Messages/sagas/sent';
+import {getSentSaga, renewSentMessageLeaseSaga} from 'store/Messages/sagas/sent';
 
 
 export function* messagesWatcherSaga() {
@@ -15,6 +15,7 @@ export function* messagesWatcherSaga() {
     getInbox,
     claimMessage,
     getSent,
+    renewSentMsgLease,
   } = messagesAction;
   yield takeEvery(sendMessage.type, sendMessageSaga);
   yield takeEvery(deleteOutboxMessage.type, deleteOutboxMessageSaga);
@@ -22,6 +23,7 @@ export function* messagesWatcherSaga() {
   yield takeEvery(getOutbox.type, getOutboxSaga);
   yield takeEvery(getInbox.type, getInboxSaga);
   yield takeEvery(getSent.type, getSentSaga);
+  yield takeEvery(renewSentMsgLease.type, renewSentMessageLeaseSaga);
 }
 
 

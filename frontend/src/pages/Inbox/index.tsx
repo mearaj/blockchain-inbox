@@ -5,23 +5,18 @@ import useStyles from './styles';
 import {messagesAction} from 'store';
 import {useDispatch} from 'react-redux';
 import {InboxMessage} from 'api';
-import {Button, CircularProgress, Typography} from '@material-ui/core';
+import {CircularProgress, Typography} from '@material-ui/core';
 import {DataGrid, GridCellParams, GridRowParams} from '@material-ui/data-grid';
 import LoginRequired from 'guards/LoginRequired';
 import {useHistory} from 'react-router-dom';
 import useInboxState from 'pages/Inbox/useInboxState';
-import {Schedule} from '@material-ui/icons';
 
-const getRenewColumnComponent = (_params: GridCellParams) => {
-  return <Button color="secondary" variant="contained">
-    <Schedule/>
-    <Typography style={{marginLeft: 6}}>Renew</Typography>
-  </Button>
-};
 
 const InboxPage: React.FC = () => {
   const classes = useStyles();
-  const [columns, getInboxState, inboxDecrypted, warningMsg] = useInboxState(getRenewColumnComponent);
+  const [columns, getInboxState, inboxDecrypted, warningMsg] = useInboxState();
+
+
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -29,6 +24,7 @@ const InboxPage: React.FC = () => {
     const inboxDetail = param.row as InboxMessage;
     dispatch(messagesAction.setInboxMsgDetail(inboxDetail));
     history.push('/inbox/detail');
+
   }
 
   const onCellClick = (params: GridCellParams, event: MouseEvent) => {
@@ -63,6 +59,7 @@ const InboxPage: React.FC = () => {
             </div>
           </div>
         }
+
         {
           getInboxState!==messagesAction.getInboxPending.type &&
           inboxDecrypted &&
