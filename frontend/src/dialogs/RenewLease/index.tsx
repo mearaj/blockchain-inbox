@@ -5,6 +5,7 @@ import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from '@materi
 import LeaseForm from 'components/LeaseForm';
 import {useLeaseForm} from 'hooks/useLeaseForm';
 import {useCuriumPayment} from 'hooks/useCuriumPayment';
+import {isLeaseFormValid} from 'utils/helpers';
 
 
 export interface RenewLeaseDialogProps {
@@ -32,10 +33,11 @@ const RenewLeaseDialog: React.FC<RenewLeaseDialogProps> = (props) => {
 
   const handleSubmit = async () => {
     lease.validate();
-    if (!lease.leaseFormError) {
+    const isLeaseValid = isLeaseFormValid(lease.leaseForm);
+    if (isLeaseValid.isValid && !lease.leaseFormError) {
+      handleClose();
       await handleCuriumPaymentApproval();
     }
-    handleClose();
   }
 
   return (
