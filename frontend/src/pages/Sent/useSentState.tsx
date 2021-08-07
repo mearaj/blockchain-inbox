@@ -79,7 +79,7 @@ export const useSentState = (renderRenewCell: RenderRenewCell): [columns: GridCo
             eachColumn.sortComparator = sortDateCreated;
             break;
           case sentColumnFieldsMappings.expiresAfter:
-            eachColumn.valueFormatter = (params)=> {
+            eachColumn.valueGetter = (params)=> {
               return getColumnExpiry(params,sentLastFetched);
             }
             eachColumn.sortComparator = sortColumnByLease;

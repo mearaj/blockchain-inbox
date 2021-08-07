@@ -7,7 +7,7 @@ import {formatDuration, getHours, getMinutes, getSeconds, intervalToDuration} fr
 export const getExpiryFromLease = (lease: Lease, startDate: number): string => {
   const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
   const currentDate = Date.now().valueOf();
-  const endDate = startDate + getSecondsFromLease(lease) * 1000 + timezoneOffset;
+  const endDate = startDate + getSecondsFromLease(lease) * 1000
   const interval = {
     start: currentDate,
     end: endDate,
@@ -20,13 +20,13 @@ export const getExpiryFromLease = (lease: Lease, startDate: number): string => {
     });
 
 
-  let hours: number | string = getHours(endDate - currentDate);
-  let minutes: number | string = getMinutes(endDate - currentDate);
-  let seconds: number | string = getSeconds(endDate - currentDate);
+  let hours: number | string = getHours(endDate - currentDate + timezoneOffset);
+  let minutes: number | string = getMinutes(endDate - currentDate + timezoneOffset);
+  let seconds: number | string = getSeconds(endDate - currentDate + timezoneOffset);
   hours = hours > 9 ? hours:'0' + hours
   minutes = minutes > 9 ? minutes:'0' + minutes
   seconds = seconds > 9 ? seconds:'0' + seconds
-  if (endDate >= currentDate + timezoneOffset) {
+  if (endDate >= currentDate) {
     return formattedDuration + " " + hours + ":" + minutes + ":" + seconds;
   }
   return "Expired!";

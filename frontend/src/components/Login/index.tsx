@@ -115,19 +115,21 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
         // Assuming it's mnemonic
         try {
           const {privateKeys} = getPrivateKeysFromMnemonic(privateKey, chainName);
-          const derivedPrivateKey: string = privateKeys[0];
-          const {isValid: isPrivateKeyValid} = isPrivateKeyFormatValid(derivedPrivateKey, chainName);
-          if (isPrivateKeyValid) {
-            const {isValid, publicKey} = genPublicKeyFromPrivateKey(derivedPrivateKey, chainName);
-            if (!isValid) {
-              setPrivateKeyErr("Invalid Private Key Or Mnemonic!");
+          for (const eachPrivateKey of privateKeys) {
+            const derivedPrivateKey: string = eachPrivateKey;
+            const {isValid: isPrivateKeyValid} = isPrivateKeyFormatValid(derivedPrivateKey, chainName);
+            if (isPrivateKeyValid) {
+              const {isValid, publicKey} = genPublicKeyFromPrivateKey(derivedPrivateKey, chainName);
+              if (!isValid) {
+                setPrivateKeyErr("Invalid Private Key Or Mnemonic!");
+              } else {
+                setPrivateKeyErr("");
+                setPublicKey(publicKey);
+                await dispatch(accountsActions.login({chainName, publicKey, privateKey: derivedPrivateKey}));
+              }
             } else {
-              setPrivateKeyErr("");
-              setPublicKey(publicKey);
-              await dispatch(accountsActions.login({chainName, publicKey, privateKey: derivedPrivateKey}));
+              setPrivateKeyErr("Invalid Private Key Or Mnemonic!");
             }
-          } else {
-            setPrivateKeyErr("Invalid Private Key Or Mnemonic!");
           }
         } catch (e) {
           setPrivateKeyErr("Invalid Private Key Or Mnemonic!");

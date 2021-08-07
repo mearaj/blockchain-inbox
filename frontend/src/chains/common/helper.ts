@@ -150,7 +150,9 @@ export const getPrivateKeysFromMnemonic = (mnemonic: string, chainName: string):
         error = "Invalid Mnemonic";
         break;
       }
-      privateKeys = getPrivateKeysFromBluzelleMnemonic(mnemonic);
+      let privateKeysOne = getPrivateKeysFromBluzelleMnemonic(mnemonic, `m/44'/118'/0'/0/0`);
+      let privateKeysTwo = getPrivateKeysFromBluzelleMnemonic(mnemonic, `m/44'/483'/0'/0/0`);
+      privateKeys = [...privateKeysOne, ...privateKeysTwo];
       isValid = true;
       error = "";
       break;

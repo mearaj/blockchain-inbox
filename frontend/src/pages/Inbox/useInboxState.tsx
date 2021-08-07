@@ -59,9 +59,9 @@ export const useInboxState = (): [columns: GridColDef[], getInboxState: string, 
 
 
   useEffect(() => {
-    // if (currentAccount) {
-    //   getInboxDecryptedMessages(inbox, currentAccount).then(setInboxDecrypted);
-    // }
+    if (currentAccount) {
+      getInboxDecryptedMessages(inbox, currentAccount).then(setInboxDecrypted);
+    }
     const timerId = setInterval(async () => {
         if (currentAccount) {
           const newDecryptedMsg = await getInboxDecryptedMessages(inbox, currentAccount);
