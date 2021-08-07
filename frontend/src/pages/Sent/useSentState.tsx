@@ -13,7 +13,7 @@ import {GridCellParams, GridColDef} from '@material-ui/data-grid';
 import dataColumns, {sentColumnFieldsMappings} from './columns';
 import getSentDecryptedMessages from 'utils/columns/sent/getSentDecryptedMessages';
 import {Button, Typography} from '@material-ui/core';
-import {Schedule} from '@material-ui/icons';
+import {Delete, Schedule} from '@material-ui/icons';
 
 const SENT_ERROR_BACKEND = "Sorry, something went wrong. Please try again later"
 const SENT_EMPTY = "Your Sent Is Empty!"
@@ -24,6 +24,13 @@ const getRenewColumnComponent = (_params: GridCellParams) => {
   return <Button color="secondary" variant="contained">
     <Schedule/>
     <Typography style={{marginLeft: 6}}>Renew</Typography>
+  </Button>
+};
+
+const getDeleteColumnComponent = (_params: GridCellParams) => {
+  return <Button color="inherit" variant="contained">
+    <Delete/>
+    <Typography style={{marginLeft: 6}}>Delete</Typography>
   </Button>
 };
 
@@ -94,6 +101,9 @@ export const useSentState = (): [columns: GridColDef[], getSentState: string, se
             break;
           case sentColumnFieldsMappings.renewLease:
             eachColumn.renderCell = getRenewColumnComponent;
+            break;
+          case sentColumnFieldsMappings.delete:
+            eachColumn.renderCell = getDeleteColumnComponent;
             break;
 
         }

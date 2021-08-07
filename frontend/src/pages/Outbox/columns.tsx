@@ -1,8 +1,8 @@
 import {GridColDef} from '@material-ui/data-grid';
 
 export const outboxColumnFieldsMappings = {
-  to:'to',
-  message:'message',
+  to: 'to',
+  message: 'message',
   dateCreated: 'dateCreated',
   leasePeriod: 'leasePeriod',
 }

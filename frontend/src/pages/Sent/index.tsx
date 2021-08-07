@@ -12,12 +12,15 @@ import {DataGrid, GridCellParams, GridRowParams} from '@material-ui/data-grid';
 import {useHistory} from 'react-router-dom';
 import useSentState from 'pages/Sent/useSentState';
 import RenewLeaseDialog from 'dialogs/RenewLease';
+import {sentColumnFieldsMappings} from 'pages/Sent/columns';
+import DeleteMessageDialog from 'dialogs/DeleteMessage';
 
 
 const SentPage: React.FC = () => {
   const classes = useStyles();
   const [columns, getSentState, sentDecrypted, warningMsg] = useSentState();
-  const [open, setOpen] = React.useState(false);
+  const [renewDialogOpen, setRenewDialogOpen] = React.useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [messageId, setMessageId] = useState("");
   const dispatch = useDispatch();
   const history = useHistory();
@@ -30,30 +33,46 @@ const SentPage: React.FC = () => {
   }
 
   const onCellClick = (params: GridCellParams, event: MouseEvent) => {
-    if (params.field==="renewLease") {
+    if (params.field===sentColumnFieldsMappings.renewLease) {
       event.stopPropagation();
       event.preventDefault();
       setMessageId(params.id as string);
-      setOpen(true);
+      setRenewDialogOpen(true);
+      return
+    }
+    if (params.field===sentColumnFieldsMappings.delete) {
+      event.stopPropagation();
+      event.preventDefault();
+      setMessageId(params.id as string);
+      setDeleteDialogOpen(true);
     }
   }
 
   const getCellClassName = (params: GridCellParams): string => {
-    if (params.field==="renewLease") {
+    if (params.field===sentColumnFieldsMappings.renewLease) {
       return classes.renewLease;
+    }
+    if (params.field===sentColumnFieldsMappings.delete) {
+      return classes.deleteColumn;
     }
     return ""
   };
 
   const handleClose = () => {
     setMessageId("");
-    setOpen(false);
+    setRenewDialogOpen(false);
+    setDeleteDialogOpen(false);
   }
 
   return (
     <CuriumRequired>
       <BluzelleAccountRequired>
-        <RenewLeaseDialog messageId={messageId} type="sent" handleClose={handleClose} open={open && !!messageId}/>
+        <RenewLeaseDialog
+          messageId={messageId} type="sent" handleClose={handleClose} open={renewDialogOpen && !!messageId}
+        />
+        <DeleteMessageDialog
+          messageId={messageId} type="sent" handleClose={handleClose} open={deleteDialogOpen && !!messageId}
+        />
         <div className={classes.root}>
           <CommonBar>Sent</CommonBar>
           {

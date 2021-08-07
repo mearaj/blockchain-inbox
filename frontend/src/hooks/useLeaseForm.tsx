@@ -12,7 +12,7 @@ export type LeaseFormState = {
   clearForm: () => void,
   leaseFormError: string,
   validate: () => void,
-  clearError: ()=> void
+  clearError: () => void
 }
 
 export const useLeaseForm = (leaseFormInitial: MessageLeaseForm): LeaseFormState => {

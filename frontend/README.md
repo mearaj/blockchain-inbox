@@ -53,7 +53,8 @@ the [Create React App documentation](https://facebook.github.io/create-react-app
 To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## Credentials for testing
-To get credentials for  public/private testnet of Bluzelle Refer to https://www.npmjs.com/package/@bluzelle/sdk-js
+
+To get credentials for public/private testnet of Bluzelle Refer to https://www.npmjs.com/package/@bluzelle/sdk-js
 
 1. ```{
    chain: "ETH",
@@ -70,7 +71,7 @@ To get credentials for  public/private testnet of Bluzelle Refer to https://www.
     publicKey2: "026238abd02a4db36ebfbddc47ea155348d169aa5bad1ff6fb01a55db7fcd595dc",
    publicKey1:"020e48ba3ec106a0ca8ab8e5910a9585e7dd6b0990298cf7d4871070f6e2d9c1d5",
     address:"bluzelle16h8ztzz09p3qhg0mcrxfpxxv2zu0ay0hpuftvf"}
-   
+
 3. ```{
     chain:  "Bluzelle",
     chainName:  "Bluzelle Mainnet",

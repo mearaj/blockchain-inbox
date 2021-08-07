@@ -1,6 +1,5 @@
 // colors
 
-
 // Sizes
 export const drawerWidth = 300
 export const pageBodySectionsStyle: {} = {

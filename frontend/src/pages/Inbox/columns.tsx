@@ -1,4 +1,5 @@
 import {GridColDef} from '@material-ui/data-grid';
+import {sentColumnFieldsMappings} from 'pages/Sent/columns';
 
 export const inboxColumnFieldsMappings = {
   from: 'from',
@@ -6,6 +7,7 @@ export const inboxColumnFieldsMappings = {
   dateCreated: 'dateCreated',
   expiresAfter: 'expiresAfter',
   renewLease: 'renewLease',
+  delete: 'delete',
 }
 
 
@@ -36,6 +38,13 @@ const columns: GridColDef[] = [
   {
     field: inboxColumnFieldsMappings.renewLease,
     headerName: 'Renew Lease',
+    sortable: false,
+    filterable: false,
+    width: 150,
+  },
+  {
+    field: sentColumnFieldsMappings.delete,
+    headerName: 'Delete',
     sortable: false,
     filterable: false,
     width: 150,

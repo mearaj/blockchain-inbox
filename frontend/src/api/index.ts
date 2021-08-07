@@ -8,10 +8,10 @@ export const TOKEN_ENDPOINT = `/token`;
 export const LOGIN_ENDPOINT = `/login`;
 export const LOGOUT_ENDPOINT = `/logout`;
 export const INBOX_ENDPOINT = `/inbox`;
-export const OUTBOX_END_POINT = `/outbox`;
-export const CLAIM_END_POINT = `/claim`;
-export const SENT_END_POINT = `/sent`;
-export const SENT_RENEW_LEASE_ENDPOINT = `${SENT_END_POINT}/renew`;
+export const OUTBOX_ENDPOINT = `/outbox`;
+export const CLAIM_ENDPOINT = `/claim`;
+export const SENT_ENDPOINT = `/sent`;
+export const SENT_RENEW_LEASE_ENDPOINT = `${SENT_ENDPOINT}/renew`;
 export const INBOX_RENEW_LEASE_ENDPOINT = `${INBOX_ENDPOINT}/renew`;
 
 export interface InboxMessage {
@@ -71,9 +71,15 @@ export interface ClaimMessage {
 
 export interface RenewLeaseReqBody {
   id: string;
-  lease:Lease;
+  lease: Lease;
   signature: StdSignature;
   signed: StdSignDoc;
+}
+
+export interface DeleteMessageReqBody {
+  id: string;
+  signature: StdSignature | undefined,
+  signed: StdSignDoc | undefined,
 }
 
 const config: AxiosRequestConfig = {
@@ -115,26 +121,26 @@ const getLoginStatus = async (authToken: string): Promise<AxiosResponse> => {
 const sendMessage = async (authToken: string, message: OutboxMessage) => {
   const newConfig = setAuthHeader(authToken, config);
   const axios = axiosOrig.create(newConfig);
-  return await axios.post(OUTBOX_END_POINT, message);
+  return await axios.post(OUTBOX_ENDPOINT, message);
 }
 
 const claimMessage = async (authToken: string, message: ClaimMessage) => {
   const newConfig = setAuthHeader(authToken, config);
   const axios = axiosOrig.create(newConfig);
-  return await axios.post(CLAIM_END_POINT, message);
+  return await axios.post(CLAIM_ENDPOINT, message);
 }
 
 
 const getOutbox = async (authToken: string) => {
   const newConfig = setAuthHeader(authToken, config);
   const axios = axiosOrig.create(newConfig);
-  return await axios.get(OUTBOX_END_POINT);
+  return await axios.get(OUTBOX_ENDPOINT);
 }
 
 const getSent = async (authToken: string) => {
   const newConfig = setAuthHeader(authToken, config);
   const axios = axiosOrig.create(newConfig);
-  return await axios.get(SENT_END_POINT);
+  return await axios.get(SENT_ENDPOINT);
 }
 
 const getInbox = async (authToken: string) => {
@@ -146,7 +152,7 @@ const getInbox = async (authToken: string) => {
 const deleteOutboxMessageById = async (authToken: string, id: string) => {
   const newConfig = setAuthHeader(authToken, config);
   const axios = axiosOrig.create(newConfig);
-  return await axios.delete(OUTBOX_END_POINT, {data: {id}});
+  return await axios.delete(OUTBOX_ENDPOINT, {data: {id}});
 }
 
 const renewSentMessageLease = async (authToken: string, message: RenewLeaseReqBody) => {
@@ -159,6 +165,18 @@ const renewInboxMessageLease = async (authToken: string, message: RenewLeaseReqB
   const newConfig = setAuthHeader(authToken, config);
   const axios = axiosOrig.create(newConfig);
   return await axios.put(INBOX_RENEW_LEASE_ENDPOINT, message);
+}
+
+const deleteInboxMessage = async (authToken: string, message: DeleteMessageReqBody) => {
+  const newConfig = setAuthHeader(authToken, config);
+  const axios = axiosOrig.create(newConfig);
+  return await axios.delete(INBOX_ENDPOINT, {data: message});
+}
+
+const deleteSentMessage = async (authToken: string, message: DeleteMessageReqBody) => {
+  const newConfig = setAuthHeader(authToken, config);
+  const axios = axiosOrig.create(newConfig);
+  return await axios.delete(SENT_ENDPOINT, {data: message});
 }
 
 
@@ -175,6 +193,8 @@ export const api = {
   deleteOutboxMessageById,
   renewSentMessageLease,
   renewInboxMessageLease,
+  deleteSentMessage,
+  deleteInboxMessage
 };
 
 export default api;

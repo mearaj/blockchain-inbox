@@ -15,10 +15,12 @@ import {
 } from 'store/Messages/reducers/outbox';
 import {sendMessage} from 'store/Messages/reducers/send';
 import {
+  deleteInboxMessage,
   getInbox,
   getInboxFailure,
   getInboxPending,
-  getInboxSuccess, renewInboxMsgLease,
+  getInboxSuccess,
+  renewInboxMsgLease,
   setInbox,
   setInboxLastFetched,
   setInboxMsgDetail
@@ -32,12 +34,14 @@ import {
 } from 'store/Messages/reducers/claim';
 
 import {
+  deleteSentMessage,
   getSent,
   getSentFailure,
   getSentPending,
   getSentSuccess,
   renewSentMsgLease,
-  setSent, setSentLastFetched,
+  setSent,
+  setSentLastFetched,
   setSentMsgDetail
 } from 'store/Messages/reducers/sent';
 
@@ -87,6 +91,7 @@ export const messagesSlice = createSlice({
     setInboxLastFetched,
     setInboxMsgDetail,
     renewInboxMsgLease,
+    deleteInboxMessage,
     setSent,
     setSentLastFetched,
     getSent,
@@ -95,6 +100,7 @@ export const messagesSlice = createSlice({
     getSentSuccess,
     setSentMsgDetail,
     renewSentMsgLease,
+    deleteSentMessage,
   }
 });
 

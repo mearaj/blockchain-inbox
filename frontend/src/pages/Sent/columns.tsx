@@ -6,6 +6,7 @@ export const sentColumnFieldsMappings = {
   dateCreated: 'dateCreated',
   expiresAfter: 'expiresAfter',
   renewLease: 'renewLease',
+  delete: 'delete',
 }
 
 const columns: GridColDef[] = [
@@ -33,8 +34,15 @@ const columns: GridColDef[] = [
     flex: 1,
   },
   {
-    field: 'renewLease',
+    field: sentColumnFieldsMappings.renewLease,
     headerName: 'Renew Lease',
+    sortable: false,
+    filterable: false,
+    width: 150,
+  },
+  {
+    field: sentColumnFieldsMappings.delete,
+    headerName: 'Delete',
     sortable: false,
     filterable: false,
     width: 150,

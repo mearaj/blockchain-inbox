@@ -11,13 +11,16 @@ import LoginRequired from 'guards/LoginRequired';
 import {useHistory} from 'react-router-dom';
 import useInboxState from 'pages/Inbox/useInboxState';
 import RenewLeaseDialog from 'dialogs/RenewLease';
+import {inboxColumnFieldsMappings} from 'pages/Inbox/columns';
+import DeleteMessageDialog from 'dialogs/DeleteMessage';
 
 
 const InboxPage: React.FC = () => {
   const classes = useStyles();
   const [columns, getInboxState, inboxDecrypted, warningMsg] = useInboxState();
   const [messageId, setMessageId] = useState("");
-  const [open, setOpen] = React.useState(false);
+  const [renewDialogOpen, setRenewDialogOpen] = React.useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
 
 
   const dispatch = useDispatch();
@@ -31,29 +34,44 @@ const InboxPage: React.FC = () => {
   }
 
   const onCellClick = (params: GridCellParams, event: MouseEvent) => {
-    if (params.field==="renewLease") {
+    if (params.field===inboxColumnFieldsMappings.renewLease) {
       event.stopPropagation();
       event.preventDefault();
       setMessageId(params.id as string);
-      setOpen(true);
+      setRenewDialogOpen(true);
+      return
+    }
+    if (params.field===inboxColumnFieldsMappings.delete) {
+      event.stopPropagation();
+      event.preventDefault();
+      setMessageId(params.id as string);
+      setDeleteDialogOpen(true);
     }
   }
 
   const getCellClassName = (params: GridCellParams): string => {
-    if (params.field==="renewLease") {
+    if (params.field===inboxColumnFieldsMappings.renewLease) {
       return classes.renewLease;
+    }
+    if (params.field===inboxColumnFieldsMappings.delete) {
+      return classes.deleteColumn;
     }
     return ""
   };
 
   const handleClose = () => {
     setMessageId("");
-    setOpen(false);
+    setRenewDialogOpen(false);
   }
 
   return (
     <LoginRequired>
-      <RenewLeaseDialog messageId={messageId} type="inbox" handleClose={handleClose} open={open && !!messageId}/>
+      <RenewLeaseDialog
+        messageId={messageId} type="inbox" handleClose={handleClose} open={renewDialogOpen && !!messageId}
+      />
+      <DeleteMessageDialog
+        messageId={messageId} type="inbox" handleClose={handleClose} open={deleteDialogOpen && !!messageId}
+      />
       <div className={classes.root}>
         <CommonBar>Inbox</CommonBar>
         {

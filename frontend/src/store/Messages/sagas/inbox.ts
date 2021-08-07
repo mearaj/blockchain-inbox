@@ -16,7 +16,7 @@ export function* getInboxSaga(action: PayloadAction) {
     try {
       const response: AxiosResponse = yield call(api.getInbox, currentAccount!.auth);
       const result: InboxMessage[] = response.data.inbox;
-      const timestamp: number= response.data.timestamp;
+      const timestamp: number = response.data.timestamp;
       yield put(messagesAction.setInboxLastFetched(timestamp));
       yield put(messagesAction.setInbox(result));
       yield put(messagesAction.getInboxSuccess());
@@ -37,6 +37,19 @@ export function* renewInboxMessageLeaseSaga(action: PayloadAction<RenewLeaseReqB
   const currentAccount: Account = yield select((state: AppState) => state.accountsState.currentAccount);
   try {
     yield call(api.renewInboxMessageLease, currentAccount!.auth, action.payload);
+    yield put(messagesAction.getInbox());
+  } catch (e) {
+    console.log(e);
+  }
+  yield put(loaderActions.hideLoader());
+}
+
+
+export function* deleteInboxMessageSaga(action: PayloadAction<RenewLeaseReqBody>) {
+  yield put(loaderActions.showLoader());
+  const currentAccount: Account = yield select((state: AppState) => state.accountsState.currentAccount);
+  try {
+    yield call(api.deleteInboxMessage, currentAccount!.auth, action.payload);
     yield put(messagesAction.getInbox());
   } catch (e) {
     console.log(e);

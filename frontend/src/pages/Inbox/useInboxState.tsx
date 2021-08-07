@@ -12,7 +12,7 @@ import {
   sortDateCreated
 } from 'utils/columns/common';
 import {Button, Typography} from '@material-ui/core';
-import {Schedule} from '@material-ui/icons';
+import {Delete, Schedule} from '@material-ui/icons';
 import {getInboxDecryptedMessages} from 'utils/columns/inbox';
 import {InboxMessage} from 'api';
 
@@ -26,6 +26,13 @@ const getRenewColumnComponent = (_params: GridCellParams) => {
   return <Button color="secondary" variant="contained">
     <Schedule/>
     <Typography style={{marginLeft: 6}}>Renew</Typography>
+  </Button>
+};
+
+const getDeleteColumnComponent = (_params: GridCellParams) => {
+  return <Button color="inherit" variant="contained">
+    <Delete/>
+    <Typography style={{marginLeft: 6}}>Delete</Typography>
   </Button>
 };
 
@@ -82,7 +89,7 @@ export const useInboxState = (): [columns: GridColDef[], getInboxState: string, 
   useEffect(() => {
 
     const newColumns = dataColumns.filter((eachColumn) => {
-      // shouldInclude intent is for the user's with Bluzelle Account so that renew lease button is visible
+        // shouldInclude intent is for the user's with Bluzelle Account so that renew lease button is visible
         let shouldInclude = false;
         switch (eachColumn.field) {
           case inboxColumnFieldsMappings.dateCreated:
@@ -109,6 +116,16 @@ export const useInboxState = (): [columns: GridColDef[], getInboxState: string, 
           case inboxColumnFieldsMappings.from:
             eachColumn.valueGetter = getColumnFromValue;
             shouldInclude = true;
+            break;
+          case inboxColumnFieldsMappings.delete:
+            if (currentAccount && curiumAccount) {
+              shouldInclude = !!(currentAccount.publicKey===curiumAccount.pubKey &&
+                currentAccount.chainName===bluzelleChain.name &&
+                window.keplr);
+              if (shouldInclude) {
+                eachColumn.renderCell = getDeleteColumnComponent;
+              }
+            }
             break;
           default:
             shouldInclude = true;

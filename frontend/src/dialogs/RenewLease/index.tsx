@@ -58,8 +58,8 @@ const RenewLeaseDialog: React.FC<RenewLeaseDialogProps> = (props) => {
   }
 
   return (
-    <Dialog className={classes.root} open={props.open} onClose={handleClose} aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">Renew Lease</DialogTitle>
+    <Dialog className={classes.root} open={props.open} onClose={handleClose} aria-labelledby="renew-lease-dialog">
+      <DialogTitle id="renew-lease-dialog">Renew Lease</DialogTitle>
       <DialogContent>
         <LeaseForm {...lease}/>
       </DialogContent>

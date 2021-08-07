@@ -51,6 +51,13 @@ const useStyles = makeStyles((theme) => {
         }
       }
     },
+    deleteColumn: {
+      '@global .MuiButtonBase-root': {
+        backgroundColor: theme.palette.error.main,
+        color: theme.palette.common.white,
+        margin: 'auto',
+      }
+    }
   }
 });
 

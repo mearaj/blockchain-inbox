@@ -7,9 +7,9 @@ export const isLeaseFormEmpty = (leaseForm: MessageLeaseForm): boolean =>
 export default isLeaseFormEmpty;
 
 
-export const isLeaseFormValid = (leaseForm: MessageLeaseForm):{isValid:boolean, error: string} => {
+export const isLeaseFormValid = (leaseForm: MessageLeaseForm): { isValid: boolean, error: string } => {
   if (isLeaseFormEmpty(leaseForm)) {
-    return {isValid:false, error:"Lease Cannot Be Zero Or Empty!"};
+    return {isValid: false, error: "Lease Cannot Be Zero Or Empty!"};
   }
   return {isValid: true, error: ""};
 }

@@ -17,7 +17,7 @@ export function* getSentSaga() {
       yield put(messagesAction.getSentPending());
       const response: AxiosResponse = yield call(api.getSent, currentAccount!.auth);
       const result: SentMessage[] = response.data.sent;
-      const timestamp:number = response.data.timestamp;
+      const timestamp: number = response.data.timestamp;
       yield put(messagesAction.setSentLastFetched(timestamp));
       yield put(messagesAction.setSent(result));
       yield put(messagesAction.getSentSuccess());
@@ -38,6 +38,18 @@ export function* renewSentMessageLeaseSaga(action: PayloadAction<RenewLeaseReqBo
   const currentAccount: Account = yield select((state: AppState) => state.accountsState.currentAccount);
   try {
     yield call(api.renewSentMessageLease, currentAccount!.auth, action.payload);
+    yield put(messagesAction.getSent());
+  } catch (e) {
+    console.log(e);
+  }
+  yield put(loaderActions.hideLoader());
+}
+
+export function* deleteSentMessageSaga(action: PayloadAction<RenewLeaseReqBody>) {
+  yield put(loaderActions.showLoader());
+  const currentAccount: Account = yield select((state: AppState) => state.accountsState.currentAccount);
+  try {
+    yield call(api.deleteSentMessage, currentAccount!.auth, action.payload);
     yield put(messagesAction.getSent());
   } catch (e) {
     console.log(e);
