@@ -78,8 +78,11 @@ export const useInboxState = (): [columns: GridColDef[], getInboxState: string, 
     return () => clearInterval(timerId);
   }, [currentAccount, dispatch, inbox])
 
+
   useEffect(() => {
+
     const newColumns = dataColumns.filter((eachColumn) => {
+      // shouldInclude intent is for the user's with Bluzelle Account so that renew lease button is visible
         let shouldInclude = false;
         switch (eachColumn.field) {
           case inboxColumnFieldsMappings.dateCreated:
@@ -88,8 +91,7 @@ export const useInboxState = (): [columns: GridColDef[], getInboxState: string, 
             break;
           case inboxColumnFieldsMappings.renewLease:
             if (currentAccount && curiumAccount) {
-              const publicKey = Buffer.from(curiumAccount.pubKey).toString('hex');
-              shouldInclude = !!(currentAccount.publicKey===publicKey &&
+              shouldInclude = !!(currentAccount.publicKey===curiumAccount.pubKey &&
                 currentAccount.chainName===bluzelleChain.name &&
                 window.keplr);
               if (shouldInclude) {
@@ -115,7 +117,7 @@ export const useInboxState = (): [columns: GridColDef[], getInboxState: string, 
       }
     );
     setColumns(newColumns)
-  }, [curiumAccount, currentAccount]);
+  }, [curiumAccount, currentAccount, inboxLastFetched]);
   return [columns, getInboxState, inboxDecrypted, warningMsg];
 }
 

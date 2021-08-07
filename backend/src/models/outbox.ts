@@ -1,7 +1,8 @@
 import {Model, model, Schema} from 'mongoose';
 import {Lease} from '@bluzelle/sdk-js/lib/codec/crud/lease';
+import {Message} from 'models/message';
 
-export interface OutboxMessage {
+export interface OutboxMessage extends Message {
   creatorPublicKey: string,
   creatorChainName: string,
   creatorEncryptedMessage: string,

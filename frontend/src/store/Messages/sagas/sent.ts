@@ -17,9 +17,10 @@ export function* getSentSaga() {
       yield put(messagesAction.getSentPending());
       const response: AxiosResponse = yield call(api.getSent, currentAccount!.auth);
       const result: SentMessage[] = response.data.sent;
+      const timestamp:number = response.data.timestamp;
+      yield put(messagesAction.setSentLastFetched(timestamp));
       yield put(messagesAction.setSent(result));
       yield put(messagesAction.getSentSuccess());
-      yield put(messagesAction.setSentLastFetched(Date.now().valueOf()));
     } catch (e) {
       if (e.error?.message.toLowerCase().includes("not authorized") ||
         e.message?.toLowerCase().includes("status code 401")) {

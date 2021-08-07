@@ -1,4 +1,4 @@
-import {ReactNode, useEffect, useState} from 'react';
+import React, {ReactNode, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState, messagesAction} from 'store';
 import {SentMessage} from 'api';
@@ -12,15 +12,23 @@ import {
 import {GridCellParams, GridColDef} from '@material-ui/data-grid';
 import dataColumns, {sentColumnFieldsMappings} from './columns';
 import getSentDecryptedMessages from 'utils/columns/sent/getSentDecryptedMessages';
-import {getInboxDecryptedMessages} from 'utils/columns/inbox';
+import {Button, Typography} from '@material-ui/core';
+import {Schedule} from '@material-ui/icons';
 
 const SENT_ERROR_BACKEND = "Sorry, something went wrong. Please try again later"
 const SENT_EMPTY = "Your Sent Is Empty!"
 
 export type RenderRenewCell = (params: GridCellParams) => ReactNode
 
+const getRenewColumnComponent = (_params: GridCellParams) => {
+  return <Button color="secondary" variant="contained">
+    <Schedule/>
+    <Typography style={{marginLeft: 6}}>Renew</Typography>
+  </Button>
+};
 
-export const useSentState = (renderRenewCell: RenderRenewCell): [columns: GridColDef[], getSentState: string, sentDecrypted: SentMessage[] | undefined, warningMdg: string] => {
+
+export const useSentState = (): [columns: GridColDef[], getSentState: string, sentDecrypted: SentMessage[] | undefined, warningMdg: string] => {
   const [columns, setColumns] = useState(dataColumns);
   const sent = useSelector((appState: AppState) => appState.messagesState.sent);
   const sentLastFetched = useSelector((appState: AppState) => appState.messagesState.sentLastFetched);
@@ -79,13 +87,13 @@ export const useSentState = (renderRenewCell: RenderRenewCell): [columns: GridCo
             eachColumn.sortComparator = sortDateCreated;
             break;
           case sentColumnFieldsMappings.expiresAfter:
-            eachColumn.valueGetter = (params)=> {
-              return getColumnExpiry(params,sentLastFetched);
+            eachColumn.valueGetter = (params) => {
+              return getColumnExpiry(params, sentLastFetched);
             }
             eachColumn.sortComparator = sortColumnByLease;
             break;
           case sentColumnFieldsMappings.renewLease:
-            eachColumn.renderCell = renderRenewCell;
+            eachColumn.renderCell = getRenewColumnComponent;
             break;
 
         }
@@ -93,7 +101,7 @@ export const useSentState = (renderRenewCell: RenderRenewCell): [columns: GridCo
       }
     );
     setColumns(newColumns)
-  }, [currentAccount, renderRenewCell]);
+  }, [currentAccount, sentLastFetched]);
 
   return [columns, getSentState, sentDecrypted, warningMsg];
 }

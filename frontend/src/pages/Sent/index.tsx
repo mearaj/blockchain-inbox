@@ -6,24 +6,17 @@ import CuriumRequired from 'guards/CuriumRequired';
 import {messagesAction} from 'store';
 import {useDispatch} from 'react-redux';
 import {SentMessage} from 'api';
-import {Button, CircularProgress, Typography} from '@material-ui/core';
+import {CircularProgress, Typography} from '@material-ui/core';
 import BluzelleAccountRequired from 'guards/BluzelleAccountRequired';
 import {DataGrid, GridCellParams, GridRowParams} from '@material-ui/data-grid';
 import {useHistory} from 'react-router-dom';
-import {Schedule} from '@material-ui/icons';
 import useSentState from 'pages/Sent/useSentState';
 import RenewLeaseDialog from 'dialogs/RenewLease';
 
-const getRenewColumnComponent = (_params: GridCellParams) => {
-  return <Button color="secondary" variant="contained">
-    <Schedule/>
-    <Typography style={{marginLeft: 6}}>Renew</Typography>
-  </Button>
-};
 
 const SentPage: React.FC = () => {
   const classes = useStyles();
-  const [columns, getSentState, sentDecrypted, warningMsg] = useSentState(getRenewColumnComponent);
+  const [columns, getSentState, sentDecrypted, warningMsg] = useSentState();
   const [open, setOpen] = React.useState(false);
   const [messageId, setMessageId] = useState("");
   const dispatch = useDispatch();

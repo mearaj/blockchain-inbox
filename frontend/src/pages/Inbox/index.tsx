@@ -1,4 +1,4 @@
-import React, {MouseEvent} from 'react';
+import React, {MouseEvent, useState} from 'react';
 import CommonBar from 'components/CommonBar';
 
 import useStyles from './styles';
@@ -10,11 +10,14 @@ import {DataGrid, GridCellParams, GridRowParams} from '@material-ui/data-grid';
 import LoginRequired from 'guards/LoginRequired';
 import {useHistory} from 'react-router-dom';
 import useInboxState from 'pages/Inbox/useInboxState';
+import RenewLeaseDialog from 'dialogs/RenewLease';
 
 
 const InboxPage: React.FC = () => {
   const classes = useStyles();
   const [columns, getInboxState, inboxDecrypted, warningMsg] = useInboxState();
+  const [messageId, setMessageId] = useState("");
+  const [open, setOpen] = React.useState(false);
 
 
   const dispatch = useDispatch();
@@ -31,6 +34,8 @@ const InboxPage: React.FC = () => {
     if (params.field==="renewLease") {
       event.stopPropagation();
       event.preventDefault();
+      setMessageId(params.id as string);
+      setOpen(true);
     }
   }
 
@@ -41,8 +46,14 @@ const InboxPage: React.FC = () => {
     return ""
   };
 
+  const handleClose = () => {
+    setMessageId("");
+    setOpen(false);
+  }
+
   return (
     <LoginRequired>
+      <RenewLeaseDialog messageId={messageId} type="inbox" handleClose={handleClose} open={open && !!messageId}/>
       <div className={classes.root}>
         <CommonBar>Inbox</CommonBar>
         {

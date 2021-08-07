@@ -18,7 +18,7 @@ import {
   getInbox,
   getInboxFailure,
   getInboxPending,
-  getInboxSuccess,
+  getInboxSuccess, renewInboxMsgLease,
   setInbox,
   setInboxLastFetched,
   setInboxMsgDetail
@@ -86,6 +86,7 @@ export const messagesSlice = createSlice({
     setInbox,
     setInboxLastFetched,
     setInboxMsgDetail,
+    renewInboxMsgLease,
     setSent,
     setSentLastFetched,
     getSent,

@@ -38,9 +38,15 @@ const RenewLeaseDialog: React.FC<RenewLeaseDialogProps> = (props) => {
         case 'sent':
           dispatch(messagesAction.renewSentMsgLease(
             {id: props.messageId, lease: getLeaseFromLeaseForm(lease.leaseForm), ...response}));
+          break;
+        case 'inbox':
+          dispatch(messagesAction.renewInboxMsgLease(
+            {id: props.messageId, lease: getLeaseFromLeaseForm(lease.leaseForm), ...response}));
+          break;
       }
     }
   }, [dispatch, lease.leaseForm, paymentHandler, props.messageId, props.type]);
+
 
   const handleSubmit = async () => {
     lease.validate();

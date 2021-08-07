@@ -15,6 +15,7 @@ const SentMsgDetail: React.FC = () => {
   const msgDetail = useSelector((appState: AppState) => appState.messagesState.sentMsgDetail as SentMessage);
   const dispatch = useDispatch();
   const history = useHistory();
+  const sentLastFetched = useSelector((appState: AppState) => appState.messagesState.sentLastFetched);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -66,7 +67,7 @@ const SentMsgDetail: React.FC = () => {
                 <TextField
                   className={classes.textField}
                   variant="outlined" fullWidth
-                  value={`${getExpiryFromLease(msgDetail.lease, Date.now().valueOf())}`} disabled
+                  value={`${getExpiryFromLease(msgDetail.lease, sentLastFetched)}`} disabled
                 />
               </div>
               <div className={classes.formControl}>

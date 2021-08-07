@@ -2,7 +2,7 @@ import {takeEvery} from 'redux-saga/effects';
 import {messagesAction} from 'store/Messages/reducers';
 import {deleteOutboxMessageSaga, getOutboxSaga} from 'store/Messages/sagas/outbox';
 import {sendMessageSaga} from 'store/Messages/sagas/send';
-import {getInboxSaga} from 'store/Messages/sagas/inbox';
+import {getInboxSaga, renewInboxMessageLeaseSaga} from 'store/Messages/sagas/inbox';
 import {claimMessageSaga} from 'store/Messages/sagas/claim';
 import {getSentSaga, renewSentMessageLeaseSaga} from 'store/Messages/sagas/sent';
 
@@ -16,6 +16,7 @@ export function* messagesWatcherSaga() {
     claimMessage,
     getSent,
     renewSentMsgLease,
+    renewInboxMsgLease,
   } = messagesAction;
   yield takeEvery(sendMessage.type, sendMessageSaga);
   yield takeEvery(deleteOutboxMessage.type, deleteOutboxMessageSaga);
@@ -24,6 +25,7 @@ export function* messagesWatcherSaga() {
   yield takeEvery(getInbox.type, getInboxSaga);
   yield takeEvery(getSent.type, getSentSaga);
   yield takeEvery(renewSentMsgLease.type, renewSentMessageLeaseSaga);
+  yield takeEvery(renewInboxMsgLease.type, renewInboxMessageLeaseSaga);
 }
 
 
