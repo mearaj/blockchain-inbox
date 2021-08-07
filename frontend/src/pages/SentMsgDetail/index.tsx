@@ -66,7 +66,7 @@ const SentMsgDetail: React.FC = () => {
                 <TextField
                   className={classes.textField}
                   variant="outlined" fullWidth
-                  value={`${getExpiryFromLease(msgDetail.lease)}`} disabled
+                  value={`${getExpiryFromLease(msgDetail.lease, Date.now().valueOf())}`} disabled
                 />
               </div>
               <div className={classes.formControl}>

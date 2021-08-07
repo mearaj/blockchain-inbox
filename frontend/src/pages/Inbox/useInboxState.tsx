@@ -2,7 +2,6 @@ import React, {ReactNode, useEffect, useState} from 'react';
 import dataColumns, {inboxColumnFieldsMappings} from './columns';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState, messagesAction} from 'store';
-import {InboxMessage} from 'api';
 import {GridCellParams, GridColDef} from '@material-ui/data-grid';
 import {bluzelleChain} from 'chains';
 import {
@@ -15,6 +14,7 @@ import {
 import {Button, Typography} from '@material-ui/core';
 import {Schedule} from '@material-ui/icons';
 import {getInboxDecryptedMessages} from 'utils/columns/inbox';
+import {InboxMessage} from 'api';
 
 
 export type RenderRenewCell = (params: GridCellParams) => ReactNode
@@ -33,6 +33,7 @@ export const useInboxState = (): [columns: GridColDef[], getInboxState: string, 
 ] => {
   const [columns, setColumns] = useState(dataColumns);
   const inbox = useSelector((appState: AppState) => appState.messagesState.inbox);
+  const inboxLastFetched = useSelector((appState: AppState) => appState.messagesState.inboxLastFetched);
   const getInboxState = useSelector((appState: AppState) => appState.messagesState.getInboxState);
   const [inboxDecrypted, setInboxDecrypted] = useState<InboxMessage[] | undefined>(undefined);
   const currentAccount = useSelector((appState: AppState) => appState.accountsState.currentAccount);
@@ -56,19 +57,16 @@ export const useInboxState = (): [columns: GridColDef[], getInboxState: string, 
     }
   }, [inbox, warningMsg, currentAccount, getInboxState]);
 
-  useEffect(() => {
-    if (currentAccount) {
-      console.log("called?");
-      getInboxDecryptedMessages(inbox, currentAccount)
-        .then((results)=> setInboxDecrypted(results));
-    }
-
-  }, [currentAccount, dispatch, inbox])
-
 
   useEffect(() => {
+    // if (currentAccount) {
+    //   getInboxDecryptedMessages(inbox, currentAccount).then(setInboxDecrypted);
+    // }
     const timerId = setInterval(async () => {
-        dispatch(messagesAction.setInbox([...inbox]));
+        if (currentAccount) {
+          const newDecryptedMsg = await getInboxDecryptedMessages(inbox, currentAccount);
+          setInboxDecrypted(newDecryptedMsg);
+        }
       }, 1000
     );
 
@@ -100,8 +98,10 @@ export const useInboxState = (): [columns: GridColDef[], getInboxState: string, 
             }
             break;
           case inboxColumnFieldsMappings.expiresAfter:
-            eachColumn.valueGetter = getColumnExpiry;
             eachColumn.sortComparator = sortColumnByLease;
+            eachColumn.valueGetter = (params) => {
+              return getColumnExpiry(params, inboxLastFetched);
+            }
             shouldInclude = true;
             break;
           case inboxColumnFieldsMappings.from:

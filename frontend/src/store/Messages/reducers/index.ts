@@ -20,8 +20,10 @@ import {
   getInboxPending,
   getInboxSuccess,
   setInbox,
+  setInboxLastFetched,
   setInboxMsgDetail
 } from 'store/Messages/reducers/inbox';
+
 import {
   claimMessage,
   setClaimMessageId,
@@ -35,7 +37,7 @@ import {
   getSentPending,
   getSentSuccess,
   renewSentMsgLease,
-  setSent,
+  setSent, setSentLastFetched,
   setSentMsgDetail
 } from 'store/Messages/reducers/sent';
 
@@ -48,6 +50,8 @@ export const initialState: MessagesState = {
   claimMessageId: '',
   inbox: [],
   getInboxState: '',
+  inboxLastFetched: Date.now().valueOf(),
+  sentLastFetched: Date.now().valueOf(),
   inboxMsgDetail: undefined,
   outbox: [],
   getOutboxState: '',
@@ -80,8 +84,10 @@ export const messagesSlice = createSlice({
     getInboxFailure,
     getInboxSuccess,
     setInbox,
+    setInboxLastFetched,
     setInboxMsgDetail,
     setSent,
+    setSentLastFetched,
     getSent,
     getSentPending,
     getSentFailure,

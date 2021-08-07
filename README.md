@@ -23,9 +23,8 @@ In case If the User disapprove the prompt from the Curium Extension, then the me
 
 ###### Task I still need to complete
 1. Proper integration of Curium Extension with the frontend.
-2. The backend should be able to verify claim message i.e. if the user has really paid the gas fee.
-3. The frontend should be able to show Message Details for any message from inbox/outbox/sent
-4. The table UI should be improved and message lease should be shown. User should be allowed to change the lease of the message.
+2. The backend should be able to verify claim message i.e. if the user has really paid the fees through curium.
+4. The table UI should be improved and message lease should be shown.
 5. Documentation and comments still need to improve.
 6. Unit Test should be provided.
 7. A Demo Video is required.

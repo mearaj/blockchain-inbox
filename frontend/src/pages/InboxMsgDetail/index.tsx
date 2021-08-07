@@ -13,6 +13,7 @@ import {ArrowBack} from '@material-ui/icons';
 const InboxMsgDetail: React.FC = () => {
   const classes = useStyles();
   const msgDetail = useSelector((appState: AppState) => appState.messagesState.inboxMsgDetail as InboxMessage);
+  const inboxLastFetched = useSelector((appState: AppState) => appState.messagesState.inboxLastFetched);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -64,7 +65,7 @@ const InboxMsgDetail: React.FC = () => {
                 <TextField
                   className={classes.textField}
                   variant="outlined" fullWidth
-                  value={`${getExpiryFromLease(msgDetail.lease)}`} disabled
+                  value={`${getExpiryFromLease(msgDetail.lease, inboxLastFetched)}`} disabled
                 />
               </div>
               <div className={classes.formControl}>

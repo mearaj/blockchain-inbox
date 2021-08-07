@@ -274,5 +274,5 @@ export const getDecryptedMessageFromPrivateKey = async (privateKey: string, chai
       }
       break;
   }
-  return {error, isValid, decryptedMessage: decryptedMessage};
+  return {error, isValid, decryptedMessage};
 }

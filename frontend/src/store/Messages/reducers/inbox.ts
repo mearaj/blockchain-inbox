@@ -22,6 +22,10 @@ export const getInboxFailure = (state: MessagesState, action: PayloadAction) => 
 export const setInbox = (state: MessagesState, action: PayloadAction<InboxMessage[]>) => {
   state.inbox = action.payload;
 }
+export const setInboxLastFetched = (state: MessagesState, action: PayloadAction<number>) => {
+  state.inboxLastFetched = action.payload;
+}
+
 
 export const setInboxMsgDetail = (state: MessagesState, action: PayloadAction<InboxMessage>) => {
   state.inboxMsgDetail = action.payload;

@@ -12,6 +12,7 @@ import {
 import {GridCellParams, GridColDef} from '@material-ui/data-grid';
 import dataColumns, {sentColumnFieldsMappings} from './columns';
 import getSentDecryptedMessages from 'utils/columns/sent/getSentDecryptedMessages';
+import {getInboxDecryptedMessages} from 'utils/columns/inbox';
 
 const SENT_ERROR_BACKEND = "Sorry, something went wrong. Please try again later"
 const SENT_EMPTY = "Your Sent Is Empty!"
@@ -22,6 +23,7 @@ export type RenderRenewCell = (params: GridCellParams) => ReactNode
 export const useSentState = (renderRenewCell: RenderRenewCell): [columns: GridColDef[], getSentState: string, sentDecrypted: SentMessage[] | undefined, warningMdg: string] => {
   const [columns, setColumns] = useState(dataColumns);
   const sent = useSelector((appState: AppState) => appState.messagesState.sent);
+  const sentLastFetched = useSelector((appState: AppState) => appState.messagesState.sentLastFetched);
   const getSentState = useSelector((appState: AppState) => appState.messagesState.getSentState);
   const [sentDecrypted, setSentDecrypted] = useState<SentMessage[] | undefined>(undefined);
   const currentAccount = useSelector((appState: AppState) => appState.accountsState.currentAccount);
@@ -46,6 +48,9 @@ export const useSentState = (renderRenewCell: RenderRenewCell): [columns: GridCo
 
 
   useEffect(() => {
+    if (currentAccount) {
+      getSentDecryptedMessages(sent, currentAccount).then(setSentDecrypted);
+    }
     const intervalId = setInterval(async () => {
         if (currentAccount) {
           const sentDecryptedMessages = await getSentDecryptedMessages(sent, currentAccount);
@@ -74,7 +79,9 @@ export const useSentState = (renderRenewCell: RenderRenewCell): [columns: GridCo
             eachColumn.sortComparator = sortDateCreated;
             break;
           case sentColumnFieldsMappings.expiresAfter:
-            eachColumn.valueGetter = getColumnExpiry;
+            eachColumn.valueFormatter = (params)=> {
+              return getColumnExpiry(params,sentLastFetched);
+            }
             eachColumn.sortComparator = sortColumnByLease;
             break;
           case sentColumnFieldsMappings.renewLease:

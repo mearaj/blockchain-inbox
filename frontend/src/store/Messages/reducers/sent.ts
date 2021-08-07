@@ -23,6 +23,10 @@ export const setSent = (state: MessagesState, action: PayloadAction<SentMessage[
   state.sent = action.payload;
 }
 
+export const setSentLastFetched = (state: MessagesState, action: PayloadAction<number>) => {
+  state.sentLastFetched = action.payload;
+}
+
 export const setSentMsgDetail = (state: MessagesState, action: PayloadAction<SentMessage>) => {
   state.sentMsgDetail = action.payload;
 }
