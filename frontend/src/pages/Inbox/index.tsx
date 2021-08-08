@@ -62,6 +62,7 @@ const InboxPage: React.FC = () => {
   const handleClose = () => {
     setMessageId("");
     setRenewDialogOpen(false);
+    setDeleteDialogOpen(false);
   }
 
   return (
@@ -90,7 +91,7 @@ const InboxPage: React.FC = () => {
         }
 
         {
-          getInboxState!==messagesAction.getInboxPending.type &&
+          getInboxState===messagesAction.getInboxSuccess.type &&
           inboxDecrypted &&
           inboxDecrypted.length!==0 &&
           <DataGrid

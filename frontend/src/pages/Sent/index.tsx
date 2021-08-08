@@ -91,7 +91,7 @@ const SentPage: React.FC = () => {
           }
 
           {
-            getSentState!==messagesAction.getSentPending.type &&
+            getSentState===messagesAction.getSentSuccess.type &&
             sentDecrypted &&
             sentDecrypted.length!==0 &&
             <DataGrid

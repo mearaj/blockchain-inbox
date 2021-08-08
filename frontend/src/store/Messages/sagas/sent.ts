@@ -41,6 +41,7 @@ export function* renewSentMessageLeaseSaga(action: PayloadAction<RenewLeaseReqBo
     yield put(messagesAction.getSent());
   } catch (e) {
     console.log(e);
+    yield put(messagesAction.getSent());
   }
   yield put(loaderActions.hideLoader());
 }
@@ -53,6 +54,7 @@ export function* deleteSentMessageSaga(action: PayloadAction<RenewLeaseReqBody>)
     yield put(messagesAction.getSent());
   } catch (e) {
     console.log(e);
+    yield put(messagesAction.getSent());
   }
   yield put(loaderActions.hideLoader());
 }

@@ -45,7 +45,7 @@ const OutboxPage: React.FC = () => {
             </div>
           }
           {
-            getOutboxState!==messagesAction.getOutboxPending.type &&
+            getOutboxState===messagesAction.getOutboxSuccess.type &&
             outboxDecrypted &&
             outboxDecrypted.length!==0 &&
             <DataGrid
