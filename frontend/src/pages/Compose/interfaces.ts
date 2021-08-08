@@ -15,5 +15,5 @@ export interface MessageLeaseForm {
 export const MAX_SECONDS = 59;
 export const MAX_MINUTES = 59;
 export const MAX_HOURS = 23;
-export const MAX_DAYS = 365;
+export const MAX_DAYS = 364;
 export const MAX_YEARS = 9;

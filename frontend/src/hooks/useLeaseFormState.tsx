@@ -15,7 +15,13 @@ export type LeaseFormState = {
   clearError: () => void
 }
 
-export const useLeaseForm = (leaseFormInitial: MessageLeaseForm): LeaseFormState => {
+
+/**
+ * This hook manages the state for LeaseForm.
+ * It's reusable.
+ * @param leaseFormInitial
+ */
+export const useLeaseFormState = (leaseFormInitial: MessageLeaseForm): LeaseFormState => {
   const [leaseForm, setLeaseForm] = useState(leaseFormInitial);
   const [leaseFormError, setLeaseFormError] = useState("");
 

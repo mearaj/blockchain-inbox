@@ -7,14 +7,14 @@ import CuriumRequired from 'guards/CuriumRequired';
 import BluzelleAccountRequired from 'guards/BluzelleAccountRequired';
 import CuriumConnectionRequired from 'guards/CuriumConnectionRequired';
 import {ethChains} from 'chains';
-import useComposeState from 'pages/Compose/useComposeState';
+import useComposePageState from 'pages/Compose/useComposePageState';
 import LeaseForm from 'components/LeaseForm';
 import ComposeSliceForm from 'components/ComposeSliceForm';
 
 
 const ComposePage: React.FC = () => {
   const classes = useStyles();
-  const composeState = useComposeState({days: 0, hours: 0, minutes: 0, seconds: 0, years: 0},
+  const composeState = useComposePageState({days: 0, hours: 0, minutes: 0, seconds: 0, years: 0},
     {chainName: ethChains[0].name, message: '', publicKey: ''}
   );
   const {

@@ -1,10 +1,16 @@
-import React from 'react';
+import React, {PropsWithChildren} from 'react';
 import useStyles from './styles';
 import {FormHelperText, FormLabel, TextField} from '@material-ui/core';
 import {MAX_DAYS, MAX_HOURS, MAX_MINUTES, MAX_SECONDS, MAX_YEARS} from 'pages/Compose/interfaces';
-import {LeaseFormState} from 'hooks/useLeaseForm';
+import {LeaseFormState} from 'hooks/useLeaseFormState';
 
-export const LeaseForm: React.FC<LeaseFormState> = (props) => {
+/**
+ * Reusable LeaseForm Component
+ * @param props
+ * @constructor
+ */
+
+export const LeaseForm: React.FC<LeaseFormState> = (props:PropsWithChildren<LeaseFormState>) => {
   const classes = useStyles();
   const {leaseForm, leaseFormError, handleChange} = props;
 

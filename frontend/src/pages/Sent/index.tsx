@@ -10,7 +10,7 @@ import {CircularProgress, Typography} from '@material-ui/core';
 import BluzelleAccountRequired from 'guards/BluzelleAccountRequired';
 import {DataGrid, GridCellParams, GridRowParams} from '@material-ui/data-grid';
 import {useHistory} from 'react-router-dom';
-import useSentState from 'pages/Sent/useSentState';
+import useSentPageState from 'pages/Sent/useSentPageState';
 import RenewLeaseDialog from 'dialogs/RenewLease';
 import {sentColumnFieldsMappings} from 'pages/Sent/columns';
 import DeleteMessageDialog from 'dialogs/DeleteMessage';
@@ -18,7 +18,7 @@ import DeleteMessageDialog from 'dialogs/DeleteMessage';
 
 const SentPage: React.FC = () => {
   const classes = useStyles();
-  const [columns, getSentState, sentDecrypted, warningMsg] = useSentState();
+  const [columns, getSentState, sentDecrypted, warningMsg] = useSentPageState();
   const [renewDialogOpen, setRenewDialogOpen] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [messageId, setMessageId] = useState("");

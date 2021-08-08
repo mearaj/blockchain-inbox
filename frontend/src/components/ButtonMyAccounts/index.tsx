@@ -21,11 +21,6 @@ export const ButtonMyAccounts: React.FC<ButtonMyAccountsProps> = (props) => {
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-    // if (accounts && accounts.length!==0) {
-    //
-    // } else {
-    //   history.push('./account');
-    // }
   };
 
   const handleClose = () => {
@@ -45,8 +40,7 @@ export const ButtonMyAccounts: React.FC<ButtonMyAccountsProps> = (props) => {
       }
 
       {
-        // accounts &&
-        // accounts.length!==0 &&
+
         anchorEl &&
         <Menu
           className={classes.accountsMenu}

@@ -5,11 +5,16 @@ import {coin} from '@cosmjs/proto-signing';
 import {AppState} from 'store';
 import {useSelector} from 'react-redux';
 
+
+/**
+ * This hook invokes Curium Extension to display Popup for User's Approval/Reject response.
+ */
+
 export const useCuriumPayment = () => {
   const accountsState = useSelector((state: AppState) => state.accountsState);
   const {currentAccount} = accountsState;
 
-  const handleCuriumPaymentApproval = async () => {
+  const handleCuriumPaymentApproval = async ():Promise<AminoSignResponse | undefined> => {
     let response: AminoSignResponse | undefined;
     await window.keplr?.enable(BLUZELLE_CHAIN_ID);
     const curiumAccount: Key | undefined = await window.keplr?.getKey(BLUZELLE_CHAIN_ID);

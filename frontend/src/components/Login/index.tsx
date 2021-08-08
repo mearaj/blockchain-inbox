@@ -213,7 +213,7 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
               </FormControl>
             </div>
           </div>
-          <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+          <div className={classes.footer}>
             <Button
               type="reset"
               variant="contained"
@@ -224,7 +224,6 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
             </Button>
             <Button
               type="submit"
-              style={{marginLeft: 24}}
               variant="contained"
               className={classes.loginButton}
               color="inherit"

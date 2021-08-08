@@ -24,10 +24,15 @@ const useStyles = makeStyles((theme) => {
     loginButton: {
       backgroundColor: theme.palette.success.main,
       color: theme.palette.common.white,
+      marginLeft: 24,
       '&:hover,&:focus,&:active': {
         backgroundColor: theme.palette.success.dark,
       }
     },
+    footer: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+    }
   }
 });
 

@@ -3,7 +3,7 @@ import React, {useCallback} from 'react';
 import useStyles from './styles';
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
 import LeaseForm from 'components/LeaseForm';
-import {useLeaseForm} from 'hooks/useLeaseForm';
+import {useLeaseFormState} from 'hooks/useLeaseFormState';
 import {useCuriumPayment} from 'hooks/useCuriumPayment';
 import {isLeaseFormValid} from 'utils/helpers';
 import {useDispatch} from 'react-redux';
@@ -20,7 +20,7 @@ export interface RenewLeaseDialogProps {
 
 const RenewLeaseDialog: React.FC<RenewLeaseDialogProps> = (props) => {
   const classes = useStyles();
-  const lease = useLeaseForm({days: 0, years: 0, minutes: 0, hours: 0, seconds: 0})
+  const lease = useLeaseFormState({days: 0, years: 0, minutes: 0, hours: 0, seconds: 0})
   const [paymentHandler] = useCuriumPayment();
   const dispatch = useDispatch();
 

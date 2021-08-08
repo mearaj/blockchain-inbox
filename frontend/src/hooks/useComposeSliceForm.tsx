@@ -16,6 +16,12 @@ export type ComposeSliceFormState = {
   messageError: string,
 }
 
+/**
+ * This hook manages the state of 'publicKey', 'chainName', 'message' of ComposePage.
+ * This hook is reusable.
+ * @param composeFormInitial
+ */
+
 export const useComposeSliceForm = (composeFormInitial: ComposeSliceForm): ComposeSliceFormState => {
   const [composeSliceForm, setComposeSliceForm] = useState<ComposeSliceForm>(composeFormInitial);
   const [publicKeyError, setPublicKeyError] = useState("");

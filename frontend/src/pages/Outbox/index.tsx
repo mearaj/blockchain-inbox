@@ -10,11 +10,11 @@ import {CircularProgress, Typography} from '@material-ui/core';
 import BluzelleAccountRequired from 'guards/BluzelleAccountRequired';
 import {DataGrid, GridRowParams} from '@material-ui/data-grid';
 import {useHistory} from 'react-router-dom';
-import useOutboxState from 'pages/Outbox/useOutboxState';
+import useOutboxPageState from 'pages/Outbox/useOutboxPageState';
 
 const OutboxPage: React.FC = () => {
   const classes = useStyles();
-  const [columns, getOutboxState, outboxDecrypted, warningMsg] = useOutboxState();
+  const [columns, getOutboxState, outboxDecrypted, warningMsg] = useOutboxPageState();
   const dispatch = useDispatch();
   const history = useHistory();
 

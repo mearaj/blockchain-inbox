@@ -1,4 +1,4 @@
-import React, {ReactNode, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState, messagesAction} from 'store';
 import {SentMessage} from 'api';
@@ -18,24 +18,13 @@ import {Delete, Schedule} from '@material-ui/icons';
 const SENT_ERROR_BACKEND = "Sorry, something went wrong. Please try again later"
 const SENT_EMPTY = "Your Sent Is Empty!"
 
-export type RenderRenewCell = (params: GridCellParams) => ReactNode
 
-const getRenewColumnComponent = (_params: GridCellParams) => {
-  return <Button color="secondary" variant="contained">
-    <Schedule/>
-    <Typography style={{marginLeft: 6}}>Renew</Typography>
-  </Button>
-};
+/**
+ * The intent of this hook is to separate the state(logic) of the SentPage, for better readability of Outbox Page which
+ * should mainly focus on UI
+ */
 
-const getDeleteColumnComponent = (_params: GridCellParams) => {
-  return <Button color="inherit" variant="contained">
-    <Delete/>
-    <Typography style={{marginLeft: 6}}>Delete</Typography>
-  </Button>
-};
-
-
-export const useSentState = (): [columns: GridColDef[], getSentState: string, sentDecrypted: SentMessage[] | undefined, warningMdg: string] => {
+export const useSentPageState = (): [columns: GridColDef[], getSentState: string, sentDecrypted: SentMessage[] | undefined, warningMdg: string] => {
   const [columns, setColumns] = useState(dataColumns);
   const sent = useSelector((appState: AppState) => appState.messagesState.sent);
   const sentLastFetched = useSelector((appState: AppState) => appState.messagesState.sentLastFetched);
@@ -44,6 +33,31 @@ export const useSentState = (): [columns: GridColDef[], getSentState: string, se
   const currentAccount = useSelector((appState: AppState) => appState.accountsState.currentAccount);
   const [warningMsg, setWarningMsg] = useState("");
   const dispatch = useDispatch();
+
+  /**
+   * Callback function for material-ui 's data-grid api.
+   * This function renders Delete Button inside Delete Column/Cell
+   * @param _params
+   */
+  const getDeleteColumnComponent = (_params: GridCellParams) => {
+    return <Button color="inherit" variant="contained">
+      <Delete/>
+      <Typography style={{marginLeft: 6}}>Delete</Typography>
+    </Button>
+  };
+
+
+  /**
+   * Callback function for material-ui 's data-grid api.
+   * This function renders Renew Button inside Renew Column/Cell
+   * @param _params
+   */
+  const getRenewColumnComponent = (_params: GridCellParams) => {
+    return <Button color="secondary" variant="contained">
+      <Schedule/>
+      <Typography style={{marginLeft: 6}}>Renew</Typography>
+    </Button>
+  };
 
   useEffect(() => {
     dispatch(messagesAction.getSent());
@@ -116,4 +130,4 @@ export const useSentState = (): [columns: GridColDef[], getSentState: string, se
   return [columns, getSentState, sentDecrypted, warningMsg];
 }
 
-export default useSentState;
+export default useSentPageState;

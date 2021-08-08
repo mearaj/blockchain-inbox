@@ -13,7 +13,7 @@ import SentMsgDetail from 'pages/SentMsgDetail';
 import InboxMsgDetail from 'pages/InboxMsgDetail';
 import OutboxMsgDetail from 'pages/OutboxMsgDetail';
 
-const Pages: React.FC = (props) => {
+const Pages: React.FC = () => {
   const classes = useStyles();
 
   const handleKeplrAccountChange = () => {
@@ -27,25 +27,6 @@ const Pages: React.FC = (props) => {
     });
     return () => clearTimeout(timerID);
   });
-
-  useEffect(() => {
-    const timerId = setTimeout(async () => {
-      // const cosmJS = new SigningCosmosClient(
-      //   "https://lcd-cosmoshub.keplr.app",
-      //   accounts[0].address,
-      //   offlineSigner,
-      // );
-      // const result = await window.keplr.signDirect(
-      //   chainId,
-      //   accounts[0].address,
-      //   {
-      //     bodyBytes: new Uint8Array(0),
-      //     chainId,
-      //   }
-      // );
-      return () => clearTimeout(timerId);
-    }, 0)
-  }, []);
 
   return (
     <>

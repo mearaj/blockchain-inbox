@@ -3,7 +3,7 @@ import {AppState, messagesAction} from 'store';
 import React, {useCallback} from 'react';
 import {getEncryptedMessageFromPublicKey, isPublicKeyFormatValid} from 'chains';
 import {ComposeSliceForm, MessageLeaseForm} from 'pages/Compose/interfaces';
-import {LeaseFormState, useLeaseForm} from 'hooks/useLeaseForm';
+import {LeaseFormState, useLeaseFormState} from 'hooks/useLeaseFormState';
 import {ComposeSliceFormState, useComposeSliceForm} from 'hooks/useComposeSliceForm';
 import {useCuriumPayment} from 'hooks/useCuriumPayment';
 import {loaderActions} from 'store/Loader';
@@ -19,8 +19,12 @@ export interface ComposeState {
   clearForm: () => void,
 }
 
+/**
+ * The intent of this hook is to separate the state(logic) of the ComposePage, for better readability of Outbox Page which
+ * should mainly focus on UI
+ */
 
-export const useComposeState = (leaseFormInitial: MessageLeaseForm, composeFormInitial: ComposeSliceForm): ComposeState => {
+export const useComposePageState = (leaseFormInitial: MessageLeaseForm, composeFormInitial: ComposeSliceForm): ComposeState => {
   const accountsState = useSelector((state: AppState) => state.accountsState);
   const {currentAccount} = accountsState;
   const [paymentHandler] = useCuriumPayment();
@@ -42,7 +46,7 @@ export const useComposeState = (leaseFormInitial: MessageLeaseForm, composeFormI
     leaseFormError,
     validate: validateLeaseFormState,
     clearError: clearLeaseFromError,
-  } = useLeaseForm(leaseFormInitial);
+  } = useLeaseFormState(leaseFormInitial);
 
 
   const validateForms = useCallback(() => {
@@ -135,4 +139,4 @@ export const useComposeState = (leaseFormInitial: MessageLeaseForm, composeFormI
 }
 
 
-export default useComposeState;
+export default useComposePageState;

@@ -16,7 +16,12 @@ import {GridColDef} from '@material-ui/data-grid';
 const OUTBOX_ERROR_BACKEND = "Sorry, something went wrong. Please try again later"
 const OUTBOX_EMPTY = "Your Outbox Is Empty!"
 
-export const useOutboxState = (): [columns: GridColDef[], getOutboxState: string, outboxDecrypted: OutboxMessage[], warningMdg: string] => {
+/**
+ * The intent of this hook is to separate the state(logic) of the OutboxPage, for better readability of Outbox Page which
+ * should mainly focus on UI
+ */
+
+export const useOutboxPageState = (): [columns: GridColDef[], getOutboxState: string, outboxDecrypted: OutboxMessage[], warningMdg: string] => {
   const [columns, setColumns] = useState<GridColDef[]>(dataColumns);
   const outbox = useSelector((appState: AppState) => appState.messagesState.outbox);
   const getOutboxState = useSelector((appState: AppState) => appState.messagesState.getOutboxState);
@@ -84,4 +89,4 @@ export const useOutboxState = (): [columns: GridColDef[], getOutboxState: string
   return [columns, getOutboxState, outboxDecrypted, warningMsg];
 }
 
-export default useOutboxState;
+export default useOutboxPageState;

@@ -1,4 +1,4 @@
-import React, {ReactNode, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import dataColumns, {inboxColumnFieldsMappings} from './columns';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState, messagesAction} from 'store';
@@ -17,24 +17,13 @@ import {getInboxDecryptedMessages} from 'utils/columns/inbox';
 import {InboxMessage} from 'api';
 
 
-export type RenderRenewCell = (params: GridCellParams) => ReactNode
-
 const INBOX_ERROR_BACKEND = "Sorry, something went wrong. Please try again later"
 const INBOX_EMPTY = "Your Inbox Is Empty!"
 
-const getRenewColumnComponent = (_params: GridCellParams) => {
-  return <Button color="secondary" variant="contained">
-    <Schedule/>
-    <Typography style={{marginLeft: 6}}>Renew</Typography>
-  </Button>
-};
-
-const getDeleteColumnComponent = (_params: GridCellParams) => {
-  return <Button color="inherit" variant="contained">
-    <Delete/>
-    <Typography style={{marginLeft: 6}}>Delete</Typography>
-  </Button>
-};
+/**
+ * The intent of this hook is to separate the state(logic) of the OutboxPage, for better readability of Outbox Page which
+ * should mainly focus on UI
+ */
 
 export const useInboxState = (): [columns: GridColDef[], getInboxState: string, inboxDecrypted: InboxMessage[] | undefined, warningMdg: string,
 ] => {
@@ -47,6 +36,31 @@ export const useInboxState = (): [columns: GridColDef[], getInboxState: string, 
   const curiumAccount = useSelector((appState: AppState) => appState.accountsState.curiumAccount);
   const [warningMsg, setWarningMsg] = useState("");
   const dispatch = useDispatch();
+
+  /**
+   * Callback function for material-ui 's data-grid api.
+   * This function renders Delete Button inside Delete Column/Cell
+   * @param _params
+   */
+  const getDeleteColumnComponent = (_params: GridCellParams) => {
+    return <Button color="inherit" variant="contained">
+      <Delete/>
+      <Typography style={{marginLeft: 6}}>Delete</Typography>
+    </Button>
+  };
+
+
+  /**
+   * Callback function for material-ui 's data-grid api.
+   * This function renders Renew Button inside Renew Column/Cell
+   * @param _params
+   */
+  const getRenewColumnComponent = (_params: GridCellParams) => {
+    return <Button color="secondary" variant="contained">
+      <Schedule/>
+      <Typography style={{marginLeft: 6}}>Renew</Typography>
+    </Button>
+  };
 
   useEffect(() => {
     dispatch(messagesAction.getInbox());
@@ -89,7 +103,8 @@ export const useInboxState = (): [columns: GridColDef[], getInboxState: string, 
   useEffect(() => {
 
     const newColumns = dataColumns.filter((eachColumn) => {
-        // shouldInclude intent is for the user's with Bluzelle Account so that renew lease button is visible
+        // shouldInclude intent is to show lease button only when user is logged in with Curium Extension with
+        // Bluzelle Account
         let shouldInclude = false;
         switch (eachColumn.field) {
           case inboxColumnFieldsMappings.dateCreated:
