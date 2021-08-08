@@ -14,6 +14,7 @@ import dataColumns, {sentColumnFieldsMappings} from './columns';
 import getSentDecryptedMessages from 'utils/columns/sent/getSentDecryptedMessages';
 import {Button, Typography} from '@material-ui/core';
 import {Delete, Schedule} from '@material-ui/icons';
+import {useAccountMatch} from 'hooks/useAccountMatch';
 
 const SENT_ERROR_BACKEND = "Sorry, something went wrong. Please try again later"
 const SENT_EMPTY = "Your Sent Is Empty!"
@@ -33,6 +34,7 @@ export const useSentPageState = (): [columns: GridColDef[], getSentState: string
   const currentAccount = useSelector((appState: AppState) => appState.accountsState.currentAccount);
   const [warningMsg, setWarningMsg] = useState("");
   const dispatch = useDispatch();
+  const [accountMatchesCurium] = useAccountMatch();
 
   /**
    * Callback function for material-ui 's data-grid api.
@@ -98,7 +100,8 @@ export const useSentPageState = (): [columns: GridColDef[], getSentState: string
 
 
   useEffect(() => {
-    const newColumns = dataColumns.map((eachColumn) => {
+    const newColumns = dataColumns.filter((eachColumn) => {
+      let shouldInclude = true;
         switch (eachColumn.field) {
           case sentColumnFieldsMappings.to:
             eachColumn.valueGetter = getColumnToValue;
@@ -114,18 +117,26 @@ export const useSentPageState = (): [columns: GridColDef[], getSentState: string
             eachColumn.sortComparator = sortColumnByLease;
             break;
           case sentColumnFieldsMappings.renewLease:
-            eachColumn.renderCell = getRenewColumnComponent;
+            shouldInclude = false;
+            if (accountMatchesCurium) {
+              shouldInclude = accountMatchesCurium;
+              eachColumn.renderCell = getRenewColumnComponent;
+            }
             break;
           case sentColumnFieldsMappings.delete:
-            eachColumn.renderCell = getDeleteColumnComponent;
+            shouldInclude = false;
+            if (accountMatchesCurium) {
+              shouldInclude = accountMatchesCurium;
+              eachColumn.renderCell = getDeleteColumnComponent;
+            }
             break;
 
         }
-        return eachColumn;
+        return shouldInclude;
       }
     );
     setColumns(newColumns)
-  }, [currentAccount, sentLastFetched]);
+  }, [accountMatchesCurium, currentAccount, sentLastFetched]);
 
   return [columns, getSentState, sentDecrypted, warningMsg];
 }

@@ -32,4 +32,5 @@ In case If the User disapprove the prompt from the Curium Extension, then the me
 Apart from above, please let me know if there's anything else required and I also need your feedback please.
 
 ###### Note
-<strong>The Private Key is never sent to the backend or anywhere else. It only remains on the frontend side.</strong>
+<strong>The Private Key is never sent to the backend or anywhere else.</strong> <br>
+<strong>It only remains on the frontend side.(User's device)</strong>

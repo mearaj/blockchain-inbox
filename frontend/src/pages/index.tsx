@@ -18,6 +18,7 @@ const Pages: React.FC = () => {
 
   const handleKeplrAccountChange = () => {
     console.log("handleKeplrAccountChange, Key store in Keplr is changed. You may need to refetch the account info.");
+    window.location.reload();
   }
 
   useEffect(() => {

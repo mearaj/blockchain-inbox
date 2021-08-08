@@ -3,7 +3,6 @@ import dataColumns, {inboxColumnFieldsMappings} from './columns';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState, messagesAction} from 'store';
 import {GridCellParams, GridColDef} from '@material-ui/data-grid';
-import {bluzelleChain} from 'chains';
 import {
   getColumnDateCreatedValue,
   getColumnExpiry,
@@ -15,6 +14,7 @@ import {Button, Typography} from '@material-ui/core';
 import {Delete, Schedule} from '@material-ui/icons';
 import {getInboxDecryptedMessages} from 'utils/columns/inbox';
 import {InboxMessage} from 'api';
+import {useAccountMatch} from 'hooks/useAccountMatch';
 
 
 const INBOX_ERROR_BACKEND = "Sorry, something went wrong. Please try again later"
@@ -33,9 +33,10 @@ export const useInboxState = (): [columns: GridColDef[], getInboxState: string, 
   const getInboxState = useSelector((appState: AppState) => appState.messagesState.getInboxState);
   const [inboxDecrypted, setInboxDecrypted] = useState<InboxMessage[] | undefined>(undefined);
   const currentAccount = useSelector((appState: AppState) => appState.accountsState.currentAccount);
-  const curiumAccount = useSelector((appState: AppState) => appState.accountsState.curiumAccount);
+  //const curiumAccount = useSelector((appState: AppState) => appState.accountsState.curiumAccount);
   const [warningMsg, setWarningMsg] = useState("");
   const dispatch = useDispatch();
+  const [accountMatchesCurium] = useAccountMatch();
 
   /**
    * Callback function for material-ui 's data-grid api.
@@ -105,20 +106,17 @@ export const useInboxState = (): [columns: GridColDef[], getInboxState: string, 
     const newColumns = dataColumns.filter((eachColumn) => {
         // shouldInclude intent is to show lease button only when user is logged in with Curium Extension with
         // Bluzelle Account
-        let shouldInclude = false;
+        let shouldInclude = true;
         switch (eachColumn.field) {
           case inboxColumnFieldsMappings.dateCreated:
             eachColumn.valueGetter = getColumnDateCreatedValue;
             eachColumn.sortComparator = sortDateCreated;
             break;
           case inboxColumnFieldsMappings.renewLease:
-            if (currentAccount && curiumAccount) {
-              shouldInclude = !!(currentAccount.publicKey===curiumAccount.pubKey &&
-                currentAccount.chainName===bluzelleChain.name &&
-                window.keplr);
-              if (shouldInclude) {
-                eachColumn.renderCell = getRenewColumnComponent;
-              }
+            shouldInclude = false;
+            if (accountMatchesCurium) {
+              shouldInclude = accountMatchesCurium;
+              eachColumn.renderCell = getRenewColumnComponent;
             }
             break;
           case inboxColumnFieldsMappings.expiresAfter:
@@ -126,30 +124,24 @@ export const useInboxState = (): [columns: GridColDef[], getInboxState: string, 
             eachColumn.valueGetter = (params) => {
               return getColumnExpiry(params, inboxLastFetched);
             }
-            shouldInclude = true;
             break;
           case inboxColumnFieldsMappings.from:
             eachColumn.valueGetter = getColumnFromValue;
-            shouldInclude = true;
             break;
           case inboxColumnFieldsMappings.delete:
-            if (currentAccount && curiumAccount) {
-              shouldInclude = !!(currentAccount.publicKey===curiumAccount.pubKey &&
-                currentAccount.chainName===bluzelleChain.name &&
-                window.keplr);
-              if (shouldInclude) {
-                eachColumn.renderCell = getDeleteColumnComponent;
-              }
+            shouldInclude = false;
+            if (accountMatchesCurium) {
+              shouldInclude = accountMatchesCurium;
+              eachColumn.renderCell = getDeleteColumnComponent;
             }
             break;
-          default:
-            shouldInclude = true;
         }
         return shouldInclude;
       }
     );
-    setColumns(newColumns)
-  }, [curiumAccount, currentAccount, inboxLastFetched]);
+    setColumns(newColumns);
+  }, [accountMatchesCurium, currentAccount, inboxLastFetched]);
+
   return [columns, getInboxState, inboxDecrypted, warningMsg];
 }
 
