@@ -20,7 +20,7 @@ export interface ComposeState {
 }
 
 /**
- * The intent of this hook is to separate the state(logic) of the ComposePage, for better readability of Outbox Page which
+ * The intent of this hook is to separate the state(logic) of the Compose Page, for better readability of Compose Page which
  * should mainly focus on UI
  */
 

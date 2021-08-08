@@ -21,7 +21,7 @@ const INBOX_ERROR_BACKEND = "Sorry, something went wrong. Please try again later
 const INBOX_EMPTY = "Your Inbox Is Empty!"
 
 /**
- * The intent of this hook is to separate the state(logic) of the OutboxPage, for better readability of Outbox Page which
+ * The intent of this hook is to separate the state(logic) of the InboxPage, for better readability of Inbox Page which
  * should mainly focus on UI
  */
 
