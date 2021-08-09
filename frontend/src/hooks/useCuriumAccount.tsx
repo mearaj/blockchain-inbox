@@ -41,4 +41,5 @@ const useCuriumAccount = () => {
   return [curiumAccount];
 }
 
+
 export default useCuriumAccount;
