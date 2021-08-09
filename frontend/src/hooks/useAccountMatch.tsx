@@ -2,7 +2,7 @@ import {AppState} from 'store';
 import {useSelector} from 'react-redux';
 import {useEffect, useState} from 'react';
 import {bluzelleChain} from 'chains';
-import useCuriumAccount from 'guards/CuriumConnectionRequired/useCuriumAccount';
+import useCuriumAccount from 'hooks/useCuriumAccount';
 
 
 /**

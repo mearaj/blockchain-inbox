@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux';
 import {AppState} from 'store';
 import {BLUZELLE_CHAIN_ID} from 'config';
 import {Button} from '@material-ui/core';
-import useCuriumAccount from 'guards/CuriumConnectionRequired/useCuriumAccount';
+import useCuriumAccount from 'hooks/useCuriumAccount';
 
 
 // This guard assumes the route is already protected with CuriumRequired and BluzelleAccountRequired
