@@ -11,10 +11,8 @@ import {
 } from 'store/Account/reducers/accounts';
 
 export const initialState: AccountsState = {
-  //curiumAccount: undefined,
   currentAccount: undefined,
   accounts: [],
-
 };
 export const accountsSlice = createSlice({
   name: 'accountsState',

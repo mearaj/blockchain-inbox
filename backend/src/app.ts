@@ -3,9 +3,10 @@ import {initSDK} from 'db/bluzelleSdk';
 import express, {Express} from 'express';
 import cors from 'cors';
 import router from 'routes';
-import {PORT} from 'config';
+import {NODE_ENV, PORT} from 'config';
 
 let app:Express;
+
 
 export const startServer = async ():Promise<Express> => {
   if (app) {
@@ -18,7 +19,7 @@ export const startServer = async ():Promise<Express> => {
   app.use(cors());
   app.use(router);
   app.listen(PORT, () => {
-    console.log(`App running on ${PORT}`);
+    console.log(`App running in ${NODE_ENV} mode on port ${PORT}`);
   });
   return app;
 }

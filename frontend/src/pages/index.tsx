@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import Sidebar from 'components/Sidebar';
 import InboxPage from 'pages/Inbox';
 
@@ -12,14 +12,21 @@ import GlobalLoader from 'components/GlobalLoader';
 import SentMsgDetail from 'pages/SentMsgDetail';
 import InboxMsgDetail from 'pages/InboxMsgDetail';
 import OutboxMsgDetail from 'pages/OutboxMsgDetail';
+import {useDispatch, useSelector} from 'react-redux';
+import {accountsActions, AppState} from 'store';
 
 const Pages: React.FC = () => {
   const classes = useStyles();
+  const currentAccount = useSelector((appState:AppState)=> appState.accountsState.currentAccount);
+  const dispatch = useDispatch();
 
-  const handleKeplrAccountChange = () => {
+  const handleKeplrAccountChange = useCallback(() => {
     console.log("handleKeplrAccountChange, Key store in Keplr is changed. You may need to refetch the account info.");
-    window.location.reload();
-  }
+    // The intent of this dispatch is to update App's account because curium account is changed
+    if (currentAccount) {
+      dispatch(accountsActions.setCurrentAccount({...currentAccount}));
+    }
+  },[currentAccount, dispatch]);
 
   useEffect(() => {
     const timerID = setTimeout(async () => {
@@ -27,7 +34,7 @@ const Pages: React.FC = () => {
       return () => window.removeEventListener("keplr_keystorechange", handleKeplrAccountChange);
     });
     return () => clearTimeout(timerID);
-  });
+  },[handleKeplrAccountChange]);
 
   return (
     <>
