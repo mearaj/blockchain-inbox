@@ -19,7 +19,7 @@ export const persistConfig = {
   key: 'root',
   storage,
   //whitelist: []
-  blacklist: ['register', 'loaderState', 'curiumAccount']
+  blacklist: ['register', 'loaderState']
 };
 
 export type AppState = ReturnType<typeof appReducer>

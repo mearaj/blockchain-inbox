@@ -2,6 +2,7 @@ import {AppState} from 'store';
 import {useSelector} from 'react-redux';
 import {useEffect, useState} from 'react';
 import {bluzelleChain} from 'chains';
+import useCuriumAccount from 'guards/CuriumConnectionRequired/useCuriumAccount';
 
 
 /**
@@ -10,7 +11,7 @@ import {bluzelleChain} from 'chains';
 
 export const useAccountMatch = () => {
   const currentAccount = useSelector((appState: AppState) => appState.accountsState.currentAccount);
-  const curiumAccount = useSelector((appState: AppState) => appState.accountsState.curiumAccount);
+  const [curiumAccount] = useCuriumAccount();
   const [found, setFound] = useState(false);
 
   useEffect(() => {
@@ -20,6 +21,7 @@ export const useAccountMatch = () => {
       currentAccount.publicKey===curiumAccount.pubKey &&
       currentAccount.chainName===bluzelleChain.name &&
       window.keplr);
+    // Only update when current state mismatches
     if (isMatched !== found) {
       setFound(isMatched);
     }

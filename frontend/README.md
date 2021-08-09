@@ -66,20 +66,20 @@ To get credentials for public/private testnet of Bluzelle Refer to https://www.n
     chain:  "Bluzelle",
     chainName:  "Bluzelle Mainnet",
     mnemonics: "private edit sound excess glad brave enrich leg able define bar submit agent section visual stay observe ivory ramp nothing direct camp target badge",
-    privateKey2:"3b9c7d7954789659d6371b579f0c2de9104430cca55c0a8e957ad2a7f5c64ff0",
    privateKey1:"6e95e98f7b6edb24e0759f35520c842d3439646890b77766ce8d99f61ecff0a6",
-    publicKey2: "026238abd02a4db36ebfbddc47ea155348d169aa5bad1ff6fb01a55db7fcd595dc",
    publicKey1:"020e48ba3ec106a0ca8ab8e5910a9585e7dd6b0990298cf7d4871070f6e2d9c1d5",
+    privateKey2:"3b9c7d7954789659d6371b579f0c2de9104430cca55c0a8e957ad2a7f5c64ff0",
+    publicKey2: "026238abd02a4db36ebfbddc47ea155348d169aa5bad1ff6fb01a55db7fcd595dc",
     address:"bluzelle16h8ztzz09p3qhg0mcrxfpxxv2zu0ay0hpuftvf"}
 
 3. ```{
     chain:  "Bluzelle",
     chainName:  "Bluzelle Mainnet",
     mnemonics: "crunch digital library parent female spell rose comic rotate clock camera snap income outside notable feel scorpion obtain transfer aim water security scene prepare",
-     privateKey2:"af62382477733e0ff6be03d693f446e8ef1286c5d1d8ceca6824f11d75e01bf4",
     privateKey1:"f3c27c81c86a0a3b22953839a48834a8d8cd934698bbb9e43f9c118ef7e9f709",
-   publicKey2:"0208bca55febd601b17cf589b5ab3f030166da624c5af36f2ea1c6954469417807"
     publicKey1: "038a0f08be416eaaaca68027a4196f2ba54d3fe1463118d45de767b4c1689d9e1b"
+     privateKey2:"af62382477733e0ff6be03d693f446e8ef1286c5d1d8ceca6824f11d75e01bf4",
+   publicKey2:"0208bca55febd601b17cf589b5ab3f030166da624c5af36f2ea1c6954469417807"
    }
 
 ## Issues

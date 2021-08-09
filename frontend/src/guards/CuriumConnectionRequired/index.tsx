@@ -1,41 +1,19 @@
-import React, {PropsWithChildren, useCallback, useEffect, useState} from 'react';
+import React, {PropsWithChildren, useEffect, useState} from 'react';
 import useStyles from './styles';
 import CommonBar from 'components/CommonBar';
-import {useDispatch, useSelector} from 'react-redux';
-import {accountsActions, AppState} from 'store';
+import {useSelector} from 'react-redux';
+import {AppState} from 'store';
 import {BLUZELLE_CHAIN_ID} from 'config';
-import {Key} from '@keplr-wallet/types';
 import {Button} from '@material-ui/core';
+import useCuriumAccount from 'guards/CuriumConnectionRequired/useCuriumAccount';
 
 
 // This guard assumes the route is already protected with CuriumRequired and BluzelleAccountRequired
 const CuriumConnectionRequired: React.FC<PropsWithChildren<any>> = (props) => {
-
-  const dispatch = useDispatch();
   const accountsState = useSelector((appState: AppState) => appState.accountsState)
-  const {currentAccount, curiumAccount} = accountsState;
+  const {currentAccount} = accountsState;
+  const [curiumAccount] = useCuriumAccount();
   const [isEnabled, setIsEnabled] = useState(true);
-
-  const checkAccount = useCallback(async () => {
-    try {
-      const results: Key | undefined = await window.keplr?.getKey(BLUZELLE_CHAIN_ID);
-      if (results) {
-        const publicKey = Buffer.from(results.pubKey).toString('hex');
-        const address = Buffer.from(results.address).toString('hex');
-        dispatch(accountsActions.setCuriumAccount({
-          address: address,
-          algo: results.algo,
-          bech32Address: results.bech32Address,
-          name: results.name,
-          pubKey: publicKey,
-        }));
-      } else {
-        dispatch(accountsActions.setCuriumAccount(undefined));
-      }
-    } catch (e) {
-      dispatch(accountsActions.setCuriumAccount(undefined));
-    }
-  }, [dispatch]);
 
   const requestEnablePermission = async () => {
     try {
@@ -46,14 +24,12 @@ const CuriumConnectionRequired: React.FC<PropsWithChildren<any>> = (props) => {
     }
   }
 
-
   useEffect(() => {
     const timerId = setTimeout(async () => {
       await requestEnablePermission();
-      await checkAccount();
     },);
     return () => clearTimeout(timerId);
-  }, [currentAccount, checkAccount]);
+  }, [currentAccount]);
 
   const classes = useStyles();
 

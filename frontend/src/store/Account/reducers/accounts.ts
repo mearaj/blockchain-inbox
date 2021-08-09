@@ -1,4 +1,4 @@
-import {Account, AccountsState, CuriumAccount} from 'store/Account/interfaces';
+import {Account, AccountsState} from 'store/Account/interfaces';
 import {PayloadAction} from '@reduxjs/toolkit';
 
 export const addUpdateAccount = (state: AccountsState, action: PayloadAction<Account>) => {
@@ -23,10 +23,6 @@ export const setAccounts = (state: AccountsState, action: PayloadAction<Account[
 }
 export const setCurrentAccount = (state: AccountsState, action: PayloadAction<Account>) => {
   state.currentAccount = action.payload;
-}
-
-export const setCuriumAccount = (state: AccountsState, action: PayloadAction<CuriumAccount | undefined>) => {
-  state.curiumAccount = action.payload;
 }
 
 export const setCurrentAccountAuth = (state: AccountsState, action: PayloadAction<string>) => {

@@ -17,7 +17,6 @@ export interface CuriumAccount {
 
 
 export interface AccountsState {
-  curiumAccount: CuriumAccount | undefined,
   currentAccount: Account | undefined;
   accounts: Account[];
 }
