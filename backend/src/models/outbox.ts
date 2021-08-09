@@ -84,7 +84,7 @@ export const outboxMessageSchema = new Schema<OutboxMessage>(
       trim: true,
       minLength: 1,
     },
-  }
+  }, {timestamps: true}
 )
 export const OutboxMessageModel: Model<OutboxMessage> = model<OutboxMessage>('OutboxMessage', outboxMessageSchema, 'outbox');
 

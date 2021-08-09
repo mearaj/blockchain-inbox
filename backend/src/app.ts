@@ -4,11 +4,12 @@ import express, {Express} from 'express';
 import cors from 'cors';
 import router from 'routes';
 import {NODE_ENV, PORT} from 'config';
+import {errorRequestHandler} from 'controllers/error';
 
-let app:Express;
+let app: Express;
 
 
-export const startServer = async ():Promise<Express> => {
+export const startServer = async (): Promise<Express> => {
   if (app) {
     return app;
   }
@@ -18,6 +19,7 @@ export const startServer = async ():Promise<Express> => {
   app.use(express.json());
   app.use(cors());
   app.use(router);
+  app.use(errorRequestHandler);
   app.listen(PORT, () => {
     console.log(`App running in ${NODE_ENV} mode on port ${PORT}`);
   });

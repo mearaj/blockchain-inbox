@@ -6,6 +6,6 @@ import {authGuard} from 'controllers/guards/auth';
 export const router = Router();
 
 router.post(LOGIN_ENDPOINT, loginController);
-router.get(LOGIN_ENDPOINT, authGuard,isLoggedInController);
+router.get(LOGIN_ENDPOINT, authGuard, isLoggedInController);
 
 export default router;

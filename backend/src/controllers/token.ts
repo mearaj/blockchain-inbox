@@ -13,7 +13,7 @@ export const requestLoginToken: RequestHandler = async (req, res, next) => {
   }
   let account = await AccountModel.findOne({publicKey, chainName});
   if (!account) {
-    const newAccount:Account = {chainName,publicKey,loginTokens:[], authTokens:[]}
+    const newAccount: Account = {chainName, publicKey, loginTokens: [], authTokens: []}
     account = new AccountModel(newAccount);
   }
   account.chainName = chainName;

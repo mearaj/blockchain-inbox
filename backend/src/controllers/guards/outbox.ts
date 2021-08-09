@@ -9,7 +9,7 @@ export const onlyBluzelleAccount: RequestHandler = async (req, res, next) => {
   try {
     const account = (req as any).account as Account;
 
-    if (account.chainName !=='Bluzelle Mainnet') {
+    if (account.chainName!=='Bluzelle Mainnet') {
       return res.status(401).json({
         error: {
           message: "Bluzelle/Curium login required for this request!"

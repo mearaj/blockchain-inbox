@@ -1,11 +1,10 @@
 import {RequestHandler} from 'express';
 import {Account} from 'models/account';
 import {initSDK} from 'db/bluzelleSdk';
-import {INBOX_ENDPOINT, INBOX_RENEW_LEASE_ENDPOINT, SENT_ENDPOINT, SENT_RENEW_LEASE_ENDPOINT} from 'config';
+import {INBOX_ENDPOINT, SENT_ENDPOINT} from 'config';
 import {DeleteMessageReqBody, Message} from 'models/message';
 import {TextDecoder} from 'util';
 import {getLeaseFromSeconds} from 'utils/helpers';
-import {RenewLeaseReqBody} from 'models/lease';
 
 export const getMessagesController: RequestHandler = async (req, res, next) => {
   try {

@@ -1,8 +1,6 @@
 import {connect, Mongoose} from 'mongoose';
 import {MONGO_URI} from 'config';
 
-console.log(MONGO_URI);
-
 let mongooseConnection: Mongoose;
 export const initMongodb = async () => {
   if (mongooseConnection) {
@@ -16,5 +14,5 @@ export const initMongodb = async () => {
   return mongooseConnection
 }
 
-initMongodb().then(() => console.log("mongodbInitialised"));
+initMongodb().then(() => console.log("MongoDB Initialised..."));
 

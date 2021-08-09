@@ -1,7 +1,8 @@
-// 1. Create an interface representing a document in MongoDB.
 import {model, Schema} from 'mongoose';
 import {LoginToken} from 'models/token';
 
+
+// 1. Create an interface representing a document in MongoDB.
 export interface Account {
   publicKey: string;
   chainName: string;
@@ -33,11 +34,11 @@ const accountSchema = new Schema<Account>({
     type: String,
     required: true
   }]
-});
+}, {timestamps: true});
 
 accountSchema.index({publicKey: 1, chainName: 1}, {unique: true});
 
 
 // 3. Create a Model.
-export const AccountModel = model<Account>('Account', accountSchema,'accounts');
+export const AccountModel = model<Account>('Account', accountSchema, 'accounts');
 

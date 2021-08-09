@@ -4,7 +4,7 @@ export interface TokenRequestBody {
 }
 
 export interface TokenResponseBody {
-  token:string;
+  token: string;
 }
 
 export interface LoginRequestBody {

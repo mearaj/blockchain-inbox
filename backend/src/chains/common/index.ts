@@ -8,7 +8,7 @@ export enum AllowedChainEnum {
 
 
 export const ethChains: ChainShortInfo[] = evmChains.filter(
-  (chain: ChainInfo) => chain.chain === AllowedChainEnum.ETH)
+  (chain: ChainInfo) => chain.chain===AllowedChainEnum.ETH)
   .map((chain: ChainInfo) => ({
       name: chain.name,
       chain: chain.chain
@@ -20,6 +20,6 @@ export const bluzelleChain = {
   chain: "Bluzelle"
 };
 
-export const allowedChains:ChainShortInfo[] = [...ethChains, bluzelleChain];
+export const allowedChains: ChainShortInfo[] = [...ethChains, bluzelleChain];
 
 export {verifyPublicKeyFormat} from './helpers';

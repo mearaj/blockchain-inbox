@@ -1,5 +1,6 @@
 import {RequestHandler} from 'express';
 import {OutboxMessageModel} from 'models/outbox';
+import {Error} from 'mongoose';
 
 
 export const getInboxMessageByIdController: RequestHandler = async (req, res, next) => {
@@ -7,7 +8,9 @@ export const getInboxMessageByIdController: RequestHandler = async (req, res, ne
     const id = req.params['id'];
     const result = await OutboxMessageModel.findById(id);
     if (!result) {
-      return res.status(404).send();
+      const error = new Error("Message Not Found!");
+      res.status(404)
+      next(error);
     }
     return res.json(result);
   } catch (e) {

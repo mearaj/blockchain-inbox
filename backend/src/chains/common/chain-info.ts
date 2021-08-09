@@ -12,9 +12,9 @@ export interface ChainInfo {
   faucets: string[],
   explorers?: ChainExplorer[],
   infoURL: string
-  slip44?:number;
+  slip44?: number;
   icon?: string;
-  ens?: {registry:string}
+  ens?: { registry: string }
   parent?: {
     chain: string,
     type: string

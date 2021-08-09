@@ -13,7 +13,7 @@ let bluzelleSdk: BluzelleSdk;
 
 // the bluzelleSdk doesn't throws error if invalid url is provided, hence intentionally crashing the app if it's
 // undefined
-setTimeout( ()=> {
+setTimeout(() => {
   if (!bluzelleSdk) {
     console.log("bluzelleSdk is not defined!, exiting app...");
     process.exit(1);
@@ -31,7 +31,7 @@ export const initSDK = async () => {
   return bluzelleSdk;
 };
 
-initSDK().then(() => console.log("bluzelleSdkInitialized"));
+initSDK().then(() => console.log("Bluzelle SDK Initialized..."));
 
 // "frontend"
 // "bluzelle1pm2902v7z87ektlngvqy23yd4geahd2j03mg3v"

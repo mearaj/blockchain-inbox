@@ -14,7 +14,6 @@ export const LOGIN_TOKEN_THRESHOLD = process.env.LOGIN_TOKEN_THRESHOLD || 1000 *
 export const NODE_ENV = process.env.NODE_ENV || "development";
 
 
-
 // Alternate configuration, if using local Mongo Server
 //export const MONGO_URI = process.env.MONGO_URI || "mongodb://blockchain-inbox:blockchain-inbox@localhost:27017/blockchain-inbox?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 
@@ -28,7 +27,6 @@ export const CLAIM_ENDPOINT = `${ENDPOINT}/claim`;
 export const SENT_ENDPOINT = `${ENDPOINT}/sent`;
 export const SENT_RENEW_LEASE_ENDPOINT = `${SENT_ENDPOINT}/renew`;
 export const LOGOUT_ENDPOINT = `${ENDPOINT}/logout`;
-
 
 
 // JWT SECRET

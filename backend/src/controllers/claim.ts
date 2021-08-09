@@ -10,7 +10,7 @@ export const getClaimController: RequestHandler = async (req, res, next) => {
   try {
     const claimMessage = req.body as ClaimMessage;
     if (!claimMessage || !claimMessage.id || !claimMessage.signed || !claimMessage.signature) {
-      return res.status(404).send({error:{message:'Not Found!'}});
+      return res.status(404).send({error: {message: 'Not Found!'}});
     }
     const message = await OutboxMessageModel.findOne({id: claimMessage.id});
     if (!message) {

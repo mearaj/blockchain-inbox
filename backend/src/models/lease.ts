@@ -3,7 +3,7 @@ import {StdSignature, StdSignDoc} from '@cosmjs/amino';
 
 export interface RenewLeaseReqBody {
   id: string;
-  lease:Lease;
+  lease: Lease;
   signature: StdSignature;
   signed: StdSignDoc;
 }
