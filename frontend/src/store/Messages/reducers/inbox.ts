@@ -1,10 +1,11 @@
 import {MessagesState} from 'store/Messages/interfaces';
 import {PayloadAction} from '@reduxjs/toolkit';
-import {DeleteMessageReqBody, InboxMessage, RenewLeaseReqBody} from 'api';
+import {InboxMessage} from 'api/inbox';
+import {DeleteMessageReqBody, RenewLeaseReqBody} from 'api/interfaces';
 
 
 // Handled by getInboxSaga
-export const getInbox = (state: MessagesState, action: PayloadAction) => {
+export const getInbox = (_state: MessagesState, _action: PayloadAction) => {
 }
 
 export const getInboxPending = (state: MessagesState, action: PayloadAction) => {
@@ -31,9 +32,9 @@ export const setInboxMsgDetail = (state: MessagesState, action: PayloadAction<In
   state.inboxMsgDetail = action.payload;
 }
 
-export const renewInboxMsgLease = (state: MessagesState, action: PayloadAction<RenewLeaseReqBody>) => {
+export const renewInboxMsgLease = (_state: MessagesState, _action: PayloadAction<RenewLeaseReqBody>) => {
 }
 
-export const deleteInboxMessage = (state: MessagesState, action: PayloadAction<DeleteMessageReqBody>) => {
+export const deleteInboxMessage = (_state: MessagesState, _action: PayloadAction<DeleteMessageReqBody>) => {
 }
 

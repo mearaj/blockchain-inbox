@@ -1,13 +1,14 @@
 import {call, put, select} from 'redux-saga/effects';
 import {AppState} from 'store/reducer';
 import {AxiosResponse} from 'axios';
-import {api, RenewLeaseReqBody, SentMessage} from 'api';
+import {api} from 'api';
 import {messagesAction} from 'store/Messages/reducers';
 import {bluzelleChain} from 'chains';
 import {accountsActions} from 'store/Account/reducers';
 import {PayloadAction} from '@reduxjs/toolkit';
 import {Account} from 'store/Account';
 import {loaderActions} from 'store/Loader';
+import {RenewLeaseReqBody, SentMessage} from 'api/interfaces';
 
 export function* getSentSaga() {
   const appState: AppState = yield select();

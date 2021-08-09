@@ -1,11 +1,12 @@
 import {call, put} from 'redux-saga/effects';
-import {login, requestLoginToken, TokenResponseBody} from 'api';
 import {PayloadAction} from '@reduxjs/toolkit';
 import {SagaTokenRequestBody} from 'store/Account/interfaces';
 import {allChains, signToken} from 'chains/common';
 import {loaderActions} from 'store/Loader';
 import {accountsActions} from 'store/Account/reducers';
 import {AxiosResponse} from 'axios';
+import {login, requestLoginToken} from 'api/login';
+import {TokenResponseBody} from 'api/interfaces';
 
 const getChain = (chainName: string) => allChains.find((chain) => chain.name===chainName);
 

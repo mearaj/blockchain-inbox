@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react';
 import dataColumns, {outboxColumnFieldsMappings} from 'pages/Outbox/columns';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState, messagesAction} from 'store';
-import {OutboxMessage} from 'api';
 import {
   getColumnDateCreatedValue,
   getColumnLeaseString,
@@ -12,6 +11,7 @@ import {
 } from 'utils/columns/common';
 import {getOutboxDecryptedMessages} from 'utils/columns/outbox'
 import {GridColDef} from '@material-ui/data-grid';
+import {OutboxMessage} from 'api/interfaces';
 
 const OUTBOX_ERROR_BACKEND = "Sorry, something went wrong. Please try again later"
 const OUTBOX_EMPTY = "Your Outbox Is Empty!"

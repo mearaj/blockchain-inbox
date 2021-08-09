@@ -2,12 +2,13 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import {call, put, select} from 'redux-saga/effects';
 import {AppState} from 'store/reducer';
 import {AxiosResponse} from 'axios';
-import {api, OutboxMessage} from 'api';
+import {api} from 'api';
 import {messagesAction} from 'store/Messages/reducers';
 import {bluzelleChain} from 'chains';
 import {accountsActions} from 'store/Account/reducers';
+import {OutboxMessage} from 'api/interfaces';
 
-export function* getOutboxSaga(action: PayloadAction) {
+export function* getOutboxSaga(_action: PayloadAction) {
   const appState: AppState = yield select();
   const currentAccount = appState.accountsState.currentAccount;
   if (currentAccount && currentAccount.chainName===bluzelleChain.name) {
@@ -29,7 +30,7 @@ export function* getOutboxSaga(action: PayloadAction) {
   }
 }
 
-export function* deleteOutboxMessageSaga(action: PayloadAction) {
+export function* deleteOutboxMessageSaga(_action: PayloadAction) {
   const appState: AppState = yield select();
   const id: string = appState.messagesState.claimMessageId;
   const currentAccount = appState.accountsState.currentAccount;

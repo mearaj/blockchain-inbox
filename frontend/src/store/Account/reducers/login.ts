@@ -3,4 +3,4 @@ import {PayloadAction} from '@reduxjs/toolkit';
 
 
 // Note: handled by loginSaga
-export const login = (state: AccountsState, action: PayloadAction<SagaTokenRequestBody>) => state;
+export const login = (state: AccountsState, _action: PayloadAction<SagaTokenRequestBody>) => state;

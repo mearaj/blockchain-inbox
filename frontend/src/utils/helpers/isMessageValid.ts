@@ -5,4 +5,3 @@ export const isMessageValid = (message: string): { isValid: boolean, error: stri
   return {error: "", isValid: true};
 }
 
-export default isMessageValid;

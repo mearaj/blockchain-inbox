@@ -4,7 +4,6 @@ import CommonBar from 'components/CommonBar';
 import useStyles from './styles';
 import {messagesAction} from 'store';
 import {useDispatch} from 'react-redux';
-import {InboxMessage} from 'api';
 import {CircularProgress, Typography} from '@material-ui/core';
 import {DataGrid, GridCellParams, GridRowParams} from '@material-ui/data-grid';
 import LoginRequired from 'guards/LoginRequired';
@@ -13,6 +12,7 @@ import useInboxState from 'pages/Inbox/useInboxState';
 import RenewLeaseDialog from 'dialogs/RenewLease';
 import {inboxColumnFieldsMappings} from 'pages/Inbox/columns';
 import DeleteMessageDialog from 'dialogs/DeleteMessage';
+import {InboxMessage} from 'api/inbox';
 
 
 const InboxPage: React.FC = () => {
@@ -26,7 +26,7 @@ const InboxPage: React.FC = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const onRowClickHandler = (param: GridRowParams, event: MouseEvent) => {
+  const onRowClickHandler = (param: GridRowParams, _event: MouseEvent) => {
     const inboxDetail = param.row as InboxMessage;
     dispatch(messagesAction.setInboxMsgDetail(inboxDetail));
     history.push('/inbox/detail');

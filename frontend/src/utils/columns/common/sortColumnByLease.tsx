@@ -9,5 +9,3 @@ export const sortColumnByLease = (v1: GridCellValue, v2: GridCellValue, cellPara
   const v2LeaseSeconds = getSecondsFromLease(v2Lease);
   return v1LeaseSeconds - v2LeaseSeconds;
 };
-
-export default sortColumnByLease;

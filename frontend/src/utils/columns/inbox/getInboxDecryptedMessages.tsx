@@ -1,6 +1,6 @@
 import {getDecryptedMessageFromPrivateKey} from 'chains';
-import {InboxMessage} from 'api';
 import {Account} from 'store';
+import {InboxMessage} from 'api/inbox';
 
 export const getInboxDecryptedMessages = async (inbox: InboxMessage[], currentAccount: Account): Promise<InboxMessage[]> => {
   return await Promise.all(inbox.map(async (eachInbox) => {

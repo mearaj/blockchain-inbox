@@ -1,6 +1,6 @@
 import {getDecryptedMessageFromPrivateKey} from 'chains';
-import {SentMessage} from 'api';
 import {Account} from 'store';
+import {SentMessage} from 'api/interfaces';
 
 export const getSentDecryptedMessages = async (sent: SentMessage[], currentAccount: Account): Promise<SentMessage[]> => {
   return await Promise.all(sent.map(async (eachSent) => {

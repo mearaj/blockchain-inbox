@@ -1,5 +1,6 @@
-import {InboxMessage, OutboxMessage, SentMessage} from 'api';
 import {AminoSignResponse, StdSignature, StdSignDoc} from '@cosmjs/launchpad';
+import {InboxMessage} from 'api/inbox';
+import {OutboxMessage, SentMessage} from 'api/interfaces';
 
 
 export interface MessagesState {

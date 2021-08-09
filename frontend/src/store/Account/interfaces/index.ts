@@ -1,4 +1,4 @@
-import {TokenRequestBody} from 'api';
+import {TokenRequestBody} from 'api/interfaces';
 
 export interface Account {
   chainName: string,

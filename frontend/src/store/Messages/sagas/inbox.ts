@@ -2,13 +2,15 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import {call, put, select} from 'redux-saga/effects';
 import {AppState} from 'store/reducer';
 import {AxiosResponse} from 'axios';
-import {api, InboxMessage, RenewLeaseReqBody} from 'api';
+import {api} from 'api';
 import {messagesAction} from 'store/Messages/reducers';
 import {accountsActions} from 'store/Account/reducers';
 import {loaderActions} from 'store/Loader';
 import {Account} from 'store/Account';
+import {InboxMessage} from 'api/inbox';
+import {RenewLeaseReqBody} from 'api/interfaces';
 
-export function* getInboxSaga(action: PayloadAction) {
+export function* getInboxSaga(_action: PayloadAction) {
   const appState: AppState = yield select();
   const currentAccount = appState.accountsState.currentAccount;
   if (currentAccount) {

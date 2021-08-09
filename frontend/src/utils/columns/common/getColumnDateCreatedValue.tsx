@@ -5,5 +5,3 @@ export const getColumnDateCreatedValue = (params: GridValueGetterParams) => {
   return `${new Date(timestamp).toDateString()}`
 }
 
-export default getColumnDateCreatedValue;
-

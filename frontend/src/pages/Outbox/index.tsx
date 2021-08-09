@@ -5,12 +5,12 @@ import useStyles from './styles';
 import CuriumRequired from 'guards/CuriumRequired';
 import {messagesAction} from 'store';
 import {useDispatch} from 'react-redux';
-import {OutboxMessage} from 'api';
 import {CircularProgress, Typography} from '@material-ui/core';
 import BluzelleAccountRequired from 'guards/BluzelleAccountRequired';
 import {DataGrid, GridRowParams} from '@material-ui/data-grid';
 import {useHistory} from 'react-router-dom';
 import useOutboxPageState from 'pages/Outbox/useOutboxPageState';
+import {OutboxMessage} from 'api/interfaces';
 
 const OutboxPage: React.FC = () => {
   const classes = useStyles();

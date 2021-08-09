@@ -36,7 +36,7 @@ const BluzelleAccountRequired: React.FC<PropsWithChildren<any>> = (props) => {
           className={classes.button}
           color="primary"
           variant="contained"
-          onClick={(event) => history.push('/account')}
+          onClick={(_event) => history.push('/account')}
         >
           My Account
         </Button>

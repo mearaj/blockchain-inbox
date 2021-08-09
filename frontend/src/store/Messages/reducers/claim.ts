@@ -3,7 +3,7 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import {StdSignature, StdSignDoc} from '@cosmjs/launchpad';
 
 // Handled by claimMessageSage
-export const claimMessage = (state: MessagesState, action: PayloadAction<{ signature: StdSignature, signed: StdSignDoc }>) => {
+export const claimMessage = (_state: MessagesState, _action: PayloadAction<{ signature: StdSignature, signed: StdSignDoc }>) => {
 
 }
 

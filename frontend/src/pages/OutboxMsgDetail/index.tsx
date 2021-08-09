@@ -5,9 +5,9 @@ import {Button, Card, FormLabel, TextField, Typography} from '@material-ui/core'
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState, messagesAction} from 'store';
 import {Redirect, useHistory} from 'react-router-dom';
-import {OutboxMessage} from 'api';
 import {ArrowBack} from '@material-ui/icons';
 import {getLeaseString} from 'utils/helpers';
+import {OutboxMessage} from 'api/interfaces';
 
 
 const OutboxMsgDetail: React.FC = () => {

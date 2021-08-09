@@ -5,7 +5,6 @@ import useStyles from './styles';
 import CuriumRequired from 'guards/CuriumRequired';
 import {messagesAction} from 'store';
 import {useDispatch} from 'react-redux';
-import {SentMessage} from 'api';
 import {CircularProgress, Typography} from '@material-ui/core';
 import BluzelleAccountRequired from 'guards/BluzelleAccountRequired';
 import {DataGrid, GridCellParams, GridRowParams} from '@material-ui/data-grid';
@@ -14,6 +13,7 @@ import useSentPageState from 'pages/Sent/useSentPageState';
 import RenewLeaseDialog from 'dialogs/RenewLease';
 import {sentColumnFieldsMappings} from 'pages/Sent/columns';
 import DeleteMessageDialog from 'dialogs/DeleteMessage';
+import {SentMessage} from 'api/interfaces';
 
 
 const SentPage: React.FC = () => {
@@ -26,7 +26,7 @@ const SentPage: React.FC = () => {
   const history = useHistory();
 
 
-  const onRowClickHandler = (param: GridRowParams, event: MouseEvent) => {
+  const onRowClickHandler = (param: GridRowParams, _event: MouseEvent) => {
     const sentDetail = param.row as SentMessage;
     dispatch(messagesAction.setSentMsgDetail(sentDetail));
     history.push('/sent/detail');

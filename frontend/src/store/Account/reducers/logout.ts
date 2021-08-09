@@ -3,4 +3,4 @@ import {PayloadAction} from '@reduxjs/toolkit';
 
 
 // Note: handled by logoutSaga
-export const logout = (state: AccountsState, action: PayloadAction<Account>) => state;
+export const logout = (state: AccountsState, _action: PayloadAction<Account>) => state;

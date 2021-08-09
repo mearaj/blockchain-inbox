@@ -1,10 +1,10 @@
 import {MessagesState} from 'store/Messages/interfaces';
 import {PayloadAction} from '@reduxjs/toolkit';
-import {OutboxMessage} from 'api';
+import {OutboxMessage} from 'api/interfaces';
 
 
 // Handled by getOutboxSaga
-export const getOutbox = (state: MessagesState, action: PayloadAction) => {
+export const getOutbox = (_state: MessagesState, _action: PayloadAction) => {
 }
 
 export const getOutboxPending = (state: MessagesState, action: PayloadAction) => {
@@ -24,7 +24,7 @@ export const setOutbox = (state: MessagesState, action: PayloadAction<OutboxMess
 }
 
 // Handled by deleteOutboxMessageSaga
-export const deleteOutboxMessage = (state: MessagesState) => {
+export const deleteOutboxMessage = (_state: MessagesState) => {
 }
 
 export const deleteOutboxMessagePending = (state: MessagesState, action: PayloadAction) => {

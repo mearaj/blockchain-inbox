@@ -5,7 +5,7 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import {useTheme} from '@material-ui/core/styles';
 import clsx from 'clsx';
 import {AccountBox, AddBox, PresentToAll, SmsFailed} from '@material-ui/icons';
-import {BrowserRouterProps, useHistory, useLocation} from 'react-router-dom';
+import {useHistory, useLocation} from 'react-router-dom';
 
 import useStyles from './styles';
 import {Button, Typography} from '@material-ui/core';
@@ -16,11 +16,7 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import LogoFull from 'components/LogoFull';
 import {sidebarActions} from 'store/Sidebar/reducers';
 
-interface SidebarProps extends BrowserRouterProps {
-}
-
-
-export const Sidebar = (props: SidebarProps) => {
+export const Sidebar: React.FC = () => {
   const classes = useStyles();
   const theme = useTheme();
   const location = useLocation();

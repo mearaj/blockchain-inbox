@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppState, messagesAction} from 'store';
-import {SentMessage} from 'api';
 import {
   getColumnDateCreatedValue,
   getColumnExpiry,
@@ -15,6 +14,7 @@ import getSentDecryptedMessages from 'utils/columns/sent/getSentDecryptedMessage
 import {Button, Typography} from '@material-ui/core';
 import {Delete, Schedule} from '@material-ui/icons';
 import {useAccountMatch} from 'hooks/useAccountMatch';
+import {SentMessage} from 'api/interfaces';
 
 const SENT_ERROR_BACKEND = "Sorry, something went wrong. Please try again later"
 const SENT_EMPTY = "Your Sent Is Empty!"

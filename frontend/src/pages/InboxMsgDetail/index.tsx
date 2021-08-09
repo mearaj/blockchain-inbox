@@ -6,8 +6,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppState, messagesAction} from 'store';
 import {Redirect, useHistory} from 'react-router-dom';
 import {getExpiryFromLease} from 'utils/helpers/getExpiryFromLease';
-import {InboxMessage} from 'api';
 import {ArrowBack} from '@material-ui/icons';
+import {InboxMessage} from 'api/inbox';
 
 
 const InboxMsgDetail: React.FC = () => {

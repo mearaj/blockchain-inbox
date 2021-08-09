@@ -13,8 +13,8 @@ import {
 import {Button, Typography} from '@material-ui/core';
 import {Delete, Schedule} from '@material-ui/icons';
 import {getInboxDecryptedMessages} from 'utils/columns/inbox';
-import {InboxMessage} from 'api';
 import {useAccountMatch} from 'hooks/useAccountMatch';
+import {InboxMessage} from 'api/inbox';
 
 
 const INBOX_ERROR_BACKEND = "Sorry, something went wrong. Please try again later"

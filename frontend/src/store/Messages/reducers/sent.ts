@@ -1,10 +1,10 @@
 import {MessagesState} from 'store/Messages/interfaces';
 import {PayloadAction} from '@reduxjs/toolkit';
-import {DeleteMessageReqBody, RenewLeaseReqBody, SentMessage} from 'api';
+import {DeleteMessageReqBody, RenewLeaseReqBody, SentMessage} from 'api/interfaces';
 
 
 // Handled by getOutboxSaga
-export const getSent = (state: MessagesState, action: PayloadAction) => {
+export const getSent = (_state: MessagesState, _action: PayloadAction) => {
 }
 
 export const getSentPending = (state: MessagesState, action: PayloadAction) => {
@@ -31,10 +31,10 @@ export const setSentMsgDetail = (state: MessagesState, action: PayloadAction<Sen
   state.sentMsgDetail = action.payload;
 }
 
-export const renewSentMsgLease = (state: MessagesState, action: PayloadAction<RenewLeaseReqBody>) => {
+export const renewSentMsgLease = (_state: MessagesState, _action: PayloadAction<RenewLeaseReqBody>) => {
 
 }
-export const deleteSentMessage = (state: MessagesState, action: PayloadAction<DeleteMessageReqBody>) => {
+export const deleteSentMessage = (_state: MessagesState, _action: PayloadAction<DeleteMessageReqBody>) => {
 }
 
 
