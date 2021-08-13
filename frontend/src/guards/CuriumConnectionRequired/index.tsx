@@ -14,6 +14,17 @@ const CuriumConnectionRequired: React.FC<PropsWithChildren<any>> = (props) => {
   const {currentAccount} = accountsState;
   const [curiumAccount] = useCuriumAccount();
   const [isEnabled, setIsEnabled] = useState(true);
+  const [loaded,setLoaded] = useState(false);
+
+
+  useEffect(()=> {
+    const timerId = setTimeout(()=> {
+      if (!loaded) {
+        setLoaded(true);
+      }
+    }, 500)
+    return ()=> clearTimeout(timerId);
+  }, [loaded])
 
   const requestEnablePermission = async () => {
     try {
@@ -34,6 +45,9 @@ const CuriumConnectionRequired: React.FC<PropsWithChildren<any>> = (props) => {
   const classes = useStyles();
 
   const getErrorMsgTitle = (): string => {
+    if (!loaded) {
+      return "";
+    }
     if (!isEnabled) {
       return "Curium Disabled"
     }
@@ -48,6 +62,9 @@ const CuriumConnectionRequired: React.FC<PropsWithChildren<any>> = (props) => {
   }
 
   const getErrorMsg = (): string => {
+    if (!loaded) {
+      return "";
+    }
     if (!isEnabled) {
       return "Curium is disabled, kindly click below to enable it.\n" +
         "Please see that your active Bluzelle account matches Curium"
