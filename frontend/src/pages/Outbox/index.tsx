@@ -35,7 +35,7 @@ const OutboxPage: React.FC = () => {
             <div className={classes.loader}>
               <CircularProgress/>
             </div>
-          },
+          }
           {
             (getOutboxState!==messagesAction.getOutboxPending.type || !outboxDecrypted) &&
             <div className={classes.emptyContainer}>

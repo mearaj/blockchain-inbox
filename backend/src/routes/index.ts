@@ -6,6 +6,7 @@ import outbox from './outbox';
 import claim from './claim';
 import sent from './sent';
 import inbox from './inbox';
+import unknown from "./unknown";
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use(logout);
 router.use(outbox);
 router.use(sent);
 router.use(inbox);
+router.use(unknown);
 
 export default router;

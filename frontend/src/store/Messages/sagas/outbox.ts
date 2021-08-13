@@ -20,8 +20,8 @@ export function* getOutboxSaga(_action: PayloadAction) {
       yield put(messagesAction.getOutboxSuccess());
     } catch (e) {
       console.log(e);
-      if (e.error?.message.toLowerCase().includes("not authorized") ||
-        e.message?.toLowerCase().includes("status code 401")) {
+      if (e.message.toLowerCase().includes("Unauthorized") ||
+        e.message.toLowerCase().includes("status code 401")) {
         yield put(accountsActions.logout(currentAccount));
       }
       yield put(messagesAction.setOutbox([]));
@@ -42,8 +42,8 @@ export function* deleteOutboxMessageSaga(_action: PayloadAction) {
       yield put(messagesAction.getOutbox());
     } catch (e) {
       console.log(e);
-      if (e.error?.message.toLowerCase().includes("not authorized") ||
-        e.message?.toLowerCase().includes("status code 401")) {
+      if (e.message.toLowerCase().includes("Unauthorized") ||
+        e.message.toLowerCase().includes("status code 401")) {
         yield put(accountsActions.logout(currentAccount));
       }
     }

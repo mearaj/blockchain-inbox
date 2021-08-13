@@ -32,9 +32,8 @@ export function* messagesWatcherSaga() {
   yield takeEvery(deleteSentMessage.type, deleteSentMessageSaga);
 }
 
-
-export {getOutboxSaga} from 'store/Messages/sagas/outbox';
-export {sendMessageSaga} from 'store/Messages/sagas/send';
-export {claimMessageSaga} from 'store/Messages/sagas/claim';
-export {getSentSaga} from 'store/Messages/sagas/sent';
-
+export * from './claim';
+export * from './inbox';
+export * from './outbox';
+export * from './send';
+export * from './sent';

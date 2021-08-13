@@ -80,7 +80,7 @@ const SentPage: React.FC = () => {
             <div className={classes.loader}>
               <CircularProgress/>
             </div>
-          },
+          }
           {
             (getSentState!==messagesAction.getSentPending.type || !sentDecrypted) &&
             <div className={classes.emptyContainer}>

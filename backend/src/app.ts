@@ -10,20 +10,21 @@ let app: Express;
 
 
 export const startServer = async (): Promise<Express> => {
-  if (app) {
+    if (app) {
+        return app;
+    }
+    await initMongodb();
+    await initSDK();
+    app = express();
+    app.use(express.json());
+    app.use(cors());
+    app.use(router);
+    app.use(errorRequestHandler);
+    app.listen(PORT, () => {
+        console.log(`App running in ${NODE_ENV} mode on port ${PORT}`);
+    });
     return app;
-  }
-  await initMongodb();
-  await initSDK();
-  app = express();
-  app.use(express.json());
-  app.use(cors());
-  app.use(router);
-  app.use(errorRequestHandler);
-  app.listen(PORT, () => {
-    console.log(`App running in ${NODE_ENV} mode on port ${PORT}`);
-  });
-  return app;
 }
+
 
 export default startServer;

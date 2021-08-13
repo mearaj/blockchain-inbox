@@ -80,7 +80,7 @@ const InboxPage: React.FC = () => {
           <div className={classes.loader}>
             <CircularProgress/>
           </div>
-        },
+        }
         {
           (getInboxState!==messagesAction.getInboxPending.type || !inboxDecrypted) &&
           <div className={classes.emptyContainer}>

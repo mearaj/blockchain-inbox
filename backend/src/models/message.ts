@@ -4,14 +4,14 @@ import {StdSignature, StdSignDoc} from '@cosmjs/amino';
 export type MessageType = "inbox" | "sent" | "outbox"
 
 export interface Message {
-  message: string,
-  lease: Lease,
-  timestamp: number,
-  id: string;
+    message: string,
+    lease: Lease,
+    timestamp: number,
+    id: string;
 }
 
 export interface DeleteMessageReqBody {
-  id: string;
-  signature: StdSignature,
-  signed: StdSignDoc,
+    id: string;
+    signature: StdSignature,
+    signed: StdSignDoc,
 }

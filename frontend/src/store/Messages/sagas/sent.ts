@@ -23,8 +23,8 @@ export function* getSentSaga() {
       yield put(messagesAction.setSent(result));
       yield put(messagesAction.getSentSuccess());
     } catch (e) {
-      if (e.error?.message.toLowerCase().includes("not authorized") ||
-        e.message?.toLowerCase().includes("status code 401")) {
+      if (e.message.toLowerCase().includes("Unauthorized") ||
+        e.message.toLowerCase().includes("status code 401")) {
         yield put(accountsActions.logout(currentAccount));
       }
       yield put(messagesAction.setSent([]));
@@ -39,11 +39,10 @@ export function* renewSentMessageLeaseSaga(action: PayloadAction<RenewLeaseReqBo
   const currentAccount: Account = yield select((state: AppState) => state.accountsState.currentAccount);
   try {
     yield call(api.renewSentMessageLease, currentAccount!.auth, action.payload);
-    yield put(messagesAction.getSent());
   } catch (e) {
     console.log(e);
-    yield put(messagesAction.getSent());
   }
+  yield put(messagesAction.getSent());
   yield put(loaderActions.hideLoader());
 }
 
@@ -52,10 +51,9 @@ export function* deleteSentMessageSaga(action: PayloadAction<RenewLeaseReqBody>)
   const currentAccount: Account = yield select((state: AppState) => state.accountsState.currentAccount);
   try {
     yield call(api.deleteSentMessage, currentAccount!.auth, action.payload);
-    yield put(messagesAction.getSent());
   } catch (e) {
     console.log(e);
-    yield put(messagesAction.getSent());
   }
+  yield put(messagesAction.getSent());
   yield put(loaderActions.hideLoader());
 }

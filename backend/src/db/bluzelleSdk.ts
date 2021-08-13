@@ -3,10 +3,10 @@ import {bluzelle, BluzelleSdk} from '@bluzelle/sdk-js';
 import {SDK_CONNECTION_URL, SDK_GAS_PRICE, SDK_MAX_GAS, SDK_MNEMONIC} from 'config';
 
 const bluzelleConfig: SDKOptions = {
-  mnemonic: SDK_MNEMONIC,
-  url: SDK_CONNECTION_URL,
-  maxGas: SDK_MAX_GAS,
-  gasPrice: SDK_GAS_PRICE,
+    mnemonic: SDK_MNEMONIC,
+    url: SDK_CONNECTION_URL,
+    maxGas: SDK_MAX_GAS,
+    gasPrice: SDK_GAS_PRICE,
 };
 
 let bluzelleSdk: BluzelleSdk;
@@ -14,21 +14,21 @@ let bluzelleSdk: BluzelleSdk;
 // the bluzelleSdk doesn't throws error if invalid url is provided, hence intentionally crashing the app if it's
 // undefined
 setTimeout(() => {
-  if (!bluzelleSdk) {
-    console.log("bluzelleSdk is not defined!, exiting app...");
-    process.exit(1);
-  }
+    if (!bluzelleSdk) {
+        console.log("bluzelleSdk is not defined!, exiting app...");
+        process.exit(1);
+    }
 }, 30000);
 
 export const initSDK = async () => {
-  if (bluzelleSdk!==undefined) {
+    if (bluzelleSdk !== undefined) {
+        return bluzelleSdk;
+    }
+    bluzelleSdk = await bluzelle(bluzelleConfig);
+    if (!bluzelleSdk) {
+        throw ("Unable to initialize bluzelleSdk...");
+    }
     return bluzelleSdk;
-  }
-  bluzelleSdk = await bluzelle(bluzelleConfig);
-  if (!bluzelleSdk) {
-    throw ("Unable to initialize bluzelleSdk...");
-  }
-  return bluzelleSdk;
 };
 
 initSDK().then(() => console.log("Bluzelle SDK Initialized..."));

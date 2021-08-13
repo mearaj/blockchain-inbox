@@ -24,7 +24,7 @@ export function* getInboxSaga(_action: PayloadAction) {
       yield put(messagesAction.getInboxSuccess());
       yield
     } catch (e) {
-      if (e.error?.message.toLowerCase().includes("not authorized") ||
+      if (e.message.toLowerCase().includes("Unauthorized") ||
         e.message?.toLowerCase().includes("status code 401")) {
         yield put(accountsActions.logout(currentAccount));
       }

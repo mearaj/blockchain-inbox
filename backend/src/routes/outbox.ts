@@ -1,10 +1,10 @@
 import {Router} from 'express';
 import {OUTBOX_ENDPOINT} from 'config';
 import {
-  deleteOutboxMessageById,
-  getOutboxController,
-  getOutboxMessageByIdController,
-  saveOutboxMessageController
+    deleteOutboxMessageById,
+    getOutboxController,
+    getOutboxMessageByIdController,
+    saveOutboxMessageController
 } from 'controllers/outbox';
 import {authGuard} from 'controllers/guards/auth';
 import {onlyBluzelleAccount} from 'controllers/guards/outbox';

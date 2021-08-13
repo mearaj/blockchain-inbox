@@ -20,8 +20,8 @@ export function* sendMessageSaga(action: PayloadAction<OutboxMessage>) {
       yield put(messagesAction.setClaimMessageId(id));
     } catch (e) {
       console.log(e);
-      if (e.error?.message.toLowerCase().includes("not authorized") ||
-        e.message?.toLowerCase().includes("status code 401")) {
+      if (e.message.toLowerCase().includes("Unauthorized") ||
+        e.message.toLowerCase().includes("status code 401")) {
         yield put(accountsActions.logout(currentAccount));
       }
     }
