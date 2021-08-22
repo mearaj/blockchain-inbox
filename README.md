@@ -19,15 +19,16 @@ The backend then sends an auth token and this way a secure connection is created
 At this point the user should be able to view his Inbox Messages, no matter what blockchain he belongs to.
 Now if the user wants to send a message to another user, then the user requires [Curium  Browser Extension](https://github.com/bluzelle/blz-extension). The app prompts the user to login with Bluzelle Account if he wants to send the message. After installing the Curium Extension, the app prompts the user to login with the same account used with Curium Extension. If all goes well, then the User can now compose the message by providing recipient's Public Key and Chain Name. The composed message is encrypted with both User's and Recipient's Public Key.
 The app then asks the backend to save the encrypted message, followed by prompt from the Curium Extension. If User approves the message by paying the gas fee for the transaction, then the app provides the proof of transaction to the backend. The backend then saves those messages at the Bluzelle Blockchain.
-In case If the User disapprove the prompt from the Curium Extension, then the message remains in the outbox.
+In case If the User disapprove the prompt from the Curium Extension, then the message is deleted from the outbox.
+The message is saved to Outbox only when something goes wrong, for example, like if User pays and Network gets disconnected, then
+then User should be able to claim that message.
 
 ###### Task I still need to complete
 1. Proper integration of Curium Extension with the frontend.
 2. The backend should be able to verify claim message i.e. if the user has really paid the fees through curium.
 4. The table UI should be improved.
 5. Documentation and comments still need to improve.
-6. Unit Test should be provided.
-7. A Demo Video is required.
+6. Unit Test.(Not sure whether required)
 
 Apart from above, please let me know if there's anything else required and I also need your feedback please.
 

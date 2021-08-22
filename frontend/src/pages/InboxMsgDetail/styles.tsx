@@ -1,5 +1,4 @@
 import {alpha, makeStyles} from '@material-ui/core/styles';
-import {flexCenterStyle} from 'styles/variables';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -9,7 +8,7 @@ const useStyles = makeStyles((theme) => {
       flexGrow: 1,
       height: '100%',
       width: '100%',
-      ...flexCenterStyle,
+      alignItems: 'center'
     },
     card: {
       display: 'flex',

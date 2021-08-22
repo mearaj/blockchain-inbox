@@ -29,7 +29,10 @@ const CuriumRequired: React.FC<PropsWithChildren<any>> = (props) => {
       props.children:
       <div className={classes.root}>
         <CommonBar>Curium Required!</CommonBar>
-        <div className={classes.helperText}>The Curium Browser Extension is required for this feature!</div>
+        <div className={classes.helperText}>
+            The Curium Browser Extension is required for this feature!
+            Kindly refresh/reload this page after installing the extension.
+        </div>
         <Button
           className={classes.button}
           color="primary"
