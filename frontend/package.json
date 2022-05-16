@@ -14,7 +14,7 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bip32": "^2.0.6",
     "clsx": "^1.1.1",
     "copy-to-clipboard": "^3.3.1",
